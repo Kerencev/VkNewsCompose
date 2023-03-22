@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Vk News Compose</string>
+    <string name="group_avatar">Аватар группы</string>
+    <string name="more">Ещё</string>
 </resources>
