@@ -1,9 +1,5 @@
-package com.kerencev.vknewscompose.presentation
+package com.kerencev.vknewscompose.presentation.screens.news
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -30,36 +26,27 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kerencev.vknewscompose.R
+import com.kerencev.vknewscompose.domain.model.NewsModel
 import com.kerencev.vknewscompose.extensions.toDateTime
-import com.kerencev.vknewscompose.ui.theme.VkNewsComposeTheme
-
-class MainActivity : ComponentActivity() {
-
-    private val viewModel by viewModels<MainViewModel>()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            VkNewsComposeTheme {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(8.dp)
-                ) {
-                    NewsScreen(viewModel = viewModel)
-                }
-            }
-        }
-    }
-}
+import com.kerencev.vknewscompose.presentation.main.MainViewModel
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun NewsScreen(
-    viewModel: MainViewModel
+    viewModel: MainViewModel,
+    paddingValues: PaddingValues
 ) {
     val newsState = viewModel.newsData.observeAsState(listOf())
-    LazyColumn {
+    LazyColumn(
+        modifier = Modifier.padding(paddingValues),
+        contentPadding = PaddingValues(
+            top = 16.dp,
+            start = 8.dp,
+            end = 8.dp,
+            bottom = 16.dp
+        ),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
         items(newsState.value, { it.id }) { newsItem ->
             val dismissState = rememberDismissState()
             if (dismissState.isDismissed(DismissDirection.EndToStart)) {
@@ -74,8 +61,8 @@ fun NewsScreen(
                         modifier = Modifier
                             .padding(16.dp)
                             .fillMaxSize()
-                            .background(Color.Red)
-                            .alpha(0.5f),
+                            .alpha(0.5f)
+                            .background(Color.Red),
                         contentAlignment = Alignment.CenterEnd,
                     ) {
                         Text(
@@ -92,10 +79,8 @@ fun NewsScreen(
                     viewModel.onStatisticClick(newsItem.id, statisticType)
                 })
             }
-            Spacer(modifier = Modifier.height(16.dp))
         }
     }
-
 }
 
 @Composable

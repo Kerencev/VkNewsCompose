@@ -1,4 +1,4 @@
-package com.kerencev.vknewscompose.presentation
+package com.kerencev.vknewscompose.domain.model
 
 data class NewsModel(
     val id: Int,
