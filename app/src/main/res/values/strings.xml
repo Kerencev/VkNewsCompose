@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Vk News Compose</string>
+    <string name="group_avatar">Аватар группы</string>
+    <string name="more">Ещё</string>
+    <string name="post_content_image">Изображение поста</string>
+    <string name="temp_text">Задача организации, в особенности же начало повседневной работы по формированию позиции способствует повышению актуальности всесторонне сбалансированных нововведений!</string>
 </resources>
