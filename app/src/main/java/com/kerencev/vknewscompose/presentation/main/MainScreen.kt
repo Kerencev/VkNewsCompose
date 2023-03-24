@@ -7,6 +7,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.kerencev.vknewscompose.navigation.AppNavGraph
 import com.kerencev.vknewscompose.navigation.NavigationItem
+import com.kerencev.vknewscompose.navigation.Screen
 import com.kerencev.vknewscompose.presentation.screens.news.NewsScreen
 
 @Composable
@@ -29,7 +30,15 @@ fun MainScreen(
                 items.forEach { item ->
                     BottomNavigationItem(
                         selected = currentRoute == item.screen.route,
-                        onClick = { navHostController.navigate(item.screen.route) },
+                        onClick = {
+                            navHostController.navigate(item.screen.route) {
+                                popUpTo(Screen.News.route) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        },
                         icon = { Icon(item.icon, contentDescription = item.title) },
                         label = { Text(text = item.title) },
                         selectedContentColor = MaterialTheme.colors.onPrimary,
