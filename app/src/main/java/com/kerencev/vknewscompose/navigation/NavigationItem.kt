@@ -12,9 +12,9 @@ sealed class NavigationItem(
     val icon: ImageVector
 ) {
 
-    object News : NavigationItem(
-        screen = Screen.News,
-        title = TITLE_NEWS,
+    object Home : NavigationItem(
+        screen = Screen.Home,
+        title = TITLE_HOME,
         icon = Icons.Outlined.Home
     )
 
@@ -31,7 +31,7 @@ sealed class NavigationItem(
     )
 
     private companion object {
-        const val TITLE_NEWS = "Новости"
+        const val TITLE_HOME = "Главная"
         const val TITLE_FAVOURITES = "Избранное"
         const val TITLE_PROFILE = "Профиль"
     }

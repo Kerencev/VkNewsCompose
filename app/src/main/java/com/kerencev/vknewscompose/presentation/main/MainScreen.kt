@@ -3,34 +3,39 @@ package com.kerencev.vknewscompose.presentation.main
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.kerencev.vknewscompose.navigation.AppNavGraph
 import com.kerencev.vknewscompose.navigation.NavigationItem
 import com.kerencev.vknewscompose.navigation.rememberNavigationState
+import com.kerencev.vknewscompose.presentation.screens.comments.CommentsScreen
 import com.kerencev.vknewscompose.presentation.screens.home.HomeScreen
 
 @Composable
-fun MainScreen(
-    viewModel: MainViewModel
-) {
+fun MainScreen() {
     val navigationState = rememberNavigationState()
 
     Scaffold(
         bottomBar = {
             BottomNavigation {
                 val navBackStackEntry by navigationState.navHostController.currentBackStackEntryAsState()
-                val currentRoute = navBackStackEntry?.destination?.route
 
                 val items = listOf(
-                    NavigationItem.News,
+                    NavigationItem.Home,
                     NavigationItem.Favourite,
                     NavigationItem.Profile
                 )
                 items.forEach { item ->
+                    val selected = navBackStackEntry?.destination?.hierarchy?.any {
+                        it.route == item.screen.route
+                    } ?: false
+
                     BottomNavigationItem(
-                        selected = currentRoute == item.screen.route,
+                        selected = selected,
                         onClick = {
-                            navigationState.navigateTo(item.screen.route)
+                            if (!selected) {
+                                navigationState.navigateTo(item.screen.route)
+                            }
                         },
                         icon = { Icon(item.icon, contentDescription = item.title) },
                         label = { Text(text = item.title) },
@@ -45,8 +50,18 @@ fun MainScreen(
             navHostController = navigationState.navHostController,
             newsScreenContent = {
                 HomeScreen(
-                    viewModel = viewModel,
-                    paddingValues = paddingValues
+                    paddingValues = paddingValues,
+                    onCommentsClick = {
+                        navigationState.navigateToComments(it)
+                    }
+                )
+            },
+            commentsScreenContent = { newsModel ->
+                CommentsScreen(
+                    newsModel = newsModel,
+                    onBackPressed = {
+                        navigationState.navHostController.popBackStack()
+                    }
                 )
             },
             favouriteScreenContent = { Text(text = "favourite Screen") },

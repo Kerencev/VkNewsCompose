@@ -1,28 +1,13 @@
-package com.kerencev.vknewscompose.presentation.main
+package com.kerencev.vknewscompose.presentation.screens.home
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.kerencev.vknewscompose.domain.model.CommentModel
 import com.kerencev.vknewscompose.domain.model.NewsModel
-import com.kerencev.vknewscompose.presentation.screens.home.HomeScreenState
 import com.kerencev.vknewscompose.presentation.screens.news.NewsStatisticType
 import kotlin.random.Random
 
-class MainViewModel : ViewModel() {
-
-    private val comments = mutableListOf<CommentModel>().apply {
-        repeat(20) {
-            add(
-                CommentModel(
-                    id = it,
-                    authorName = "Сергей К.",
-                    commentText = "классный комментарий",
-                    commentDate = System.currentTimeMillis()
-                )
-            )
-        }
-    }
+class HomeViewModel : ViewModel() {
 
     private val initialNews = mutableListOf<NewsModel>().apply {
         var currentTime = System.currentTimeMillis()
@@ -43,22 +28,15 @@ class MainViewModel : ViewModel() {
             )
         }
     }
-    private val initialState = HomeScreenState.News(news = initialNews)
+    private val initialState = HomeScreenState.Home(news = initialNews)
 
     private val _screenState = MutableLiveData<HomeScreenState>(initialState)
     val screenState: LiveData<HomeScreenState>
         get() = _screenState
 
-    private var savedState: HomeScreenState? = initialState
-
     fun onStatisticClick(newsModel: NewsModel, type: NewsStatisticType) {
-        if (type == NewsStatisticType.COMMENTS) {
-            onCommentsClick(newsModel)
-            return
-        }
-
         val currentState = _screenState.value
-        if (currentState !is HomeScreenState.News) return
+        if (currentState !is HomeScreenState.Home) return
 
         val newsList = currentState.news.toMutableList()
         val oldNewsModel = newsList.find { it.id == newsModel.id }
@@ -78,26 +56,17 @@ class MainViewModel : ViewModel() {
                 }
             }
             newsList[newsList.indexOf(oldNewsModel)] = newNewsModel
-            _screenState.value = HomeScreenState.News(news = newsList)
+            _screenState.value = HomeScreenState.Home(news = newsList)
         }
     }
 
     fun onNewsItemDismiss(newsModel: NewsModel) {
         val currentState = _screenState.value
-        if (currentState !is HomeScreenState.News) return
+        if (currentState !is HomeScreenState.Home) return
 
         val newsList = currentState.news.toMutableList()
         newsList.remove(newsModel)
-        _screenState.value = HomeScreenState.News(news = newsList)
-    }
-
-    fun onBackPressedComments() {
-        _screenState.value = savedState
-    }
-
-    private fun onCommentsClick(newsModel: NewsModel) {
-        savedState = _screenState.value
-        _screenState.value = HomeScreenState.Comments(newsModel = newsModel, comments = comments)
+        _screenState.value = HomeScreenState.Home(news = newsList)
     }
 
 }

@@ -27,14 +27,15 @@ import androidx.compose.ui.unit.sp
 import com.kerencev.vknewscompose.R
 import com.kerencev.vknewscompose.domain.model.NewsModel
 import com.kerencev.vknewscompose.extensions.toDateTime
-import com.kerencev.vknewscompose.presentation.main.MainViewModel
+import com.kerencev.vknewscompose.presentation.screens.home.HomeViewModel
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun NewsScreen(
-    viewModel: MainViewModel,
+    viewModel: HomeViewModel,
     news: List<NewsModel>,
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    onCommentsClick: (newsModel: NewsModel) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier.padding(paddingValues),
@@ -74,9 +75,13 @@ fun NewsScreen(
                     }
                 }
             ) {
-                NewsCard(newsModel = newsItem, onclick = { statisticType ->
-                    viewModel.onStatisticClick(newsItem, statisticType)
-                })
+                NewsCard(
+                    newsModel = newsItem,
+                    onStatisticClick = { statisticType ->
+                        viewModel.onStatisticClick(newsItem, statisticType)
+                    },
+                    onCommentsClick = onCommentsClick
+                )
             }
         }
     }
@@ -85,7 +90,8 @@ fun NewsScreen(
 @Composable
 fun NewsCard(
     newsModel: NewsModel,
-    onclick: (type: NewsStatisticType) -> Unit
+    onStatisticClick: (type: NewsStatisticType) -> Unit,
+    onCommentsClick: (newsModel: NewsModel) -> Unit
 ) {
     Card {
         Column(
@@ -103,7 +109,7 @@ fun NewsCard(
                 contentScale = ContentScale.FillWidth
             )
             Spacer(modifier = Modifier.height(8.dp))
-            NewsFooter(newsModel = newsModel, onclick)
+            NewsFooter(newsModel = newsModel, onStatisticClick, onCommentsClick)
         }
     }
 }
@@ -148,12 +154,13 @@ fun NewsHeader(newsModel: NewsModel) {
 @Composable
 fun NewsFooter(
     newsModel: NewsModel,
-    onclick: (type: NewsStatisticType) -> Unit
+    onStatisticClick: (type: NewsStatisticType) -> Unit,
+    onCommentsClick: (newsModel: NewsModel) -> Unit
 ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Row(modifier = Modifier.weight(1f)) {
             IconWithText(
-                modifier = Modifier.clickable { onclick(NewsStatisticType.VIEWS) },
+                modifier = Modifier.clickable { onStatisticClick(NewsStatisticType.VIEWS) },
                 iconRes = R.drawable.ic_views_count,
                 text = newsModel.viewsCount.toString(),
             )
@@ -163,17 +170,17 @@ fun NewsFooter(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             IconWithText(
-                modifier = Modifier.clickable { onclick(NewsStatisticType.SHARES) },
+                modifier = Modifier.clickable { onStatisticClick(NewsStatisticType.SHARES) },
                 iconRes = R.drawable.ic_share,
                 text = newsModel.sharesCount.toString(),
             )
             IconWithText(
-                modifier = Modifier.clickable { onclick(NewsStatisticType.COMMENTS) },
+                modifier = Modifier.clickable { onCommentsClick(newsModel) },
                 iconRes = R.drawable.ic_comment,
                 text = newsModel.commentsCount.toString(),
             )
             IconWithText(
-                modifier = Modifier.clickable { onclick(NewsStatisticType.LIKES) },
+                modifier = Modifier.clickable { onStatisticClick(NewsStatisticType.LIKES) },
                 iconRes = R.drawable.ic_like,
                 text = newsModel.likesCount.toString(),
             )
