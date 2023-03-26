@@ -3,11 +3,11 @@ package com.kerencev.vknewscompose.presentation.main
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
-import com.kerencev.vknewscompose.navigation.*
-import com.kerencev.vknewscompose.presentation.screens.news.NewsScreen
+import com.kerencev.vknewscompose.navigation.AppNavGraph
+import com.kerencev.vknewscompose.navigation.NavigationItem
+import com.kerencev.vknewscompose.navigation.rememberNavigationState
+import com.kerencev.vknewscompose.presentation.screens.home.HomeScreen
 
 @Composable
 fun MainScreen(
@@ -44,7 +44,7 @@ fun MainScreen(
         AppNavGraph(
             navHostController = navigationState.navHostController,
             newsScreenContent = {
-                NewsScreen(
+                HomeScreen(
                     viewModel = viewModel,
                     paddingValues = paddingValues
                 )

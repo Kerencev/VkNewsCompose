@@ -13,7 +13,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -34,9 +33,9 @@ import com.kerencev.vknewscompose.presentation.main.MainViewModel
 @Composable
 fun NewsScreen(
     viewModel: MainViewModel,
+    news: List<NewsModel>,
     paddingValues: PaddingValues
 ) {
-    val newsState = viewModel.newsData.observeAsState(listOf())
     LazyColumn(
         modifier = Modifier.padding(paddingValues),
         contentPadding = PaddingValues(
@@ -47,7 +46,7 @@ fun NewsScreen(
         ),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(newsState.value, { it.id }) { newsItem ->
+        items(news, { it.id }) { newsItem ->
             val dismissState = rememberDismissState()
             if (dismissState.isDismissed(DismissDirection.EndToStart)) {
                 viewModel.onNewsItemDismiss(newsModel = newsItem)
@@ -76,7 +75,7 @@ fun NewsScreen(
                 }
             ) {
                 NewsCard(newsModel = newsItem, onclick = { statisticType ->
-                    viewModel.onStatisticClick(newsItem.id, statisticType)
+                    viewModel.onStatisticClick(newsItem, statisticType)
                 })
             }
         }
