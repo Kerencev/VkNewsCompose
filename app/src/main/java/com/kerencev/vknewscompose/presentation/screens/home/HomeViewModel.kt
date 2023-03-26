@@ -1,15 +1,17 @@
-package com.kerencev.vknewscompose.presentation
+package com.kerencev.vknewscompose.presentation.screens.home
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.kerencev.vknewscompose.domain.model.NewsModel
+import com.kerencev.vknewscompose.presentation.screens.news.NewsStatisticType
 import kotlin.random.Random
 
-class MainViewModel : ViewModel() {
+class HomeViewModel : ViewModel() {
 
-    private val initialList = mutableListOf<NewsModel>().apply {
+    private val initialNews = mutableListOf<NewsModel>().apply {
         var currentTime = System.currentTimeMillis()
-        repeat(100) { index ->
+        repeat(10) { index ->
             val postTime = currentTime - 300_000
             currentTime = postTime
             add(
@@ -26,14 +28,18 @@ class MainViewModel : ViewModel() {
             )
         }
     }
+    private val initialState = HomeScreenState.Home(news = initialNews)
 
-    private val _newsData = MutableLiveData<List<NewsModel>>(initialList)
-    val newsData: LiveData<List<NewsModel>>
-        get() = _newsData
+    private val _screenState = MutableLiveData<HomeScreenState>(initialState)
+    val screenState: LiveData<HomeScreenState>
+        get() = _screenState
 
-    fun onStatisticClick(newsId: Int, type: NewsStatisticType) {
-        val newsList = _newsData.value?.toMutableList() ?: mutableListOf()
-        val oldNewsModel = newsList.find { it.id == newsId }
+    fun onStatisticClick(newsModel: NewsModel, type: NewsStatisticType) {
+        val currentState = _screenState.value
+        if (currentState !is HomeScreenState.Home) return
+
+        val newsList = currentState.news.toMutableList()
+        val oldNewsModel = newsList.find { it.id == newsModel.id }
         oldNewsModel?.let { oldModel ->
             val newNewsModel = when (type) {
                 NewsStatisticType.VIEWS -> {
@@ -50,14 +56,17 @@ class MainViewModel : ViewModel() {
                 }
             }
             newsList[newsList.indexOf(oldNewsModel)] = newNewsModel
-            _newsData.value = newsList
+            _screenState.value = HomeScreenState.Home(news = newsList)
         }
     }
 
     fun onNewsItemDismiss(newsModel: NewsModel) {
-        val newsList = _newsData.value?.toMutableList() ?: mutableListOf()
+        val currentState = _screenState.value
+        if (currentState !is HomeScreenState.Home) return
+
+        val newsList = currentState.news.toMutableList()
         newsList.remove(newsModel)
-        _newsData.value = newsList
+        _screenState.value = HomeScreenState.Home(news = newsList)
     }
 
 }
