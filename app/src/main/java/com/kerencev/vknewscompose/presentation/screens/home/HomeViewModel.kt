@@ -2,54 +2,51 @@ package com.kerencev.vknewscompose.presentation.screens.home
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.kerencev.vknewscompose.data.repository.NewsFeedRepository
 import com.kerencev.vknewscompose.domain.model.news_feed.NewsModel
+import com.kerencev.vknewscompose.presentation.utils.extensions.mergeWith
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val _screenState = MutableLiveData<HomeScreenState>(HomeScreenState.Initial)
-    val screenState: LiveData<HomeScreenState>
-        get() = _screenState
-
     private val repository = NewsFeedRepository(application)
 
-    init {
-        _screenState.value = HomeScreenState.Loading
-        loadNews()
+    private val newsFlow = repository.news
+
+    private val loadNexDataFlow = MutableSharedFlow<HomeScreenState>()
+
+    val screenState = newsFlow
+        .filter { it.isNotEmpty() }
+        .map { HomeScreenState.Home(it) as HomeScreenState }
+        .onStart { emit(HomeScreenState.Loading) }
+        .mergeWith(loadNexDataFlow)
+
+    fun loadNextNews() {
+        viewModelScope.launch {
+            loadNexDataFlow.emit(
+                HomeScreenState.Home(
+                    news = newsFlow.value,
+                    nextDataIsLoading = true
+                )
+            )
+            repository.loadNextData()
+        }
     }
 
     fun changeLikesStatus(newsModel: NewsModel) {
         viewModelScope.launch {
             repository.changeLikeStatus(newsModel)
-            _screenState.postValue(HomeScreenState.Home(news = repository.newsModels))
         }
     }
 
-    fun loadNextNews() {
-        _screenState.value = HomeScreenState.Home(
-            news = repository.newsModels,
-            nextDataIsLoading = true
-        )
-        loadNews()
-    }
-
     fun onNewsItemDismiss(newsModel: NewsModel) {
-        val currentState = _screenState.value
-        if (currentState !is HomeScreenState.Home) return
-
-        val newsList = currentState.news.toMutableList()
-        newsList.remove(newsModel)
-        _screenState.value = HomeScreenState.Home(news = newsList)
-    }
-
-    private fun loadNews() {
         viewModelScope.launch {
-            val newsPosts = repository.loadNewsFeed()
-            _screenState.postValue(HomeScreenState.Home(newsPosts))
+            repository.deleteNews(newsModel)
         }
     }
 

@@ -7,7 +7,7 @@ import kotlin.math.absoluteValue
 
 class NewsFeedMapper {
 
-    fun mapResponseToPost(responseDto: NewsFeedResponseDto): List<NewsModel> {
+    fun mapDtoToEntity(responseDto: NewsFeedResponseDto): List<NewsModel> {
         val result = mutableListOf<NewsModel>()
 
         val posts = responseDto.response?.items
