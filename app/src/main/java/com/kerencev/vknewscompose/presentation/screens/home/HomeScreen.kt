@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -19,12 +19,13 @@ fun HomeScreen(
     onCommentsClick: (newsModel: NewsModel) -> Unit
 ) {
     val viewModel: HomeViewModel = viewModel()
-    val screenState = viewModel.screenState.observeAsState(HomeScreenState.Initial).value
+    val screenState = viewModel.screenState.collectAsState(HomeScreenState.Initial).value
 
     when (screenState) {
         is HomeScreenState.Initial -> {
 
         }
+
         HomeScreenState.Loading -> {
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -33,6 +34,7 @@ fun HomeScreen(
                 CircularProgressIndicator(color = DarkBlue)
             }
         }
+
         is HomeScreenState.Home -> {
             NewsScreen(
                 viewModel = viewModel,
