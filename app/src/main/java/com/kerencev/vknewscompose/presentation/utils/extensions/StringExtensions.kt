@@ -1,4 +1,4 @@
-package com.kerencev.vknewscompose.extensions
+package com.kerencev.vknewscompose.presentation.utils.extensions
 
 import android.net.Uri
 

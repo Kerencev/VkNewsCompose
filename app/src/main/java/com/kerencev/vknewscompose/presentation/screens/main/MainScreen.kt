@@ -1,13 +1,13 @@
-package com.kerencev.vknewscompose.presentation.main
+package com.kerencev.vknewscompose.presentation.screens.main
 
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.kerencev.vknewscompose.navigation.AppNavGraph
-import com.kerencev.vknewscompose.navigation.NavigationItem
-import com.kerencev.vknewscompose.navigation.rememberNavigationState
+import com.kerencev.vknewscompose.presentation.navigation.AppNavGraph
+import com.kerencev.vknewscompose.presentation.navigation.NavigationItem
+import com.kerencev.vknewscompose.presentation.navigation.rememberNavigationState
 import com.kerencev.vknewscompose.presentation.screens.comments.CommentsScreen
 import com.kerencev.vknewscompose.presentation.screens.home.HomeScreen
 

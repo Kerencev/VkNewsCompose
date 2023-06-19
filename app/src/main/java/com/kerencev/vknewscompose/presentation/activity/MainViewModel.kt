@@ -1,4 +1,4 @@
-package com.kerencev.vknewscompose.presentation.main
+package com.kerencev.vknewscompose.presentation.activity
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import com.vk.api.sdk.VKPreferencesKeyValueStorage
 import com.vk.api.sdk.auth.VKAccessToken
 import com.vk.api.sdk.auth.VKAuthenticationResult
+
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -27,5 +28,15 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             _authState.value = AuthState.NotAuthorized
         }
     }
+
+}
+
+sealed class AuthState {
+
+    object Initial : AuthState()
+
+    object Authorized : AuthState()
+
+    object NotAuthorized : AuthState()
 
 }

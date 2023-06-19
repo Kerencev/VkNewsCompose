@@ -1,26 +1,28 @@
 package com.kerencev.vknewscompose.presentation.screens.comments
 
-import androidx.compose.foundation.Image
+import android.app.Application
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
 import com.kerencev.vknewscompose.R
-import com.kerencev.vknewscompose.domain.model.CommentModel
-import com.kerencev.vknewscompose.domain.model.NewsModel
-import com.kerencev.vknewscompose.extensions.toDateTime
+import com.kerencev.vknewscompose.domain.model.news_feed.CommentModel
+import com.kerencev.vknewscompose.domain.model.news_feed.NewsModel
 
 @Composable
 fun CommentsScreen(
@@ -28,17 +30,30 @@ fun CommentsScreen(
     onBackPressed: () -> Unit
 ) {
     val viewModel: CommentsViewModel = viewModel(
-        factory = CommentsViewModelFactory(newsModel)
+        factory = CommentsViewModelFactory(
+            application = LocalContext.current.applicationContext as Application,
+            newsModel = newsModel
+        )
     )
-    val screenState = viewModel.screenState.observeAsState(CommentsScreenState.Initial)
-    val currentState = screenState.value
+    val state = viewModel.screenState.observeAsState(CommentsScreenState.Initial).value
 
-    if (currentState is CommentsScreenState.Comments) {
+    if (state is CommentsScreenState.Comments) {
         Scaffold(
             topBar = {
                 TopAppBar(
                     title = {
-                        Text(text = "${stringResource(id = R.string.comments)} ${currentState.newsModel.id}")
+                        Column {
+                            Text(
+                                text = state.newsModel.communityName,
+                                maxLines = 1,
+                                fontSize = 20.sp
+                            )
+                            Text(
+                                text = stringResource(id = R.string.comments),
+                                maxLines = 1,
+                                fontSize = 16.sp
+                            )
+                        }
                     },
                     navigationIcon = {
                         IconButton(onClick = { onBackPressed() }) {
@@ -59,7 +74,7 @@ fun CommentsScreen(
                 )
             ) {
                 items(
-                    items = currentState.comments,
+                    items = state.comments,
                     key = { it.id }
                 ) { comment ->
                     CommentItem(comment = comment)
@@ -79,9 +94,11 @@ fun CommentItem(
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
-        Image(
-            modifier = Modifier.size(24.dp),
-            painter = painterResource(id = R.drawable.ic_launcher_foreground),
+        AsyncImage(
+            modifier = Modifier
+                .size(48.dp)
+                .clip(CircleShape),
+            model = comment.authorImageUrl,
             contentDescription = null
         )
         Spacer(modifier = Modifier.width(8.dp))
@@ -99,7 +116,7 @@ fun CommentItem(
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.End,
-                text = comment.commentDate.toDateTime(),
+                text = comment.commentDate,
                 fontSize = 12.sp,
                 color = MaterialTheme.colors.onSecondary
             )
