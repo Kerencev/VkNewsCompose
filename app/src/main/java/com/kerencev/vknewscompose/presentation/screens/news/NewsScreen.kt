@@ -2,7 +2,6 @@ package com.kerencev.vknewscompose.presentation.screens.news
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -13,6 +12,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -24,10 +24,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.kerencev.vknewscompose.R
-import com.kerencev.vknewscompose.domain.model.NewsModel
-import com.kerencev.vknewscompose.extensions.toDateTime
+import com.kerencev.vknewscompose.domain.model.news_feed.NewsModel
+import com.kerencev.vknewscompose.presentation.utils.extensions.formatStatisticCount
 import com.kerencev.vknewscompose.presentation.screens.home.HomeViewModel
+import com.kerencev.vknewscompose.ui.theme.DarkBlue
+import com.kerencev.vknewscompose.ui.theme.DarkRed
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Composable
@@ -35,7 +38,8 @@ fun NewsScreen(
     viewModel: HomeViewModel,
     news: List<NewsModel>,
     paddingValues: PaddingValues,
-    onCommentsClick: (newsModel: NewsModel) -> Unit
+    onCommentsClick: (newsModel: NewsModel) -> Unit,
+    nextDataIsLoading: Boolean
 ) {
     LazyColumn(
         modifier = Modifier.padding(paddingValues),
@@ -77,11 +81,28 @@ fun NewsScreen(
             ) {
                 NewsCard(
                     newsModel = newsItem,
-                    onStatisticClick = { statisticType ->
-                        viewModel.onStatisticClick(newsItem, statisticType)
-                    },
-                    onCommentsClick = onCommentsClick
+                    onCommentsClick = onCommentsClick,
+                    onLikesClick = {
+                        viewModel.changeLikesStatus(newsItem)
+                    }
                 )
+            }
+        }
+        item {
+            if (nextDataIsLoading) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                        .padding(16.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(color = DarkBlue)
+                }
+            } else {
+                SideEffect {
+                    viewModel.loadNextNews()
+                }
             }
         }
     }
@@ -90,8 +111,8 @@ fun NewsScreen(
 @Composable
 fun NewsCard(
     newsModel: NewsModel,
-    onStatisticClick: (type: NewsStatisticType) -> Unit,
-    onCommentsClick: (newsModel: NewsModel) -> Unit
+    onCommentsClick: (newsModel: NewsModel) -> Unit,
+    onLikesClick: () -> Unit
 ) {
     Card {
         Column(
@@ -100,16 +121,18 @@ fun NewsCard(
         ) {
             NewsHeader(newsModel = newsModel)
             Spacer(modifier = Modifier.height(4.dp))
-            Text(text = newsModel.text)
+            Text(text = newsModel.contentText)
             Spacer(modifier = Modifier.height(4.dp))
-            Image(
-                modifier = Modifier.fillMaxWidth(),
-                painter = painterResource(id = R.drawable.post_content_image),
+            AsyncImage(
+                model = newsModel.contentImageUrl,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight(),
                 contentDescription = stringResource(id = R.string.post_content_image),
                 contentScale = ContentScale.FillWidth
             )
             Spacer(modifier = Modifier.height(8.dp))
-            NewsFooter(newsModel = newsModel, onStatisticClick, onCommentsClick)
+            NewsFooter(newsModel = newsModel, onCommentsClick, onLikesClick)
         }
     }
 }
@@ -119,11 +142,11 @@ fun NewsHeader(newsModel: NewsModel) {
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Image(
+        AsyncImage(
+            model = newsModel.communityImageUrl,
             modifier = Modifier
                 .clip(CircleShape)
                 .size(50.dp),
-            painter = painterResource(id = R.drawable.ic_launcher_background),
             contentDescription = stringResource(
                 id = R.string.group_avatar
             )
@@ -134,12 +157,12 @@ fun NewsHeader(newsModel: NewsModel) {
                 .padding(start = 4.dp)
         ) {
             Text(
-                text = newsModel.name,
+                text = newsModel.communityName,
                 color = MaterialTheme.colors.onPrimary
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = newsModel.postTime.toDateTime(),
+                text = newsModel.postTime,
                 color = MaterialTheme.colors.onSecondary
             )
         }
@@ -154,35 +177,35 @@ fun NewsHeader(newsModel: NewsModel) {
 @Composable
 fun NewsFooter(
     newsModel: NewsModel,
-    onStatisticClick: (type: NewsStatisticType) -> Unit,
-    onCommentsClick: (newsModel: NewsModel) -> Unit
+    onCommentsClick: (newsModel: NewsModel) -> Unit,
+    onLikesClick: () -> Unit
 ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Row(modifier = Modifier.weight(1f)) {
             IconWithText(
-                modifier = Modifier.clickable { onStatisticClick(NewsStatisticType.VIEWS) },
+                modifier = Modifier,
                 iconRes = R.drawable.ic_views_count,
-                text = newsModel.viewsCount.toString(),
+                text = newsModel.viewsCount.formatStatisticCount(),
             )
         }
-        Row(
-            modifier = Modifier.weight(2f),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
+        Row {
             IconWithText(
-                modifier = Modifier.clickable { onStatisticClick(NewsStatisticType.SHARES) },
+                modifier = Modifier,
                 iconRes = R.drawable.ic_share,
-                text = newsModel.sharesCount.toString(),
+                text = newsModel.sharesCount.formatStatisticCount(),
             )
+            Spacer(modifier = Modifier.width(12.dp))
             IconWithText(
                 modifier = Modifier.clickable { onCommentsClick(newsModel) },
                 iconRes = R.drawable.ic_comment,
-                text = newsModel.commentsCount.toString(),
+                text = newsModel.commentsCount.formatStatisticCount(),
             )
+            Spacer(modifier = Modifier.width(12.dp))
             IconWithText(
-                modifier = Modifier.clickable { onStatisticClick(NewsStatisticType.LIKES) },
-                iconRes = R.drawable.ic_like,
-                text = newsModel.likesCount.toString(),
+                modifier = Modifier.clickable { onLikesClick() },
+                iconRes = if (newsModel.isLiked) R.drawable.ic_like_fill else R.drawable.ic_like,
+                text = newsModel.likesCount.formatStatisticCount(),
+                tint = if (newsModel.isLiked) DarkRed else MaterialTheme.colors.onSecondary
             )
         }
     }
@@ -193,17 +216,19 @@ fun IconWithText(
     modifier: Modifier,
     @DrawableRes iconRes: Int,
     text: String,
+    tint: Color = MaterialTheme.colors.onSecondary
 ) {
     Row(
-        modifier = modifier,
+        modifier = modifier.padding(4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
+            modifier = Modifier.size(20.dp),
             painter = painterResource(id = iconRes),
             contentDescription = text,
-            tint = MaterialTheme.colors.onSecondary
+            tint = tint
         )
-        Spacer(modifier = Modifier.width(4.dp))
+        Spacer(modifier = Modifier.width(2.dp))
         Text(text = text, color = MaterialTheme.colors.onSecondary)
     }
 }

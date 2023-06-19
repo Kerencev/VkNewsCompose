@@ -1,63 +1,40 @@
 package com.kerencev.vknewscompose.presentation.screens.home
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.kerencev.vknewscompose.domain.model.NewsModel
-import com.kerencev.vknewscompose.presentation.screens.news.NewsStatisticType
-import kotlin.random.Random
+import androidx.lifecycle.viewModelScope
+import com.kerencev.vknewscompose.data.repository.NewsFeedRepository
+import com.kerencev.vknewscompose.domain.model.news_feed.NewsModel
+import kotlinx.coroutines.launch
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val initialNews = mutableListOf<NewsModel>().apply {
-        var currentTime = System.currentTimeMillis()
-        repeat(10) { index ->
-            val postTime = currentTime - 300_000
-            currentTime = postTime
-            add(
-                NewsModel(
-                    id = index,
-                    name = "Группа № $index",
-                    postTime = postTime,
-                    text = "Текст поста группы № $index",
-                    viewsCount = Random.nextInt(5_000),
-                    sharesCount = Random.nextInt(3_000),
-                    commentsCount = Random.nextInt(500),
-                    likesCount = Random.nextInt(4_000)
-                )
-            )
-        }
-    }
-    private val initialState = HomeScreenState.Home(news = initialNews)
-
-    private val _screenState = MutableLiveData<HomeScreenState>(initialState)
+    private val _screenState = MutableLiveData<HomeScreenState>(HomeScreenState.Initial)
     val screenState: LiveData<HomeScreenState>
         get() = _screenState
 
-    fun onStatisticClick(newsModel: NewsModel, type: NewsStatisticType) {
-        val currentState = _screenState.value
-        if (currentState !is HomeScreenState.Home) return
+    private val repository = NewsFeedRepository(application)
 
-        val newsList = currentState.news.toMutableList()
-        val oldNewsModel = newsList.find { it.id == newsModel.id }
-        oldNewsModel?.let { oldModel ->
-            val newNewsModel = when (type) {
-                NewsStatisticType.VIEWS -> {
-                    oldModel.copy(viewsCount = oldModel.viewsCount + 1)
-                }
-                NewsStatisticType.SHARES -> {
-                    oldModel.copy(sharesCount = oldModel.sharesCount + 1)
-                }
-                NewsStatisticType.COMMENTS -> {
-                    oldModel.copy(commentsCount = oldModel.commentsCount + 1)
-                }
-                NewsStatisticType.LIKES -> {
-                    oldModel.copy(likesCount = oldModel.likesCount + 1)
-                }
-            }
-            newsList[newsList.indexOf(oldNewsModel)] = newNewsModel
-            _screenState.value = HomeScreenState.Home(news = newsList)
+    init {
+        _screenState.value = HomeScreenState.Loading
+        loadNews()
+    }
+
+    fun changeLikesStatus(newsModel: NewsModel) {
+        viewModelScope.launch {
+            repository.changeLikeStatus(newsModel)
+            _screenState.postValue(HomeScreenState.Home(news = repository.newsModels))
         }
+    }
+
+    fun loadNextNews() {
+        _screenState.value = HomeScreenState.Home(
+            news = repository.newsModels,
+            nextDataIsLoading = true
+        )
+        loadNews()
     }
 
     fun onNewsItemDismiss(newsModel: NewsModel) {
@@ -67,6 +44,13 @@ class HomeViewModel : ViewModel() {
         val newsList = currentState.news.toMutableList()
         newsList.remove(newsModel)
         _screenState.value = HomeScreenState.Home(news = newsList)
+    }
+
+    private fun loadNews() {
+        viewModelScope.launch {
+            val newsPosts = repository.loadNewsFeed()
+            _screenState.postValue(HomeScreenState.Home(newsPosts))
+        }
     }
 
 }

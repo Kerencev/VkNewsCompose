@@ -1,22 +1,26 @@
-package com.kerencev.vknewscompose.domain.model
+package com.kerencev.vknewscompose.domain.model.news_feed
 
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.navigation.NavType
 import com.google.gson.Gson
-import com.kerencev.vknewscompose.extensions.getParcelableNew
+import com.kerencev.vknewscompose.presentation.utils.extensions.getParcelableNew
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class NewsModel(
-    val id: Int,
-    val name: String,
-    val postTime: Long,
-    val text: String,
+    val id: Long,
+    val communityId: Long,
+    val communityName: String,
+    val postTime: String,
+    val communityImageUrl: String?,
+    val contentText: String,
+    val contentImageUrl: String?,
     val viewsCount: Int,
     val sharesCount: Int,
     val commentsCount: Int,
-    val likesCount: Int
+    val likesCount: Int,
+    val isLiked: Boolean
 ) : Parcelable {
 
     companion object {

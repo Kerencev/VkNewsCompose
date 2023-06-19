@@ -1,10 +1,10 @@
-package com.kerencev.vknewscompose.navigation
+package com.kerencev.vknewscompose.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.kerencev.vknewscompose.domain.model.NewsModel
+import com.kerencev.vknewscompose.domain.model.news_feed.NewsModel
 
 @Composable
 fun AppNavGraph(

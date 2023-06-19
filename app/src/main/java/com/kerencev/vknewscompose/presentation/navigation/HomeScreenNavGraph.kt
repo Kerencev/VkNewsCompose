@@ -1,12 +1,12 @@
-package com.kerencev.vknewscompose.navigation
+package com.kerencev.vknewscompose.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
-import com.kerencev.vknewscompose.domain.model.NewsModel
-import com.kerencev.vknewscompose.extensions.getParcelableNew
+import com.kerencev.vknewscompose.domain.model.news_feed.NewsModel
+import com.kerencev.vknewscompose.presentation.utils.extensions.getParcelableNew
 
 fun NavGraphBuilder.homeScreenNavGraph(
     newsScreenContent: @Composable () -> Unit,

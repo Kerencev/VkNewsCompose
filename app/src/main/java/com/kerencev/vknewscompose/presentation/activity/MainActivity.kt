@@ -1,4 +1,4 @@
-package com.kerencev.vknewscompose.presentation.main
+package com.kerencev.vknewscompose.presentation.activity
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kerencev.vknewscompose.presentation.screens.login.LoginScreen
+import com.kerencev.vknewscompose.presentation.screens.main.MainScreen
 import com.kerencev.vknewscompose.ui.theme.VkNewsComposeTheme
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.auth.VKScope

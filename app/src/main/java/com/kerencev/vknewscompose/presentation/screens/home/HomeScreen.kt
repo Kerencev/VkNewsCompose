@@ -1,33 +1,45 @@
 package com.kerencev.vknewscompose.presentation.screens.home
 
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.kerencev.vknewscompose.domain.model.NewsModel
+import com.kerencev.vknewscompose.domain.model.news_feed.NewsModel
 import com.kerencev.vknewscompose.presentation.screens.news.NewsScreen
+import com.kerencev.vknewscompose.ui.theme.DarkBlue
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreen(
     paddingValues: PaddingValues,
     onCommentsClick: (newsModel: NewsModel) -> Unit
 ) {
     val viewModel: HomeViewModel = viewModel()
-    val screenState = viewModel.screenState.observeAsState(HomeScreenState.Initial)
+    val screenState = viewModel.screenState.observeAsState(HomeScreenState.Initial).value
 
-    when (val currentState = screenState.value) {
+    when (screenState) {
         is HomeScreenState.Initial -> {
 
+        }
+        HomeScreenState.Loading -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(color = DarkBlue)
+            }
         }
         is HomeScreenState.Home -> {
             NewsScreen(
                 viewModel = viewModel,
-                news = currentState.news,
+                news = screenState.news,
                 paddingValues = paddingValues,
-                onCommentsClick = onCommentsClick
+                onCommentsClick = onCommentsClick,
+                nextDataIsLoading = screenState.nextDataIsLoading
             )
         }
     }
