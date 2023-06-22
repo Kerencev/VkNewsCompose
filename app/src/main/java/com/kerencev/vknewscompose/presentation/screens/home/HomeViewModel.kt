@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.kerencev.vknewscompose.data.repository.NewsFeedRepository
 import com.kerencev.vknewscompose.domain.model.news_feed.NewsModel
+import com.kerencev.vknewscompose.presentation.common.ScreenState
 import com.kerencev.vknewscompose.presentation.utils.extensions.mergeWith
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.filter
@@ -18,20 +19,22 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     private val newsFlow = repository.news
 
-    private val loadNexDataFlow = MutableSharedFlow<HomeScreenState>()
+    private val loadNexDataFlow = MutableSharedFlow<ScreenState<Home>>()
 
     val screenState = newsFlow
         .filter { it.isNotEmpty() }
-        .map { HomeScreenState.Home(it) as HomeScreenState }
-        .onStart { emit(HomeScreenState.Loading) }
+        .map { ScreenState.Content(Home(it)) as ScreenState<Home> }
+        .onStart { emit(ScreenState.Loading) }
         .mergeWith(loadNexDataFlow)
 
     fun loadNextNews() {
         viewModelScope.launch {
             loadNexDataFlow.emit(
-                HomeScreenState.Home(
-                    news = newsFlow.value,
-                    nextDataIsLoading = true
+                ScreenState.Content(
+                    data = Home(
+                        news = newsFlow.value,
+                        nextDataIsLoading = true
+                    )
                 )
             )
             repository.loadNextData()
@@ -51,3 +54,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
 }
+
+data class Home(
+    val news: List<NewsModel>,
+    val nextDataIsLoading: Boolean = false
+)
