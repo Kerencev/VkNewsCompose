@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.kerencev.vknewscompose.R
-import com.kerencev.vknewscompose.domain.model.news_feed.NewsModel
+import com.kerencev.vknewscompose.domain.entities.NewsModel
 import com.kerencev.vknewscompose.presentation.utils.extensions.formatStatisticCount
 import com.kerencev.vknewscompose.presentation.screens.home.HomeViewModel
 import com.kerencev.vknewscompose.ui.theme.DarkBlue

@@ -3,8 +3,12 @@ package com.kerencev.vknewscompose.presentation.screens.home
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.kerencev.vknewscompose.data.repository.NewsFeedRepository
-import com.kerencev.vknewscompose.domain.model.news_feed.NewsModel
+import com.kerencev.vknewscompose.data.repository.NewsFeedRepositoryImpl
+import com.kerencev.vknewscompose.domain.entities.NewsModel
+import com.kerencev.vknewscompose.domain.use_cases.ChangeLikeStatusUseCase
+import com.kerencev.vknewscompose.domain.use_cases.DeleteNewsUseCase
+import com.kerencev.vknewscompose.domain.use_cases.GetNewsUseCase
+import com.kerencev.vknewscompose.domain.use_cases.LoadNextNewsUseCase
 import com.kerencev.vknewscompose.presentation.common.ScreenState
 import com.kerencev.vknewscompose.presentation.utils.extensions.mergeWith
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -15,9 +19,14 @@ import kotlinx.coroutines.launch
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository = NewsFeedRepository(application)
+    private val repository = NewsFeedRepositoryImpl(application)
 
-    private val newsFlow = repository.news
+    private val getNewsUseCase = GetNewsUseCase(repository)
+    private val loadNexNewsUseCase = LoadNextNewsUseCase(repository)
+    private val changeLikeStatusUseCase = ChangeLikeStatusUseCase(repository)
+    private val deleteNewsUseCase = DeleteNewsUseCase(repository)
+
+    private val newsFlow = getNewsUseCase()
 
     private val loadNexDataFlow = MutableSharedFlow<ScreenState<Home>>()
 
@@ -37,19 +46,19 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                     )
                 )
             )
-            repository.loadNextData()
+            loadNexNewsUseCase()
         }
     }
 
     fun changeLikesStatus(newsModel: NewsModel) {
         viewModelScope.launch {
-            repository.changeLikeStatus(newsModel)
+            changeLikeStatusUseCase(newsModel)
         }
     }
 
     fun onNewsItemDismiss(newsModel: NewsModel) {
         viewModelScope.launch {
-            repository.deleteNews(newsModel)
+            deleteNewsUseCase(newsModel)
         }
     }
 

@@ -1,7 +1,7 @@
 package com.kerencev.vknewscompose.data.mapper
 
 import com.kerencev.vknewscompose.data.dto.news_feed.NewsFeedResponseDto
-import com.kerencev.vknewscompose.domain.model.news_feed.NewsModel
+import com.kerencev.vknewscompose.domain.entities.NewsModel
 import com.kerencev.vknewscompose.presentation.utils.extensions.toDateTime
 import kotlin.math.absoluteValue
 

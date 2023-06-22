@@ -28,8 +28,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.kerencev.vknewscompose.R
-import com.kerencev.vknewscompose.domain.model.news_feed.CommentModel
-import com.kerencev.vknewscompose.domain.model.news_feed.NewsModel
+import com.kerencev.vknewscompose.domain.entities.CommentModel
+import com.kerencev.vknewscompose.domain.entities.NewsModel
 import com.kerencev.vknewscompose.presentation.common.ScreenState
 import com.kerencev.vknewscompose.presentation.common.compose.ProgressBarDefault
 import com.kerencev.vknewscompose.presentation.common.compose.RetryWithTitle

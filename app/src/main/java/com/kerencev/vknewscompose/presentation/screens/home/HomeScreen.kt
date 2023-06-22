@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.kerencev.vknewscompose.domain.model.news_feed.NewsModel
+import com.kerencev.vknewscompose.domain.entities.NewsModel
 import com.kerencev.vknewscompose.presentation.common.ScreenState
 import com.kerencev.vknewscompose.presentation.common.compose.ProgressBarDefault
 import com.kerencev.vknewscompose.presentation.screens.news.NewsScreen

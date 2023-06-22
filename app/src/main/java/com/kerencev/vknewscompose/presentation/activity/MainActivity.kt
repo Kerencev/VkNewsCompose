@@ -4,8 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.kerencev.vknewscompose.domain.entities.AuthState
 import com.kerencev.vknewscompose.presentation.screens.login.LoginScreen
 import com.kerencev.vknewscompose.presentation.screens.main.MainScreen
 import com.kerencev.vknewscompose.ui.theme.VkNewsComposeTheme
@@ -19,23 +20,25 @@ class MainActivity : ComponentActivity() {
         setContent {
             VkNewsComposeTheme {
                 val viewModel: MainViewModel = viewModel()
-                val authState = viewModel.authState.observeAsState(AuthState.Initial)
+                val authState = viewModel.authState.collectAsState(AuthState.Initial).value
 
                 val launcher = rememberLauncherForActivityResult(
                     contract = VK.getVKAuthActivityResultContract()
-                ) { vkAuthResult ->
-                    viewModel.performAuthResult(vkAuthResult)
+                ) {
+                    viewModel.performAuthResult()
                 }
 
-                when (authState.value) {
+                when (authState) {
                     is AuthState.Authorized -> {
                         MainScreen()
                     }
+
                     is AuthState.NotAuthorized -> {
                         LoginScreen {
                             launcher.launch(listOf(VKScope.WALL, VKScope.FRIENDS))
                         }
                     }
+
                     is AuthState.Initial -> Unit
                 }
             }

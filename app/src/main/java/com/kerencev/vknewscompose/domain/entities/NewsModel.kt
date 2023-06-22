@@ -1,4 +1,4 @@
-package com.kerencev.vknewscompose.domain.model.news_feed
+package com.kerencev.vknewscompose.domain.entities
 
 import android.os.Bundle
 import android.os.Parcelable
