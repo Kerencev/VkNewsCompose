@@ -1,17 +1,13 @@
 package com.kerencev.vknewscompose.presentation.screens.home
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kerencev.vknewscompose.domain.model.news_feed.NewsModel
+import com.kerencev.vknewscompose.presentation.common.ScreenState
+import com.kerencev.vknewscompose.presentation.common.compose.ProgressBarDefault
 import com.kerencev.vknewscompose.presentation.screens.news.NewsScreen
-import com.kerencev.vknewscompose.ui.theme.DarkBlue
 
 @Composable
 fun HomeScreen(
@@ -19,30 +15,24 @@ fun HomeScreen(
     onCommentsClick: (newsModel: NewsModel) -> Unit
 ) {
     val viewModel: HomeViewModel = viewModel()
-    val screenState = viewModel.screenState.collectAsState(HomeScreenState.Initial).value
+    val screenState = viewModel.screenState.collectAsState(ScreenState.Loading).value
 
     when (screenState) {
-        is HomeScreenState.Initial -> {
 
-        }
+        is ScreenState.Loading -> ProgressBarDefault()
 
-        HomeScreenState.Loading -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator(color = DarkBlue)
-            }
-        }
-
-        is HomeScreenState.Home -> {
+        is ScreenState.Content -> {
             NewsScreen(
                 viewModel = viewModel,
-                news = screenState.news,
+                news = screenState.data.news,
                 paddingValues = paddingValues,
                 onCommentsClick = onCommentsClick,
-                nextDataIsLoading = screenState.nextDataIsLoading
+                nextDataIsLoading = screenState.data.nextDataIsLoading
             )
         }
+
+        is ScreenState.Empty -> Unit
+
+        is ScreenState.Error -> Unit
     }
 }

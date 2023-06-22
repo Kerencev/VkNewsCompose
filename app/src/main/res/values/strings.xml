@@ -8,4 +8,7 @@
     <string name="delete">Удалить</string>
     <string name="comments">Комментарии</string>
     <string name="button_login">Войти</string>
+    <string name="something_went_wrong">Что-то пошло не так</string>
+    <string name="retry">Повторить</string>
+    <string name="empty_comments">Список комментариев пуст</string>
 </resources>
