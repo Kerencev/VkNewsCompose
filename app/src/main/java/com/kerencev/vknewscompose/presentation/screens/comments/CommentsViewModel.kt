@@ -4,9 +4,10 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.kerencev.vknewscompose.common.DataResult
-import com.kerencev.vknewscompose.data.repository.NewsFeedRepository
-import com.kerencev.vknewscompose.domain.model.news_feed.CommentModel
-import com.kerencev.vknewscompose.domain.model.news_feed.NewsModel
+import com.kerencev.vknewscompose.data.repository.CommentsRepositoryImpl
+import com.kerencev.vknewscompose.domain.entities.CommentModel
+import com.kerencev.vknewscompose.domain.entities.NewsModel
+import com.kerencev.vknewscompose.domain.use_cases.GetCommentsUseCase
 import com.kerencev.vknewscompose.presentation.common.ScreenState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +20,9 @@ class CommentsViewModel(
     private val newsModel: NewsModel
 ) : AndroidViewModel(application) {
 
-    private val repository = NewsFeedRepository(application)
+    private val repository = CommentsRepositoryImpl(application)
+
+    private val getCommentsUseCase = GetCommentsUseCase(repository)
 
     private val _screenState = MutableStateFlow(ScreenState.Loading as ScreenState<List<CommentModel>>)
     val screenState = _screenState.asStateFlow()
@@ -31,7 +34,7 @@ class CommentsViewModel(
 
     fun loadData() {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getComments(newsModel)
+            getCommentsUseCase(newsModel)
                 .onStart { _screenState.emit(ScreenState.Loading) }
                 .collect { result ->
                     when (result) {

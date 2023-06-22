@@ -1,7 +1,7 @@
 package com.kerencev.vknewscompose.presentation.navigation
 
 import com.google.gson.Gson
-import com.kerencev.vknewscompose.domain.model.news_feed.NewsModel
+import com.kerencev.vknewscompose.domain.entities.NewsModel
 import com.kerencev.vknewscompose.presentation.utils.extensions.encode
 
 sealed class Screen(

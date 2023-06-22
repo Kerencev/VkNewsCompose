@@ -6,8 +6,9 @@ import com.kerencev.vknewscompose.data.api.ApiFactory
 import com.kerencev.vknewscompose.data.dto.likes.LikesCountResponseDto
 import com.kerencev.vknewscompose.data.mapper.CommentsMapper
 import com.kerencev.vknewscompose.data.mapper.NewsFeedMapper
-import com.kerencev.vknewscompose.domain.model.news_feed.CommentModel
-import com.kerencev.vknewscompose.domain.model.news_feed.NewsModel
+import com.kerencev.vknewscompose.domain.entities.CommentModel
+import com.kerencev.vknewscompose.domain.entities.NewsModel
+import com.kerencev.vknewscompose.domain.repositories.NewsFeedRepository
 import com.kerencev.vknewscompose.presentation.utils.extensions.mergeWith
 import com.vk.api.sdk.VKPreferencesKeyValueStorage
 import com.vk.api.sdk.auth.VKAccessToken
@@ -24,7 +25,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.retry
 import kotlinx.coroutines.flow.stateIn
 
-class NewsFeedRepository(application: Application) {
+class NewsFeedRepositoryImpl(application: Application) : NewsFeedRepository {
 
     companion object {
         private const val RETRY_COUNT = 2L
@@ -34,7 +35,8 @@ class NewsFeedRepository(application: Application) {
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
     private val storage = VKPreferencesKeyValueStorage(application)
-    private val token = VKAccessToken.restore(storage)
+    private val token
+        get() = VKAccessToken.restore(storage)
 
     private val apiService = ApiFactory.apiService
     private val newsMapper = NewsFeedMapper()
@@ -69,7 +71,7 @@ class NewsFeedRepository(application: Application) {
         }
     //TODO: Add through and error handling
 
-    val news: StateFlow<List<NewsModel>> = loadedListFlow
+    private val news: StateFlow<List<NewsModel>> = loadedListFlow
         .mergeWith(refreshedListFlow)
         .stateIn(
             scope = coroutineScope,
@@ -77,11 +79,13 @@ class NewsFeedRepository(application: Application) {
             initialValue = newsModels
         )
 
-    suspend fun loadNextData() {
+    override fun getNewsFeed() = news
+
+    override suspend fun loadNextNews() {
         nextDataEvents.emit(Unit)
     }
 
-    suspend fun changeLikeStatus(newsModel: NewsModel) {
+    override suspend fun changeLikeStatus(newsModel: NewsModel) {
         val response: LikesCountResponseDto = if (newsModel.isLiked) {
             apiService.deleteLike(
                 token = getAccessToken(), ownerId = newsModel.communityId, postId = newsModel.id
@@ -98,7 +102,7 @@ class NewsFeedRepository(application: Application) {
         refreshedListFlow.emit(newsModels)
     }
 
-    suspend fun deleteNews(newsModel: NewsModel) {
+    override suspend fun deleteNews(newsModel: NewsModel) {
         _newsModels.remove(newsModel)
         refreshedListFlow.emit(newsModels)
     }

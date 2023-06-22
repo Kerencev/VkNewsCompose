@@ -2,41 +2,28 @@ package com.kerencev.vknewscompose.presentation.activity
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.vk.api.sdk.VKPreferencesKeyValueStorage
-import com.vk.api.sdk.auth.VKAccessToken
-import com.vk.api.sdk.auth.VKAuthenticationResult
+import androidx.lifecycle.viewModelScope
+import com.kerencev.vknewscompose.data.repository.AuthRepositoryImpl
+import com.kerencev.vknewscompose.domain.repositories.AuthRepository
+import com.kerencev.vknewscompose.domain.use_cases.CheckAuthStateUseCase
+import com.kerencev.vknewscompose.domain.use_cases.GetAuthStateUseCase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val _authState = MutableLiveData<AuthState>(AuthState.Initial)
-    val authState: LiveData<AuthState> = _authState
+    private val repository = AuthRepositoryImpl(application)
 
-    init {
-        val storage = VKPreferencesKeyValueStorage(application)
-        val token = VKAccessToken.restore(storage)
-        val loggedIn = token != null && token.isValid
-        _authState.value = if (loggedIn) AuthState.Authorized else AuthState.NotAuthorized
-    }
+    private val getAuthStateUseCase = GetAuthStateUseCase(repository)
+    private val checkAuthStateUseCase = CheckAuthStateUseCase(repository)
 
-    fun performAuthResult(vkAuthResult: VKAuthenticationResult) {
-        if (vkAuthResult is VKAuthenticationResult.Success) {
-            _authState.value = AuthState.Authorized
-        } else {
-            _authState.value = AuthState.NotAuthorized
+    val authState = getAuthStateUseCase()
+
+    fun performAuthResult() {
+        viewModelScope.launch(Dispatchers.IO) {
+            checkAuthStateUseCase()
         }
     }
-
-}
-
-sealed class AuthState {
-
-    object Initial : AuthState()
-
-    object Authorized : AuthState()
-
-    object NotAuthorized : AuthState()
 
 }

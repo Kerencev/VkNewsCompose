@@ -1,7 +1,7 @@
 package com.kerencev.vknewscompose.data.mapper
 
 import com.kerencev.vknewscompose.data.dto.comments.CommentsResponseDto
-import com.kerencev.vknewscompose.domain.model.news_feed.CommentModel
+import com.kerencev.vknewscompose.domain.entities.CommentModel
 import com.kerencev.vknewscompose.presentation.utils.extensions.toDateTime
 
 class CommentsMapper {
