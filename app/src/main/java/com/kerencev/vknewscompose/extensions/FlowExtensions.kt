@@ -1,4 +1,4 @@
-package com.kerencev.vknewscompose.presentation.utils.extensions
+package com.kerencev.vknewscompose.extensions
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.merge

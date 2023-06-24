@@ -1,26 +1,22 @@
 package com.kerencev.vknewscompose.presentation.activity
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kerencev.vknewscompose.data.repository.AuthRepositoryImpl
-import com.kerencev.vknewscompose.domain.repositories.AuthRepository
-import com.kerencev.vknewscompose.domain.use_cases.CheckAuthStateUseCase
-import com.kerencev.vknewscompose.domain.use_cases.GetAuthStateUseCase
+import com.kerencev.vknewscompose.domain.use_cases.change_auth_state.CheckAuthStateUseCase
+import com.kerencev.vknewscompose.domain.use_cases.get_auth_state.GetAuthStateUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-
-class MainViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val repository = AuthRepositoryImpl(application)
-
-    private val getAuthStateUseCase = GetAuthStateUseCase(repository)
-    private val checkAuthStateUseCase = CheckAuthStateUseCase(repository)
+class MainViewModel @Inject constructor(
+    private val getAuthStateUseCase: GetAuthStateUseCase,
+    private val checkAuthStateUseCase: CheckAuthStateUseCase
+) : ViewModel() {
 
     val authState = getAuthStateUseCase()
 
     fun performAuthResult() {
+        //TODO: inject Dispatchers?
         viewModelScope.launch(Dispatchers.IO) {
             checkAuthStateUseCase()
         }

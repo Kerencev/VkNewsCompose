@@ -1,13 +1,14 @@
-package com.kerencev.vknewscompose.data.mapper
+package com.kerencev.vknewscompose.data.mapper.news_feed
 
 import com.kerencev.vknewscompose.data.dto.news_feed.NewsFeedResponseDto
 import com.kerencev.vknewscompose.domain.entities.NewsModel
-import com.kerencev.vknewscompose.presentation.utils.extensions.toDateTime
+import com.kerencev.vknewscompose.extensions.toDateTime
+import javax.inject.Inject
 import kotlin.math.absoluteValue
 
-class NewsFeedMapper {
+class NewsFeedMapperImpl @Inject constructor(): NewsFeedMapper {
 
-    fun mapDtoToEntity(responseDto: NewsFeedResponseDto): List<NewsModel> {
+    override fun mapToEntity(responseDto: NewsFeedResponseDto): List<NewsModel> {
         val result = mutableListOf<NewsModel>()
 
         val posts = responseDto.response?.items

@@ -1,4 +1,4 @@
-package com.kerencev.vknewscompose.presentation.utils.extensions
+package com.kerencev.vknewscompose.presentation.extensions
 
 import android.os.Build
 import android.os.Build.VERSION_CODES

@@ -1,4 +1,4 @@
-package com.kerencev.vknewscompose.presentation.utils.extensions
+package com.kerencev.vknewscompose.extensions
 
 import java.text.SimpleDateFormat
 import java.util.Date

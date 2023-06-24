@@ -1,6 +1,5 @@
 package com.kerencev.vknewscompose.presentation.screens.comments
 
-import android.app.Application
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -16,10 +15,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -28,32 +27,45 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.kerencev.vknewscompose.R
+import com.kerencev.vknewscompose.di.getApplicationComponent
 import com.kerencev.vknewscompose.domain.entities.CommentModel
-import com.kerencev.vknewscompose.domain.entities.NewsModel
 import com.kerencev.vknewscompose.presentation.common.ScreenState
 import com.kerencev.vknewscompose.presentation.common.compose.ProgressBarDefault
 import com.kerencev.vknewscompose.presentation.common.compose.RetryWithTitle
 import com.kerencev.vknewscompose.presentation.common.compose.ScaffoldWithToolbar
+import com.kerencev.vknewscompose.presentation.model.NewsModelUi
 
 @Composable
 fun CommentsScreen(
-    newsModel: NewsModel,
+    newsModel: NewsModelUi,
     onBackPressed: () -> Unit
 ) {
-    val viewModel: CommentsViewModel = viewModel(
-        factory = CommentsViewModelFactory(
-            application = LocalContext.current.applicationContext as Application,
-            newsModel = newsModel
-        )
+    val component = getApplicationComponent()
+        .getCommentsScreenComponentFactory()
+        .create(newsModel)
+    val viewModel: CommentsViewModel = viewModel(factory = component.getViewModelFactory())
+    val state = viewModel.screenState.collectAsState(ScreenState.Loading)
+    CommentsScreenContent(
+        state = state,
+        viewModel = viewModel,
+        newsModel = newsModel,
+        onBackPressed = onBackPressed
     )
-    val state = viewModel.screenState.collectAsState(ScreenState.Loading).value
+}
 
+@Composable
+fun CommentsScreenContent(
+    state: State<ScreenState<List<CommentModel>>>,
+    viewModel: CommentsViewModel,
+    newsModel: NewsModelUi,
+    onBackPressed: () -> Unit
+) {
     ScaffoldWithToolbar(
         title = newsModel.communityName,
         subTitle = stringResource(id = R.string.comments),
         onBackPressed = { onBackPressed() }
     ) { paddingValues ->
-        when (state) {
+        when (val currentState = state.value) {
             is ScreenState.Empty -> RetryWithTitle(
                 title = stringResource(id = R.string.empty_comments),
                 onRetryClick = viewModel::loadData
@@ -62,7 +74,7 @@ fun CommentsScreen(
             is ScreenState.Loading -> ProgressBarDefault()
 
             is ScreenState.Content -> CommentsList(
-                comments = state.data,
+                comments = currentState.data,
                 paddingValues = paddingValues
             )
 

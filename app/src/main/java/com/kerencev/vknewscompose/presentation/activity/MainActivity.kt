@@ -6,6 +6,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.kerencev.vknewscompose.di.getApplicationComponent
 import com.kerencev.vknewscompose.domain.entities.AuthState
 import com.kerencev.vknewscompose.presentation.screens.login.LoginScreen
 import com.kerencev.vknewscompose.presentation.screens.main.MainScreen
@@ -18,19 +19,22 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+
+            val component = getApplicationComponent()
+            val viewModelFactory = component.getViewModelFactory()
+            val viewModel: MainViewModel = viewModel(factory = viewModelFactory)
+            val authState = viewModel.authState.collectAsState(AuthState.Initial)
+
+            val launcher = rememberLauncherForActivityResult(
+                contract = VK.getVKAuthActivityResultContract()
+            ) {
+                viewModel.performAuthResult()
+            }
+
             VkNewsComposeTheme {
-                val viewModel: MainViewModel = viewModel()
-                val authState = viewModel.authState.collectAsState(AuthState.Initial).value
-
-                val launcher = rememberLauncherForActivityResult(
-                    contract = VK.getVKAuthActivityResultContract()
-                ) {
-                    viewModel.performAuthResult()
-                }
-
-                when (authState) {
+                when (authState.value) {
                     is AuthState.Authorized -> {
-                        MainScreen()
+                        MainScreen(viewModelFactory)
                     }
 
                     is AuthState.NotAuthorized -> {

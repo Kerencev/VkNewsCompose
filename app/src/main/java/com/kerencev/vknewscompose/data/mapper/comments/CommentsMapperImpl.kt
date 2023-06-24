@@ -1,12 +1,13 @@
-package com.kerencev.vknewscompose.data.mapper
+package com.kerencev.vknewscompose.data.mapper.comments
 
 import com.kerencev.vknewscompose.data.dto.comments.CommentsResponseDto
 import com.kerencev.vknewscompose.domain.entities.CommentModel
-import com.kerencev.vknewscompose.presentation.utils.extensions.toDateTime
+import com.kerencev.vknewscompose.extensions.toDateTime
+import javax.inject.Inject
 
-class CommentsMapper {
+class CommentsMapperImpl @Inject constructor() : CommentsMapper {
 
-    fun mapResponseToComments(responseDto: CommentsResponseDto): List<CommentModel> {
+    override fun mapToEntity(responseDto: CommentsResponseDto): List<CommentModel> {
         val result = mutableListOf<CommentModel>()
 
         val comments = responseDto.response?.items

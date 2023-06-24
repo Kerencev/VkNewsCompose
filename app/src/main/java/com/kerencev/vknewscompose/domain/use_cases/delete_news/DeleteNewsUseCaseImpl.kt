@@ -1,13 +1,14 @@
-package com.kerencev.vknewscompose.domain.use_cases
+package com.kerencev.vknewscompose.domain.use_cases.delete_news
 
 import com.kerencev.vknewscompose.domain.entities.NewsModel
 import com.kerencev.vknewscompose.domain.repositories.NewsFeedRepository
+import javax.inject.Inject
 
-class DeleteNewsUseCase(
+class DeleteNewsUseCaseImpl @Inject constructor(
     private val repository: NewsFeedRepository
-) {
+): DeleteNewsUseCase {
 
-    suspend operator fun invoke(newsModel: NewsModel) {
+    override suspend operator fun invoke(newsModel: NewsModel) {
         return repository.deleteNews(newsModel)
     }
 

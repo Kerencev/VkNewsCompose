@@ -1,30 +1,28 @@
 package com.kerencev.vknewscompose.presentation.screens.comments
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kerencev.vknewscompose.common.DataResult
-import com.kerencev.vknewscompose.data.repository.CommentsRepositoryImpl
 import com.kerencev.vknewscompose.domain.entities.CommentModel
-import com.kerencev.vknewscompose.domain.entities.NewsModel
-import com.kerencev.vknewscompose.domain.use_cases.GetCommentsUseCase
+import com.kerencev.vknewscompose.domain.use_cases.get_comments.GetCommentsUseCase
 import com.kerencev.vknewscompose.presentation.common.ScreenState
-import kotlinx.coroutines.Dispatchers
+import com.kerencev.vknewscompose.presentation.mapper.NewsModelMapper
+import com.kerencev.vknewscompose.presentation.model.NewsModelUi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class CommentsViewModel(
-    application: Application,
-    private val newsModel: NewsModel
-) : AndroidViewModel(application) {
+class CommentsViewModel @Inject constructor(
+    private val newsModel: NewsModelUi,
+    private val getCommentsUseCase: GetCommentsUseCase,
+    private val newsModelMapper: NewsModelMapper
+) : ViewModel() {
 
-    private val repository = CommentsRepositoryImpl(application)
-
-    private val getCommentsUseCase = GetCommentsUseCase(repository)
-
-    private val _screenState = MutableStateFlow(ScreenState.Loading as ScreenState<List<CommentModel>>)
+    private val _screenState =
+        MutableStateFlow(ScreenState.Loading as ScreenState<List<CommentModel>>)
     val screenState = _screenState.asStateFlow()
 
 
@@ -33,22 +31,21 @@ class CommentsViewModel(
     }
 
     fun loadData() {
-        viewModelScope.launch(Dispatchers.IO) {
-            getCommentsUseCase(newsModel)
-                .onStart { _screenState.emit(ScreenState.Loading) }
-                .collect { result ->
-                    when (result) {
-                        is DataResult.Success -> _screenState.emit(
-                            if (result.data.isEmpty()) ScreenState.Empty
-                            else ScreenState.Content(data = result.data)
-                        )
+        getCommentsUseCase(newsModelMapper.mapToEntity(newsModel))
+            .onStart { _screenState.emit(ScreenState.Loading) }
+            .onEach { result ->
+                when (result) {
+                    is DataResult.Success -> _screenState.emit(
+                        if (result.data.isEmpty()) ScreenState.Empty
+                        else ScreenState.Content(data = result.data)
+                    )
 
-                        is DataResult.Error -> _screenState.emit(
-                            ScreenState.Error(throwable = result.throwable)
-                        )
-                    }
+                    is DataResult.Error -> _screenState.emit(
+                        ScreenState.Error(throwable = result.throwable)
+                    )
                 }
-        }
+            }
+            .launchIn(viewModelScope)
     }
 
 }
