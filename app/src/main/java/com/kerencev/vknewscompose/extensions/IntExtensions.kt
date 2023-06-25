@@ -1,4 +1,4 @@
-package com.kerencev.vknewscompose.presentation.utils.extensions
+package com.kerencev.vknewscompose.extensions
 
 fun Int.formatStatisticCount(): String {
     return if (this > 100_000) {

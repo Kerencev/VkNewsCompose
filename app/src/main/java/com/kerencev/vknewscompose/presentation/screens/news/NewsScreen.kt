@@ -4,13 +4,33 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.DismissDirection
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.SwipeToDismiss
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
@@ -27,7 +47,8 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.kerencev.vknewscompose.R
 import com.kerencev.vknewscompose.domain.entities.NewsModel
-import com.kerencev.vknewscompose.presentation.utils.extensions.formatStatisticCount
+import com.kerencev.vknewscompose.extensions.formatStatisticCount
+import com.kerencev.vknewscompose.presentation.model.NewsModelUi
 import com.kerencev.vknewscompose.presentation.screens.home.HomeViewModel
 import com.kerencev.vknewscompose.ui.theme.DarkBlue
 import com.kerencev.vknewscompose.ui.theme.DarkRed
@@ -36,9 +57,9 @@ import com.kerencev.vknewscompose.ui.theme.DarkRed
 @Composable
 fun NewsScreen(
     viewModel: HomeViewModel,
-    news: List<NewsModel>,
+    news: List<NewsModelUi>,
     paddingValues: PaddingValues,
-    onCommentsClick: (newsModel: NewsModel) -> Unit,
+    onCommentsClick: (newsModel: NewsModelUi) -> Unit,
     nextDataIsLoading: Boolean
 ) {
     LazyColumn(
@@ -54,7 +75,7 @@ fun NewsScreen(
         items(news, { it.id }) { newsItem ->
             val dismissState = rememberDismissState()
             if (dismissState.isDismissed(DismissDirection.EndToStart)) {
-                viewModel.onNewsItemDismiss(newsModel = newsItem)
+                viewModel.onNewsItemDismiss(newsModelUi = newsItem)
             }
             SwipeToDismiss(
                 modifier = Modifier.animateItemPlacement(),
@@ -110,8 +131,8 @@ fun NewsScreen(
 
 @Composable
 fun NewsCard(
-    newsModel: NewsModel,
-    onCommentsClick: (newsModel: NewsModel) -> Unit,
+    newsModel: NewsModelUi,
+    onCommentsClick: (newsModel: NewsModelUi) -> Unit,
     onLikesClick: () -> Unit
 ) {
     Card {
@@ -138,7 +159,7 @@ fun NewsCard(
 }
 
 @Composable
-fun NewsHeader(newsModel: NewsModel) {
+fun NewsHeader(newsModel: NewsModelUi) {
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -176,8 +197,8 @@ fun NewsHeader(newsModel: NewsModel) {
 
 @Composable
 fun NewsFooter(
-    newsModel: NewsModel,
-    onCommentsClick: (newsModel: NewsModel) -> Unit,
+    newsModel: NewsModelUi,
+    onCommentsClick: (newsModel: NewsModelUi) -> Unit,
     onLikesClick: () -> Unit
 ) {
     Row(verticalAlignment = Alignment.CenterVertically) {

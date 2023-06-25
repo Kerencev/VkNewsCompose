@@ -1,8 +1,8 @@
 package com.kerencev.vknewscompose.presentation.navigation
 
 import com.google.gson.Gson
-import com.kerencev.vknewscompose.domain.entities.NewsModel
-import com.kerencev.vknewscompose.presentation.utils.extensions.encode
+import com.kerencev.vknewscompose.presentation.extensions.encode
+import com.kerencev.vknewscompose.presentation.model.NewsModelUi
 
 sealed class Screen(
     val route: String
@@ -19,7 +19,7 @@ sealed class Screen(
     object Comments : Screen(ROUTE_COMMENTS) {
         private const val ROUTE_FOR_ARGS = "comments"
 
-        fun getRouteWithArgs(newsModel: NewsModel): String {
+        fun getRouteWithArgs(newsModel: NewsModelUi): String {
             val newsPostJson = Gson().toJson(newsModel)
             return "$ROUTE_FOR_ARGS/${newsPostJson.encode()}"
         }

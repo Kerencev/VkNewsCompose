@@ -6,6 +6,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.kerencev.vknewscompose.domain.entities.NewsModel
+import com.kerencev.vknewscompose.presentation.model.NewsModelUi
 
 class NavigationState(
     val navHostController: NavHostController
@@ -21,7 +22,7 @@ class NavigationState(
         }
     }
 
-    fun navigateToComments(newsModel: NewsModel) {
+    fun navigateToComments(newsModel: NewsModelUi) {
         navHostController.navigate(Screen.Comments.getRouteWithArgs(newsModel = newsModel))
     }
 

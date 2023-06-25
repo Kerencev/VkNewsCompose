@@ -1,46 +1,39 @@
 package com.kerencev.vknewscompose.data.repository
 
-import android.app.Application
-import com.kerencev.vknewscompose.common.DataResult
-import com.kerencev.vknewscompose.data.api.ApiFactory
+import com.kerencev.vknewscompose.data.api.ApiService
 import com.kerencev.vknewscompose.data.dto.likes.LikesCountResponseDto
-import com.kerencev.vknewscompose.data.mapper.CommentsMapper
-import com.kerencev.vknewscompose.data.mapper.NewsFeedMapper
-import com.kerencev.vknewscompose.domain.entities.CommentModel
+import com.kerencev.vknewscompose.data.mapper.news_feed.NewsFeedMapper
 import com.kerencev.vknewscompose.domain.entities.NewsModel
 import com.kerencev.vknewscompose.domain.repositories.NewsFeedRepository
-import com.kerencev.vknewscompose.presentation.utils.extensions.mergeWith
-import com.vk.api.sdk.VKPreferencesKeyValueStorage
+import com.kerencev.vknewscompose.extensions.mergeWith
+import com.vk.api.sdk.VKKeyValueStorage
 import com.vk.api.sdk.auth.VKAccessToken
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.retry
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class NewsFeedRepositoryImpl(application: Application) : NewsFeedRepository {
+class NewsFeedRepositoryImpl @Inject constructor(
+    private val apiService: ApiService,
+    private val storage: VKKeyValueStorage,
+    private val newsMapper: NewsFeedMapper
+) : NewsFeedRepository {
 
     companion object {
-        private const val RETRY_COUNT = 2L
         private const val RETRY_DELAY = 3_000L
     }
 
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
-    private val storage = VKPreferencesKeyValueStorage(application)
     private val token
         get() = VKAccessToken.restore(storage)
-
-    private val apiService = ApiFactory.apiService
-    private val newsMapper = NewsFeedMapper()
-    private val commentsMapper = CommentsMapper()
 
     private val _newsModels = mutableListOf<NewsModel>()
     private val newsModels: List<NewsModel>
@@ -61,7 +54,7 @@ class NewsFeedRepositoryImpl(application: Application) : NewsFeedRepository {
             val response = if (startFrom == null) apiService.loadNewsFeed(getAccessToken())
             else apiService.loadNewsFeed(getAccessToken(), startFrom)
             nextFrom = response.response?.nextFrom
-            _newsModels.addAll(newsMapper.mapDtoToEntity(response))
+            _newsModels.addAll(newsMapper.mapToEntity(response))
             emit(newsModels)
         }
     }
@@ -85,7 +78,7 @@ class NewsFeedRepositoryImpl(application: Application) : NewsFeedRepository {
         nextDataEvents.emit(Unit)
     }
 
-    override suspend fun changeLikeStatus(newsModel: NewsModel) {
+    override suspend fun changeLikeStatus(newsModel: NewsModel) = withContext(Dispatchers.IO) {
         val response: LikesCountResponseDto = if (newsModel.isLiked) {
             apiService.deleteLike(
                 token = getAccessToken(), ownerId = newsModel.communityId, postId = newsModel.id
@@ -102,25 +95,10 @@ class NewsFeedRepositoryImpl(application: Application) : NewsFeedRepository {
         refreshedListFlow.emit(newsModels)
     }
 
-    override suspend fun deleteNews(newsModel: NewsModel) {
+    override suspend fun deleteNews(newsModel: NewsModel) = withContext(Dispatchers.IO) {
         _newsModels.remove(newsModel)
         refreshedListFlow.emit(newsModels)
     }
-
-    fun getComments(newsModel: NewsModel): Flow<DataResult<List<CommentModel>>> = flow {
-        val response = apiService.getComments(
-            token = getAccessToken(),
-            ownerId = newsModel.communityId,
-            postId = newsModel.id
-        )
-        emit(commentsMapper.mapResponseToComments(response))
-    }
-        .map { DataResult.Success(it) as DataResult<List<CommentModel>> }
-        .retry(RETRY_COUNT) {
-            delay(RETRY_DELAY)
-            true
-        }
-        .catch { emit(DataResult.Error(it)) }
 
     @Throws(IllegalStateException::class)
     private fun getAccessToken(): String {

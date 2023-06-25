@@ -1,23 +1,21 @@
 package com.kerencev.vknewscompose.data.repository
 
-import android.app.Application
 import com.kerencev.vknewscompose.domain.entities.AuthState
 import com.kerencev.vknewscompose.domain.repositories.AuthRepository
-import com.vk.api.sdk.VKPreferencesKeyValueStorage
+import com.vk.api.sdk.VKKeyValueStorage
 import com.vk.api.sdk.auth.VKAccessToken
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
+import javax.inject.Inject
 
-class AuthRepositoryImpl(
-    private val application: Application
+class AuthRepositoryImpl @Inject constructor(
+    private val storage: VKKeyValueStorage
 ) : AuthRepository {
 
-    private val storage = VKPreferencesKeyValueStorage(application)
     private val token
         get() = VKAccessToken.restore(storage)
 
