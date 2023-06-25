@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.DismissDirection
@@ -39,6 +40,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -46,7 +48,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.kerencev.vknewscompose.R
-import com.kerencev.vknewscompose.domain.entities.NewsModel
 import com.kerencev.vknewscompose.extensions.formatStatisticCount
 import com.kerencev.vknewscompose.presentation.model.NewsModelUi
 import com.kerencev.vknewscompose.presentation.screens.home.HomeViewModel
@@ -63,12 +64,11 @@ fun NewsScreen(
     nextDataIsLoading: Boolean
 ) {
     LazyColumn(
-        modifier = Modifier.padding(paddingValues),
+        modifier = Modifier
+            .padding(paddingValues)
+            .background(color = colorResource(id = R.color.background_news)),
         contentPadding = PaddingValues(
-            top = 16.dp,
-            start = 8.dp,
-            end = 8.dp,
-            bottom = 16.dp
+            vertical = 16.dp
         ),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
@@ -135,7 +135,9 @@ fun NewsCard(
     onCommentsClick: (newsModel: NewsModelUi) -> Unit,
     onLikesClick: () -> Unit
 ) {
-    Card {
+    Card(
+        shape = RoundedCornerShape(16.dp)
+    ) {
         Column(
             modifier = Modifier
                 .padding(8.dp)
