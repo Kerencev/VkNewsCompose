@@ -1,4 +1,4 @@
-package com.kerencev.vknewscompose.presentation.common.compose
+package com.kerencev.vknewscompose.presentation.common.views
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues

@@ -27,12 +27,12 @@ class AuthRepositoryImpl @Inject constructor(
         checkAuthState.collect {
             val currentToken = token
             val loggedIn = currentToken != null && currentToken.isValid
-            emit(if (loggedIn) AuthState.Authorized else AuthState.NotAuthorized)
+            emit(if (loggedIn) AuthState.AUTHORIZED else AuthState.NOT_AUTHORIZED)
         }
     }.stateIn(
         scope = coroutineScope,
         started = SharingStarted.Lazily,
-        initialValue = AuthState.Initial
+        initialValue = AuthState.INITIAL
     )
 
     override fun getAuthStateFlow() = authState

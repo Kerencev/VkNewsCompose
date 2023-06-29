@@ -2,6 +2,7 @@
     <string name="app_name">Vk News Compose</string>
     <integer name="com_vk_sdk_AppId">51600464</integer>
     <string name="group_avatar">Аватар группы</string>
+    <string name="user_avatar">Аватар пользователя</string>
     <string name="more">Ещё</string>
     <string name="post_content_image">Изображение поста</string>
     <string name="temp_text">Задача организации, в особенности же начало повседневной работы по формированию позиции способствует повышению актуальности всесторонне сбалансированных нововведений!</string>
@@ -11,4 +12,13 @@
     <string name="something_went_wrong">Что-то пошло не так</string>
     <string name="retry">Повторить</string>
     <string name="empty_comments">Список комментариев пуст</string>
+    <string name="friends_a_lot">друзей</string>
+    <string name="friends_a_little">друга</string>
+    <string name="friend">друг</string>
+    <string name="all_photos">Все фотографии %s</string>
+    <string name="photo">Фото</string>
+    <string name="show_all">Показать все</string>
+    <string name="wall">Записи на стене</string>
+    <string name="profile_photos_error">Не удалось загрузить фотографии</string>
+    <string name="load_data_error">Не удалось загрузить данные</string>
 </resources>

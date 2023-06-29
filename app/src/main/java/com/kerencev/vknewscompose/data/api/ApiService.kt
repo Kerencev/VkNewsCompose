@@ -3,6 +3,8 @@ package com.kerencev.vknewscompose.data.api
 import com.kerencev.vknewscompose.data.dto.comments.CommentsResponseDto
 import com.kerencev.vknewscompose.data.dto.likes.LikesCountResponseDto
 import com.kerencev.vknewscompose.data.dto.news_feed.NewsFeedResponseDto
+import com.kerencev.vknewscompose.data.dto.profile.ProfilePhotosResponseDto
+import com.kerencev.vknewscompose.data.dto.profile.ProfileResponseDto
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -39,5 +41,24 @@ interface ApiService {
         @Query("owner_id") ownerId: Long,
         @Query("post_id") postId: Long
     ): CommentsResponseDto
+
+    @GET("users.get?v=5.131&fields=city, education, counters, crop_photo")
+    suspend fun getProfile(
+        @Query("access_token") token: String,
+        @Query("user_ids") usersIds: String
+    ): ProfileResponseDto
+
+    @GET("photos.getAll?v=5.131&extended=true")
+    suspend fun getProfilePhotos(
+        @Query("access_token") token: String,
+        @Query("owner_id") ownerId: String
+    ): ProfilePhotosResponseDto
+
+    @GET("wall.get?v=5.131&extended=true")
+    suspend fun getWall(
+        @Query("access_token") token: String,
+        @Query("offset") offset: Int,
+        @Query("count") count: Int
+    ): NewsFeedResponseDto
 
 }

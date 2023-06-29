@@ -32,13 +32,14 @@ class CommentsViewModel @Inject constructor(
 
     fun loadData() {
         getCommentsUseCase(newsModelMapper.mapToEntity(newsModel))
-            .onStart { _screenState.emit(ScreenState.Loading) }
             .onEach { result ->
                 when (result) {
                     is DataResult.Success -> _screenState.emit(
                         if (result.data.isEmpty()) ScreenState.Empty
                         else ScreenState.Content(data = result.data)
                     )
+
+                    is DataResult.Loading -> _screenState.emit(ScreenState.Loading)
 
                     is DataResult.Error -> _screenState.emit(
                         ScreenState.Error(throwable = result.throwable)
