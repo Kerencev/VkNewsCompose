@@ -8,8 +8,6 @@ class ChangeLikeStatusUseCaseImpl @Inject constructor(
     private val repository: NewsFeedRepository
 ) : ChangeLikeStatusUseCase {
 
-    override suspend operator fun invoke(newsModel: NewsModel) {
-        return repository.changeLikeStatus(newsModel)
-    }
+    override operator fun invoke(newsModel: NewsModel) = repository.changeLikeStatus(newsModel)
 
 }

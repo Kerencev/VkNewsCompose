@@ -1,16 +1,15 @@
 package com.kerencev.vknewscompose.domain.repositories
 
+import com.kerencev.vknewscompose.common.DataResult
 import com.kerencev.vknewscompose.domain.entities.NewsModel
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.Flow
 
 interface NewsFeedRepository {
 
-    fun getNewsFeed(): StateFlow<List<NewsModel>>
+    fun getNewsFeed(): Flow<DataResult<List<NewsModel>>>
 
-    suspend fun loadNextNews()
+    fun deleteNews(newsModel: NewsModel): Flow<DataResult<Unit>>
 
-    suspend fun deleteNews(newsModel: NewsModel)
-
-    suspend fun changeLikeStatus(newsModel: NewsModel)
+    fun changeLikeStatus(newsModel: NewsModel): Flow<DataResult<NewsModel>>
 
 }

@@ -6,13 +6,14 @@ import com.kerencev.vknewscompose.extensions.toDateTime
 import javax.inject.Inject
 import kotlin.math.absoluteValue
 
-class NewsFeedMapperImpl @Inject constructor(): NewsFeedMapper {
+class NewsFeedMapperImpl @Inject constructor() : NewsFeedMapper {
 
     override fun mapToEntity(responseDto: NewsFeedResponseDto): List<NewsModel> {
         val result = mutableListOf<NewsModel>()
 
         val posts = responseDto.response?.items
         val groups = responseDto.response?.groups
+        val profile = responseDto.response?.profiles?.firstOrNull()
         val uniquePostsId = HashSet<Long>()
 
         posts?.let {
@@ -23,10 +24,12 @@ class NewsFeedMapperImpl @Inject constructor(): NewsFeedMapper {
                 val newsModel = NewsModel(
                     id = post.id,
                     communityId = post.sourceId ?: 0,
-                    communityName = group?.name.orEmpty(),
+                    communityName = group?.name
+                        ?: if (profile?.firstName != null && profile.lastName != null)
+                            "${profile.firstName} ${profile.lastName}" else "",
                     postTime = ((post.date ?: 0) * 1000).toDateTime(),
-                    communityImageUrl = group?.avatar,
-                    contentText = post.text ?: "Данных нет",
+                    communityImageUrl = group?.avatar ?: profile?.photoUrl,
+                    contentText = post.text.orEmpty(),
                     contentImageUrl = post.attachments?.firstOrNull()?.photo?.sizes?.lastOrNull()?.url,
                     viewsCount = post.views?.count ?: 0,
                     sharesCount = post.reposts?.count ?: 0,

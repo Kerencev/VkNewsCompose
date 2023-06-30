@@ -4,7 +4,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.graphics.toArgb
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kerencev.vknewscompose.di.getApplicationComponent
 import com.kerencev.vknewscompose.domain.entities.AuthState
@@ -23,7 +27,7 @@ class MainActivity : ComponentActivity() {
             val component = getApplicationComponent()
             val viewModelFactory = component.getViewModelFactory()
             val viewModel: MainViewModel = viewModel(factory = viewModelFactory)
-            val authState = viewModel.authState.collectAsState(AuthState.Initial)
+            val authState = viewModel.authState.collectAsState(AuthState.INITIAL)
 
             val launcher = rememberLauncherForActivityResult(
                 contract = VK.getVKAuthActivityResultContract()
@@ -32,18 +36,23 @@ class MainActivity : ComponentActivity() {
             }
 
             VkNewsComposeTheme {
+                window.statusBarColor = MaterialTheme.colors.surface.toArgb()
+                window.navigationBarColor = MaterialTheme.colors.surface.toArgb()
+                val windowInsetsController =
+                    WindowCompat.getInsetsController(window, window.decorView)
+                windowInsetsController.isAppearanceLightStatusBars = !isSystemInDarkTheme()
                 when (authState.value) {
-                    is AuthState.Authorized -> {
+                    AuthState.AUTHORIZED -> {
                         MainScreen(viewModelFactory)
                     }
 
-                    is AuthState.NotAuthorized -> {
+                    AuthState.NOT_AUTHORIZED -> {
                         LoginScreen {
-                            launcher.launch(listOf(VKScope.WALL, VKScope.FRIENDS))
+                            launcher.launch(listOf(VKScope.WALL, VKScope.FRIENDS, VKScope.PHOTOS))
                         }
                     }
 
-                    is AuthState.Initial -> Unit
+                    AuthState.INITIAL -> Unit
                 }
             }
         }

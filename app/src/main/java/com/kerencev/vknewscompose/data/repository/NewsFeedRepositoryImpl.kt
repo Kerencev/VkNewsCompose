@@ -1,23 +1,20 @@
 package com.kerencev.vknewscompose.data.repository
 
+import com.kerencev.vknewscompose.common.DataResult
 import com.kerencev.vknewscompose.data.api.ApiService
 import com.kerencev.vknewscompose.data.dto.likes.LikesCountResponseDto
 import com.kerencev.vknewscompose.data.mapper.news_feed.NewsFeedMapper
 import com.kerencev.vknewscompose.domain.entities.NewsModel
 import com.kerencev.vknewscompose.domain.repositories.NewsFeedRepository
-import com.kerencev.vknewscompose.extensions.mergeWith
 import com.vk.api.sdk.VKKeyValueStorage
 import com.vk.api.sdk.auth.VKAccessToken
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.retry
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class NewsFeedRepositoryImpl @Inject constructor(
@@ -27,82 +24,74 @@ class NewsFeedRepositoryImpl @Inject constructor(
 ) : NewsFeedRepository {
 
     companion object {
+        private const val RETRY_COUNT = 2L
         private const val RETRY_DELAY = 3_000L
     }
-
-    private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
     private val token
         get() = VKAccessToken.restore(storage)
 
-    private val _newsModels = mutableListOf<NewsModel>()
-    private val newsModels: List<NewsModel>
-        get() = _newsModels.toList()
+    private var startFrom: String? = null
 
-    private var nextFrom: String? = null
-
-    private val nextDataEvents = MutableSharedFlow<Unit>(replay = 1)
-    private val refreshedListFlow = MutableSharedFlow<List<NewsModel>>()
-    private val loadedListFlow = flow {
-        nextDataEvents.emit(Unit)
-        nextDataEvents.collect {
-            val startFrom = nextFrom
-            if (startFrom == null && newsModels.isNotEmpty()) {
-                emit(newsModels)
-                return@collect
-            }
-            val response = if (startFrom == null) apiService.loadNewsFeed(getAccessToken())
-            else apiService.loadNewsFeed(getAccessToken(), startFrom)
-            nextFrom = response.response?.nextFrom
-            _newsModels.addAll(newsMapper.mapToEntity(response))
-            emit(newsModels)
-        }
+    override fun getNewsFeed() = flow {
+        emit(DataResult.Loading)
+        val response = if (startFrom == null) apiService.loadNewsFeed(getAccessToken())
+        else apiService.loadNewsFeed(getAccessToken(), startFrom.orEmpty())
+        startFrom = response.response?.nextFrom
+        emit(DataResult.Success(newsMapper.mapToEntity(response)))
     }
-        .retry {
+        .retry(RETRY_COUNT) {
             delay(RETRY_DELAY)
             true
         }
-    //TODO: Add through and error handling
+        .catch { emit(DataResult.Error(it)) }
+        .flowOn(Dispatchers.IO)
 
-    private val news: StateFlow<List<NewsModel>> = loadedListFlow
-        .mergeWith(refreshedListFlow)
-        .stateIn(
-            scope = coroutineScope,
-            started = SharingStarted.Lazily,
-            initialValue = newsModels
-        )
-
-    override fun getNewsFeed() = news
-
-    override suspend fun loadNextNews() {
-        nextDataEvents.emit(Unit)
-    }
-
-    override suspend fun changeLikeStatus(newsModel: NewsModel) = withContext(Dispatchers.IO) {
-        val response: LikesCountResponseDto = if (newsModel.isLiked) {
+    override fun changeLikeStatus(newsModel: NewsModel): Flow<DataResult<NewsModel>> = flow {
+        emit(DataResult.Loading)
+        if (newsModel.isLiked) {
             apiService.deleteLike(
                 token = getAccessToken(), ownerId = newsModel.communityId, postId = newsModel.id
+            )
+            emit(
+                DataResult.Success(
+                    newsModel.copy(
+                        likesCount = newsModel.likesCount - 1,
+                        isLiked = false
+                    )
+                )
             )
         } else {
             apiService.addLike(
                 token = getAccessToken(), ownerId = newsModel.communityId, postId = newsModel.id
             )
+            emit(
+                DataResult.Success(
+                    newsModel.copy(
+                        likesCount = newsModel.likesCount + 1,
+                        isLiked = true
+                    )
+                )
+            )
         }
-        val newLikesCount = response.likes?.count
-        val newPost = newsModel.copy(likesCount = newLikesCount ?: 0, isLiked = !newsModel.isLiked)
-        val postIndex = _newsModels.indexOf(newsModel)
-        _newsModels[postIndex] = newPost
-        refreshedListFlow.emit(newsModels)
     }
+        .retry(RETRY_COUNT) {
+            delay(RETRY_DELAY)
+            true
+        }
+        .catch { emit(DataResult.Error(it)) }
+        .flowOn(Dispatchers.IO)
 
-    override suspend fun deleteNews(newsModel: NewsModel) = withContext(Dispatchers.IO) {
-        _newsModels.remove(newsModel)
-        refreshedListFlow.emit(newsModels)
+    override fun deleteNews(newsModel: NewsModel): Flow<DataResult<Unit>> = flow {
+        emit(DataResult.Loading)
+        delay(300)
+        emit(DataResult.Success(Unit))
     }
+        .flowOn(Dispatchers.IO)
 
     @Throws(IllegalStateException::class)
     private fun getAccessToken(): String {
-        return token?.accessToken ?: throw IllegalStateException("Token is null")
+        return token?.accessToken ?: error("Token is null")
     }
 
 }

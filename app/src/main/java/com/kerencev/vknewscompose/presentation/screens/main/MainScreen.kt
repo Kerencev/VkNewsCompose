@@ -16,6 +16,7 @@ import com.kerencev.vknewscompose.presentation.navigation.NavigationItem
 import com.kerencev.vknewscompose.presentation.navigation.rememberNavigationState
 import com.kerencev.vknewscompose.presentation.screens.comments.CommentsScreen
 import com.kerencev.vknewscompose.presentation.screens.home.HomeScreen
+import com.kerencev.vknewscompose.presentation.screens.profile.ProfileScreen
 
 @Composable
 fun MainScreen(viewModelFactory: ViewModelFactory) {
@@ -72,7 +73,12 @@ fun MainScreen(viewModelFactory: ViewModelFactory) {
                 )
             },
             favouriteScreenContent = { Text(text = "favourite Screen") },
-            profileScreenContent = { Text(text = "Profile Screen") }
+            profileScreenContent = {
+                ProfileScreen(
+                    paddingValues = paddingValues,
+                    viewModelFactory = viewModelFactory
+                )
+            }
         )
     }
 }

@@ -9,14 +9,13 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
-    private val getAuthStateUseCase: GetAuthStateUseCase,
+    getAuthStateUseCase: GetAuthStateUseCase,
     private val checkAuthStateUseCase: CheckAuthStateUseCase
 ) : ViewModel() {
 
     val authState = getAuthStateUseCase()
 
     fun performAuthResult() {
-        //TODO: inject Dispatchers?
         viewModelScope.launch(Dispatchers.IO) {
             checkAuthStateUseCase()
         }

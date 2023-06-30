@@ -6,4 +6,6 @@ sealed class DataResult<out T> {
 
     data class Error(val throwable: Throwable) : DataResult<Nothing>()
 
+    object Loading : DataResult<Nothing>()
+
 }

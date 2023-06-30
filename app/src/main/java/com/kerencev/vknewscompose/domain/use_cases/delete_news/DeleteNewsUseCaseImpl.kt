@@ -6,10 +6,8 @@ import javax.inject.Inject
 
 class DeleteNewsUseCaseImpl @Inject constructor(
     private val repository: NewsFeedRepository
-): DeleteNewsUseCase {
+) : DeleteNewsUseCase {
 
-    override suspend operator fun invoke(newsModel: NewsModel) {
-        return repository.deleteNews(newsModel)
-    }
+    override operator fun invoke(newsModel: NewsModel) = repository.deleteNews(newsModel)
 
 }
