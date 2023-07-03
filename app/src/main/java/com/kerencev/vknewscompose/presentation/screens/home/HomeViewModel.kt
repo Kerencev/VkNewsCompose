@@ -11,46 +11,47 @@ import com.kerencev.vknewscompose.presentation.screens.home.flow.HomeInputAction
 import com.kerencev.vknewscompose.presentation.screens.home.flow.HomeOutputAction
 import com.kerencev.vknewscompose.presentation.screens.home.flow.HomeShot
 import com.kerencev.vknewscompose.presentation.screens.home.flow.HomeViewState
-import com.kerencev.vknewscompose.domain.use_cases.change_like_status.ChangeLikeStatusUseCase
-import com.kerencev.vknewscompose.domain.use_cases.delete_news.DeleteNewsUseCase
-import com.kerencev.vknewscompose.domain.use_cases.get_news.GetNewsUseCase
+import com.kerencev.vknewscompose.presentation.screens.home.flow.features.ChangeLikeStatusFeature
+import com.kerencev.vknewscompose.presentation.screens.home.flow.features.DeleteNewsFeature
+import com.kerencev.vknewscompose.presentation.screens.home.flow.features.GetNewsFeature
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 class HomeViewModel @Inject constructor(
     private val newsModelMapper: NewsModelMapper,
-    private val getNewsUseCase: GetNewsUseCase,
-    private val changeLikeStatusUseCase: ChangeLikeStatusUseCase,
-    private val deleteNewsUseCase: DeleteNewsUseCase
+    private val getNewsFeature: GetNewsFeature,
+    private val changeLikeStatusFeature: ChangeLikeStatusFeature,
+    private val deleteNewsFeature: DeleteNewsFeature
 ) : BaseViewModel<HomeEvent, HomeViewState, HomeShot>() {
 
     override fun initState() = HomeViewState()
+    private var firstVisibleItemIndex = 0
 
-    /**
-     * Обрабатываем входящий [event] и в зависимости от него определяем дальнейшие дейтсивя
-     */
     override fun produceCommand(event: HomeEvent): VkCommand {
         return when (event) {
-            is HomeEvent.GetNews -> HomeInputAction.GetNews
+            is HomeEvent.GetNews -> HomeInputAction.GetNews(event.isRefresh)
             is HomeEvent.ChangeLikeStatus -> HomeInputAction.ChangeLikeStatus(
                 newsModelMapper.mapToEntity(event.newsModelUi)
             )
-
             is HomeEvent.DeleteNews -> HomeInputAction.DeleteNews(
                 newsModelMapper.mapToEntity(event.newsModelUi)
             )
-
             is HomeEvent.HideSnackBar -> HomeEffect.None
+            is HomeEvent.OnScrollToTop -> HomeOutputAction.OnScrollToTop
+            is HomeEvent.OnUserScroll -> HomeOutputAction.OnUserScroll(event.firstVisibleItemIndex)
         }
     }
 
     override fun features(action: VkAction): Flow<VkCommand>? {
         return when (action) {
-            is HomeInputAction.GetNews -> getNewsUseCase()
-            is HomeInputAction.ChangeLikeStatus -> changeLikeStatusUseCase(action.newsModel)
-            is HomeInputAction.DeleteNews -> deleteNewsUseCase(action.newsModel)
+            is HomeInputAction.GetNews -> getNewsFeature(action, state())
+            is HomeInputAction.ChangeLikeStatus -> changeLikeStatusFeature(action, state())
+            is HomeInputAction.DeleteNews -> deleteNewsFeature(action, state())
             else -> null
         }
+            ?.flowOn(Dispatchers.IO)
     }
 
     override suspend fun produceShot(effect: VkEffect) {
@@ -63,7 +64,8 @@ class HomeViewModel @Inject constructor(
     override suspend fun produceState(action: VkAction) {
         when (action) {
             is HomeOutputAction.GetNewsSuccess -> setState {
-                setNews(newsList + action.result.map { newsModelMapper.mapToUi(it) })
+                val data = action.result.map { newsModelMapper.mapToUi(it) }
+                if (action.isRefresh) refreshNews(data) else setNews(data)
             }
 
             is HomeOutputAction.GetNewsLoading -> setState { loading() }
@@ -74,6 +76,18 @@ class HomeViewModel @Inject constructor(
 
             is HomeOutputAction.DeleteNews -> setState {
                 deleteItem(newsModelMapper.mapToUi(action.newsModel))
+            }
+
+            is HomeOutputAction.GetNewsRefreshing -> setState { refreshing() }
+            is HomeOutputAction.OnScrollToTop -> setState { onScrollToTop() }
+            is HomeOutputAction.OnUserScroll -> {
+                setState {
+                    setScrollToTopVisible(
+                        isScrollToTopVisible =
+                        action.firstVisibleItemIndex in 1 until firstVisibleItemIndex
+                    )
+                }
+                firstVisibleItemIndex = action.firstVisibleItemIndex
             }
         }
     }

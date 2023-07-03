@@ -17,6 +17,7 @@ import com.kerencev.vknewscompose.presentation.navigation.rememberNavigationStat
 import com.kerencev.vknewscompose.presentation.screens.comments.CommentsScreen
 import com.kerencev.vknewscompose.presentation.screens.home.HomeScreen
 import com.kerencev.vknewscompose.presentation.screens.profile.ProfileScreen
+import com.kerencev.vknewscompose.ui.theme.LightBlue
 
 @Composable
 fun MainScreen(viewModelFactory: ViewModelFactory) {
@@ -46,7 +47,7 @@ fun MainScreen(viewModelFactory: ViewModelFactory) {
                         },
                         icon = { Icon(item.icon, contentDescription = item.title) },
                         label = { Text(text = item.title) },
-                        selectedContentColor = MaterialTheme.colors.onPrimary,
+                        selectedContentColor = LightBlue,
                         unselectedContentColor = MaterialTheme.colors.onSecondary
                     )
                 }

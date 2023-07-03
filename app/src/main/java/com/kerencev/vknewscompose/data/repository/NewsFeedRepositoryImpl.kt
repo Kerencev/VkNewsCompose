@@ -6,11 +6,9 @@ import com.kerencev.vknewscompose.domain.entities.NewsModel
 import com.kerencev.vknewscompose.domain.repositories.NewsFeedRepository
 import com.vk.api.sdk.VKKeyValueStorage
 import com.vk.api.sdk.auth.VKAccessToken
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.retry
 import javax.inject.Inject
 
@@ -30,7 +28,8 @@ class NewsFeedRepositoryImpl @Inject constructor(
 
     private var startFrom: String? = null
 
-    override fun getNewsFeed() = flow {
+    override fun getNewsFeed(isRefresh: Boolean) = flow {
+        if (isRefresh) startFrom = null
         val response = if (startFrom == null) apiService.loadNewsFeed(getAccessToken())
         else apiService.loadNewsFeed(getAccessToken(), startFrom.orEmpty())
         startFrom = response.response?.nextFrom
@@ -40,7 +39,6 @@ class NewsFeedRepositoryImpl @Inject constructor(
             delay(RETRY_DELAY)
             true
         }
-        .flowOn(Dispatchers.IO)
 
     override fun changeLikeStatus(newsModel: NewsModel) = flow {
         if (newsModel.isLiked) {
@@ -59,13 +57,11 @@ class NewsFeedRepositoryImpl @Inject constructor(
             delay(RETRY_DELAY)
             true
         }
-        .flowOn(Dispatchers.IO)
 
     override fun deleteNews(newsModel: NewsModel): Flow<Unit> = flow {
         delay(300)
         emit(Unit)
     }
-        .flowOn(Dispatchers.IO)
 
     @Throws(IllegalStateException::class)
     private fun getAccessToken(): String {
