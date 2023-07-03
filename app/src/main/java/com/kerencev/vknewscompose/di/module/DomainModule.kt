@@ -1,14 +1,11 @@
 package com.kerencev.vknewscompose.di.module
 
 import com.kerencev.vknewscompose.domain.repositories.AuthRepository
-import com.kerencev.vknewscompose.domain.repositories.CommentsRepository
 import com.kerencev.vknewscompose.domain.repositories.ProfileRepository
 import com.kerencev.vknewscompose.domain.use_cases.change_auth_state.CheckAuthStateUseCase
 import com.kerencev.vknewscompose.domain.use_cases.change_auth_state.CheckAuthStateUseCaseImpl
 import com.kerencev.vknewscompose.domain.use_cases.get_auth_state.GetAuthStateUseCase
 import com.kerencev.vknewscompose.domain.use_cases.get_auth_state.GetAuthStateUseCaseImpl
-import com.kerencev.vknewscompose.domain.use_cases.get_comments.GetCommentsUseCase
-import com.kerencev.vknewscompose.domain.use_cases.get_comments.GetCommentsUseCaseImpl
 import com.kerencev.vknewscompose.domain.use_cases.get_wall.GetWallUseCase
 import com.kerencev.vknewscompose.domain.use_cases.get_wall.GetWallUseCaseImpl
 import com.kerencev.vknewscompose.domain.use_cases.profile.GetProfilePhotosUseCase
@@ -29,11 +26,6 @@ class DomainModule {
     @Provides
     fun provideGetAuthStateUseCase(authRepository: AuthRepository): GetAuthStateUseCase {
         return GetAuthStateUseCaseImpl(authRepository)
-    }
-
-    @Provides
-    fun provideGetCommentsUseCase(commentsRepository: CommentsRepository): GetCommentsUseCase {
-        return GetCommentsUseCaseImpl(commentsRepository)
     }
 
     @Provides

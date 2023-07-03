@@ -9,7 +9,6 @@ import com.vk.api.sdk.auth.VKAccessToken
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.retry
 import javax.inject.Inject
 
 class NewsFeedRepositoryImpl @Inject constructor(
@@ -17,11 +16,6 @@ class NewsFeedRepositoryImpl @Inject constructor(
     private val storage: VKKeyValueStorage,
     private val newsMapper: NewsFeedMapper
 ) : NewsFeedRepository {
-
-    companion object {
-        private const val RETRY_COUNT = 2L
-        private const val RETRY_DELAY = 3_000L
-    }
 
     private val token
         get() = VKAccessToken.restore(storage)
@@ -35,10 +29,6 @@ class NewsFeedRepositoryImpl @Inject constructor(
         startFrom = response.response?.nextFrom
         emit(newsMapper.mapToEntity(response))
     }
-        .retry(RETRY_COUNT) {
-            delay(RETRY_DELAY)
-            true
-        }
 
     override fun changeLikeStatus(newsModel: NewsModel) = flow {
         if (newsModel.isLiked) {
@@ -53,10 +43,6 @@ class NewsFeedRepositoryImpl @Inject constructor(
             emit(newsModel.copy(likesCount = newsModel.likesCount + 1, isLiked = true))
         }
     }
-        .retry(RETRY_COUNT) {
-            delay(RETRY_DELAY)
-            true
-        }
 
     override fun deleteNews(newsModel: NewsModel): Flow<Unit> = flow {
         delay(300)

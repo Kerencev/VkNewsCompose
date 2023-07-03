@@ -11,7 +11,7 @@ import dagger.Module
 import dagger.Provides
 
 @Module
-class FeatureModule {
+class HomeFeatureModule {
 
     @Provides
     fun provideGetNewsFeature(newsFeedRepository: NewsFeedRepository): GetNewsFeature {

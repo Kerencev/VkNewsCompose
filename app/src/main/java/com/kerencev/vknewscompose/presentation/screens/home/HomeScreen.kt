@@ -11,13 +11,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
@@ -30,7 +25,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -43,6 +37,7 @@ import com.kerencev.vknewscompose.di.ViewModelFactory
 import com.kerencev.vknewscompose.presentation.common.compose.rememberUnit
 import com.kerencev.vknewscompose.presentation.common.compose.rememberUnitParams
 import com.kerencev.vknewscompose.presentation.common.views.ProgressBarDefault
+import com.kerencev.vknewscompose.presentation.common.views.ScaffoldWithCollapsingToolbar
 import com.kerencev.vknewscompose.presentation.common.views.SnackBarWithAction
 import com.kerencev.vknewscompose.presentation.common.views.SwipeWithBackground
 import com.kerencev.vknewscompose.presentation.common.views.TextWithButton
@@ -110,30 +105,14 @@ fun HomeScreenContent(
     onScrollToTop: () -> Unit,
     onUserScroll: (Int) -> Unit
 ) {
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-
-    Scaffold(
-        modifier = Modifier
-            .nestedScroll(scrollBehavior.nestedScrollConnection)
-            .padding(paddingValues),
-        topBar = {
-            Surface(elevation = 8.dp) {
-                TopAppBar(
-                    title = {
-                        Text(
-                            text = stringResource(id = R.string.news),
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    },
-                    scrollBehavior = scrollBehavior,
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colors.surface,
-                        scrolledContainerColor = MaterialTheme.colors.surface,
-                        titleContentColor = MaterialTheme.colors.onPrimary
-                    )
-                )
-            }
+    ScaffoldWithCollapsingToolbar(
+        paddingValues = paddingValues,
+        title = {
+            Text(
+                text = stringResource(id = R.string.news),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
         },
         content = { innerPadding ->
             Box(
@@ -143,8 +122,10 @@ fun HomeScreenContent(
                     .background(color = colorResource(id = R.color.background_news)),
                 contentAlignment = Alignment.Center
             ) {
+                val currentState = state.value
+
                 SwipeRefresh(
-                    state = SwipeRefreshState(isRefreshing = state.value.isSwipeRefreshing),
+                    state = SwipeRefreshState(isRefreshing = currentState.isSwipeRefreshing),
                     onRefresh = { loadNews(true) },
                 ) {
                     val listState = rememberLazyListState()
@@ -155,7 +136,7 @@ fun HomeScreenContent(
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        items(state.value.newsList, { it.id }) { newsItem ->
+                        items(currentState.newsList, { it.id }) { newsItem ->
                             SwipeWithBackground(
                                 modifier = Modifier.animateItemPlacement(),
                                 onDismiss = { onItemDismiss(newsItem) },
@@ -170,13 +151,13 @@ fun HomeScreenContent(
                         }
                         item {
                             when {
-                                state.value.isLoading -> ProgressBarDefault(
+                                currentState.isLoading -> ProgressBarDefault(
                                     modifier = Modifier.padding(
                                         16.dp
                                     )
                                 )
 
-                                state.value.isError -> TextWithButton(
+                                currentState.isError -> TextWithButton(
                                     modifier = Modifier.padding(16.dp),
                                     title = stringResource(id = R.string.load_data_error),
                                     onRetryClick = { loadNews(false) }
@@ -197,15 +178,15 @@ fun HomeScreenContent(
                             .launchIn(coroutineScope)
                     }
 
-                    LaunchedEffect(key1 = state.value.scrollToTop) {
-                        if (state.value.scrollToTop) {
+                    LaunchedEffect(key1 = currentState.scrollToTop) {
+                        if (currentState.scrollToTop) {
                             listState.scrollToItem(0)
                             onScrollToTop()
                         }
                     }
                 }
 
-                val visibilityState by animateFloatAsState(targetValue = if (state.value.isScrollToTopVisible) 1f else 0f)
+                val visibilityState by animateFloatAsState(targetValue = if (currentState.isScrollToTopVisible) 1f else 0f)
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.TopCenter
@@ -216,7 +197,7 @@ fun HomeScreenContent(
                             .alpha(visibilityState),
                         text = stringResource(id = R.string.new_posts),
                         iconRes = R.drawable.ic_arrow_up,
-                        onClick = { if (state.value.isScrollToTopVisible) loadNews(true) }
+                        onClick = { if (currentState.isScrollToTopVisible) loadNews(true) }
                     )
                 }
             }

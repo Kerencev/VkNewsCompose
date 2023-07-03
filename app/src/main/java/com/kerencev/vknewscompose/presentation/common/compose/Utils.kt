@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 
 /**
- * функции обертки для оптимизации Compose при работе с лямбдами
+ * Wrapper functions for optimizing Compose when working with lambdas
  */
 @Composable
 fun rememberUnit(action: () -> Unit): () -> Unit {

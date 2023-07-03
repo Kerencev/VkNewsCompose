@@ -1,6 +1,7 @@
 package com.kerencev.vknewscompose.presentation.screens.home.flow.features
 
 import com.kerencev.vknewscompose.domain.repositories.NewsFeedRepository
+import com.kerencev.vknewscompose.extensions.retryDefault
 import com.kerencev.vknewscompose.presentation.common.mvi.VkCommand
 import com.kerencev.vknewscompose.presentation.screens.home.flow.HomeEffect
 import com.kerencev.vknewscompose.presentation.screens.home.flow.HomeInputAction
@@ -26,6 +27,7 @@ class ChangeLikeStatusFeatureImpl @Inject constructor(
             .flatMapConcat { updatedModel ->
                 flowOf(HomeOutputAction.ChangeLikeStatus(newsModel = updatedModel) as VkCommand)
             }
+            .retryDefault()
             .catch { emit(HomeEffect.LikeError(message = it.message.orEmpty())) }
     }
 }
