@@ -77,7 +77,8 @@ fun MainScreen(viewModelFactory: ViewModelFactory) {
             profileScreenContent = {
                 ProfileScreen(
                     paddingValues = paddingValues,
-                    viewModelFactory = viewModelFactory
+                    viewModelFactory = viewModelFactory,
+                    onPhotoClick = {} //TODO
                 )
             }
         )

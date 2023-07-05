@@ -60,13 +60,13 @@ fun CommentsScreenContent(
             currentState.isError -> TextWithButton(
                 modifier = Modifier.fillMaxSize(),
                 title = stringResource(id = R.string.something_went_wrong),
-                onRetryClick = onRetryClick
+                onClick = onRetryClick
             )
 
             currentState.commentsList.isEmpty() -> TextWithButton(
                 modifier = Modifier.fillMaxSize(),
                 title = stringResource(id = R.string.empty_comments),
-                onRetryClick = onRetryClick
+                onClick = onRetryClick
             )
         }
 

@@ -160,7 +160,7 @@ fun HomeScreenContent(
                                 currentState.isError -> TextWithButton(
                                     modifier = Modifier.padding(16.dp),
                                     title = stringResource(id = R.string.load_data_error),
-                                    onRetryClick = { loadNews(false) }
+                                    onClick = { loadNews(false) }
                                 )
 
                                 else -> SideEffect { loadNews(false) }

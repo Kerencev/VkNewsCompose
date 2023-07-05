@@ -22,7 +22,7 @@ import com.kerencev.vknewscompose.ui.theme.VkNewsComposeTheme
 fun TextWithButton(
     modifier: Modifier = Modifier,
     title: String,
-    onRetryClick: () -> Unit
+    onClick: () -> Unit
 ) {
     Column(
         modifier = modifier
@@ -33,7 +33,7 @@ fun TextWithButton(
         Text(text = title)
         Button(
             colors = ButtonDefaults.buttonColors(backgroundColor = LightBlue),
-            onClick = { onRetryClick() }
+            onClick = { onClick() }
         ) {
             Text(
                 text = stringResource(id = R.string.retry),
@@ -50,7 +50,7 @@ fun TextWithButtonPreview() {
         TextWithButton(
             modifier = Modifier.padding(16.dp),
             title = stringResource(id = R.string.load_data_error),
-            onRetryClick = {}
+            onClick = {}
         )
     }
 }

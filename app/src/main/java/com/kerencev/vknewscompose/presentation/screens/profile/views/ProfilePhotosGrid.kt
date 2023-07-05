@@ -1,23 +1,17 @@
 package com.kerencev.vknewscompose.presentation.screens.profile.views
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -27,80 +21,48 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.kerencev.vknewscompose.R
 import com.kerencev.vknewscompose.domain.entities.PhotoModel
-import com.kerencev.vknewscompose.presentation.common.ScreenState
 import com.kerencev.vknewscompose.presentation.common.views.CardTitle
-import com.kerencev.vknewscompose.presentation.common.views.TextWithButton
 import com.kerencev.vknewscompose.ui.theme.LightBlue
-import com.kerencev.vknewscompose.ui.theme.LightGray
-import com.valentinilk.shimmer.shimmer
 
 @Composable
 fun ProfilePhotosGrid(
-    photosState: State<ScreenState<List<PhotoModel>>>,
-    onRetryLoadPhotos: () -> Unit
+    photos: List<PhotoModel>,
+    onPhotoClick: () -> Unit
 ) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 8.dp),
-        shape = RoundedCornerShape(16.dp)
-    ) {
-
-        Column {
-            Row(
-                modifier = Modifier
-                    .padding(start = 16.dp, end = 16.dp, top = 8.dp)
-                    .clickable { },
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                CardTitle(
-                    modifier = Modifier.weight(1f),
-                    text = stringResource(id = R.string.photo)
-                )
-                CardTitle(text = stringResource(id = R.string.show_all))
-                Icon(
-                    modifier = Modifier.padding(top = 2.dp),
-                    painter = painterResource(id = R.drawable.ic_arrow_right),
+    Column {
+        Row(
+            modifier = Modifier
+                .padding(start = 16.dp, end = 16.dp, top = 8.dp)
+                .clickable { onPhotoClick() },
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            CardTitle(
+                modifier = Modifier.weight(1f),
+                text = stringResource(id = R.string.photo)
+            )
+            CardTitle(text = stringResource(id = R.string.show_all))
+            Icon(
+                modifier = Modifier.padding(top = 2.dp),
+                painter = painterResource(id = R.drawable.ic_arrow_right),
+                contentDescription = null,
+                tint = LightBlue
+            )
+        }
+        LazyHorizontalGrid(
+            modifier = Modifier
+                .height(200.dp)
+                .padding(8.dp),
+            rows = GridCells.Fixed(2),
+            horizontalArrangement = Arrangement.spacedBy(2.dp),
+            verticalArrangement = Arrangement.spacedBy(2.dp)
+        ) {
+            items(photos, { it.id }) { photoItem ->
+                AsyncImage(
+                    modifier = Modifier.size(100.dp),
+                    model = photoItem.url,
                     contentDescription = null,
-                    tint = LightBlue
+                    contentScale = ContentScale.Crop
                 )
-            }
-            when (val state = photosState.value) {
-                is ScreenState.Content -> LazyHorizontalGrid(
-                    modifier = Modifier
-                        .height(200.dp)
-                        .padding(8.dp),
-                    rows = GridCells.Fixed(2),
-                    horizontalArrangement = Arrangement.spacedBy(2.dp),
-                    verticalArrangement = Arrangement.spacedBy(2.dp)
-                ) {
-                    items(state.data, { it.id }) { photoItem ->
-                        Box(modifier = Modifier.size(100.dp)) {
-                            AsyncImage(
-                                modifier = Modifier.size(100.dp),
-                                model = photoItem.url,
-                                contentDescription = null,
-                                contentScale = ContentScale.Crop
-                            )
-                        }
-                    }
-                }
-
-                is ScreenState.Error -> TextWithButton(
-                    modifier = Modifier.padding(16.dp),
-                    title = stringResource(id = R.string.profile_photos_error),
-                    onRetryClick = { onRetryLoadPhotos() }
-                )
-
-                is ScreenState.Loading -> Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(200.dp)
-                        .shimmer()
-                        .background(LightGray)
-                )
-
-                is ScreenState.Empty -> Unit
             }
         }
     }
