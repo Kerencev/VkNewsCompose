@@ -8,6 +8,16 @@ sealed class Screen(
     val route: String
 ) {
 
+    object Main : Screen(ROUTE_MAIN)
+
+    object PhotosPager : Screen(ROUTE_PHOTOS_PAGER) {
+        private const val ROUTE_FOR_ARGS = "photos_pager"
+
+        fun getRouteWithArgs(initialNumber: Int): String {
+            return "$ROUTE_FOR_ARGS/$initialNumber"
+        }
+    }
+
     object Home : Screen(ROUTE_HOME)
 
     object News : Screen(ROUTE_NEWS)
@@ -28,11 +38,14 @@ sealed class Screen(
 
     companion object {
         const val KEY_NEWS_POST = "news_post"
+        const val KEY_SELECTED_PHOTO = "selected_photo"
 
-        const val ROUTE_HOME = "home"
-        const val ROUTE_NEWS = "news"
-        const val ROUTE_FAVOURITE = "favourite"
-        const val ROUTE_PROFILE = "profile"
-        const val ROUTE_COMMENTS = "comments/{$KEY_NEWS_POST}"
+        private const val ROUTE_MAIN = "main"
+        private const val ROUTE_PHOTOS_PAGER = "photos_pager/{$KEY_SELECTED_PHOTO}"
+        private const val ROUTE_HOME = "home"
+        private const val ROUTE_NEWS = "news"
+        private const val ROUTE_FAVOURITE = "favourite"
+        private const val ROUTE_PROFILE = "profile"
+        private const val ROUTE_COMMENTS = "comments/{$KEY_NEWS_POST}"
     }
 }

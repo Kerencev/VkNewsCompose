@@ -5,6 +5,7 @@ import com.kerencev.vknewscompose.di.annotation.ViewModelKey
 import com.kerencev.vknewscompose.presentation.activity.MainViewModel
 import com.kerencev.vknewscompose.presentation.screens.home.HomeViewModel
 import com.kerencev.vknewscompose.presentation.screens.profile.ProfileViewModel
+import com.kerencev.vknewscompose.presentation.screens.profile_photos.ProfilePhotosViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -26,5 +27,10 @@ interface ViewModelModule {
     @ViewModelKey(ProfileViewModel::class)
     @Binds
     fun bindProfileViewModel(viewModel: ProfileViewModel): ViewModel
+
+    @IntoMap
+    @ViewModelKey(ProfilePhotosViewModel::class)
+    @Binds
+    fun bindProfilePhotosViewModel(viewModel: ProfilePhotosViewModel): ViewModel
 
 }

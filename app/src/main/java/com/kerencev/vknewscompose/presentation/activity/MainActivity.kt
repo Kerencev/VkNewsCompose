@@ -7,13 +7,16 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.graphics.toArgb
-import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
 import com.kerencev.vknewscompose.di.getApplicationComponent
 import com.kerencev.vknewscompose.domain.entities.AuthState
+import com.kerencev.vknewscompose.presentation.common.compose.SetupStatusColors
+import com.kerencev.vknewscompose.presentation.navigation.AppNavGraph
+import com.kerencev.vknewscompose.presentation.navigation.Screen
 import com.kerencev.vknewscompose.presentation.screens.login.LoginScreen
 import com.kerencev.vknewscompose.presentation.screens.main.MainScreen
+import com.kerencev.vknewscompose.presentation.screens.profile_photos.PhotosPagerScreen
 import com.kerencev.vknewscompose.ui.theme.VkNewsComposeTheme
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.auth.VKScope
@@ -23,6 +26,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val navController = rememberNavController()
 
             val component = getApplicationComponent()
             val viewModelFactory = component.getViewModelFactory()
@@ -36,14 +40,34 @@ class MainActivity : ComponentActivity() {
             }
 
             VkNewsComposeTheme {
-                window.statusBarColor = MaterialTheme.colors.surface.toArgb()
-                window.navigationBarColor = MaterialTheme.colors.surface.toArgb()
-                val windowInsetsController =
-                    WindowCompat.getInsetsController(window, window.decorView)
-                windowInsetsController.isAppearanceLightStatusBars = !isSystemInDarkTheme()
+                SetupStatusColors(
+                    color = MaterialTheme.colors.surface,
+                    isAppearanceLightStatusBars = !isSystemInDarkTheme()
+                )
+
                 when (authState.value) {
                     AuthState.AUTHORIZED -> {
-                        MainScreen(viewModelFactory)
+                        AppNavGraph(
+                            navHostController = navController,
+                            mainScreenContent = {
+                                MainScreen(
+                                    viewModelFactory = viewModelFactory,
+                                    onPhotoClick = { number ->
+                                        navController.navigate(
+                                            Screen.PhotosPager.getRouteWithArgs(
+                                                initialNumber = number
+                                            )
+                                        )
+                                    }
+                                )
+                            },
+                            photosSliderScreenContent = { number ->
+                                PhotosPagerScreen(
+                                    viewModelFactory = viewModelFactory,
+                                    selectedPhotoNumber = number
+                                )
+                            }
+                        )
                     }
 
                     AuthState.NOT_AUTHORIZED -> {

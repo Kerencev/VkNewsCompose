@@ -1,0 +1,45 @@
+ext.versions = [
+        minSdk            : 23,
+        targetSdk         : 33,
+        compileSdk        : 33,
+        versionCode       : 1,
+        versionName       : '1.0',
+        jvmTarget         : '1.8',
+
+        core_ktx          : '1.10.1',
+
+        //Compose
+        compose_version   : '1.4.3',
+        compose_material  : '1.4.3',
+        compose_material3 : '1.1.1',
+        compose_activity  : '1.7.2',
+        compose_navigation: '2.6.0',
+
+        //Network
+        retrofit          : '2.9.0',
+        okhttp            : '4.9.3',
+        gson              : '2.10',
+
+        //Vk sdk
+        vk_sdk            : '4.0.1',
+
+        //Dagger
+        dagger            : '2.43.2',
+
+        //Coil
+        coil              : '2.1.0',
+
+        //Swiperefresh
+        swiperefresh      : '0.24.13-rc',
+
+        //Shimmer
+        shimmer           : '1.0.5',
+
+        //Zoomable Image
+        zoom_image        : '0.5.0',
+
+        //Test
+        junit             : '4.13.2',
+        android_junit     : '1.1.5',
+        espresso          : '3.5.1',
+]

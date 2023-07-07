@@ -1,13 +1,17 @@
 package com.kerencev.vknewscompose.presentation.screens.profile
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.State
@@ -16,85 +20,57 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kerencev.vknewscompose.R
 import com.kerencev.vknewscompose.di.ViewModelFactory
-import com.kerencev.vknewscompose.domain.entities.PhotoModel
-import com.kerencev.vknewscompose.domain.entities.ProfileModel
-import com.kerencev.vknewscompose.presentation.common.ScreenState
+import com.kerencev.vknewscompose.presentation.common.ContentState
+import com.kerencev.vknewscompose.presentation.common.compose.SetupStatusColors
+import com.kerencev.vknewscompose.presentation.common.compose.rememberUnitParams
 import com.kerencev.vknewscompose.presentation.common.views.CardTitle
 import com.kerencev.vknewscompose.presentation.common.views.ProgressBarDefault
+import com.kerencev.vknewscompose.presentation.common.views.ShimmerDefault
 import com.kerencev.vknewscompose.presentation.common.views.TextWithButton
 import com.kerencev.vknewscompose.presentation.screens.home.views.NewsCard
+import com.kerencev.vknewscompose.presentation.screens.profile.flow.ProfileEvent
+import com.kerencev.vknewscompose.presentation.screens.profile.flow.ProfileViewState
 import com.kerencev.vknewscompose.presentation.screens.profile.views.ProfileFriends
 import com.kerencev.vknewscompose.presentation.screens.profile.views.ProfileHeader
 import com.kerencev.vknewscompose.presentation.screens.profile.views.ProfilePhotosGrid
+import com.kerencev.vknewscompose.ui.theme.LightBlue
+import com.kerencev.vknewscompose.ui.theme.Shapes
 
 @Composable
 fun ProfileScreen(
     paddingValues: PaddingValues,
-    viewModelFactory: ViewModelFactory
+    viewModelFactory: ViewModelFactory,
+    onPhotoClick: (Int) -> Unit
 ) {
-    val viewModel: ProfileViewModel = viewModel(factory = viewModelFactory)
+    SetupStatusColors(
+        color = MaterialTheme.colors.surface,
+        isAppearanceLightStatusBars = !isSystemInDarkTheme()
+    )
 
-    val profileState = viewModel.profileState.collectAsState(ScreenState.Loading)
-    val photosState = viewModel.photosState.collectAsState(ScreenState.Loading)
-    val wallState = viewModel.wallState.collectAsState(WallState(emptyList(), isLoading = true))
+    val viewModel: ProfileViewModel = viewModel(factory = viewModelFactory)
+    val state = viewModel.observedState.collectAsState()
+    val sendEvent: (ProfileEvent) -> Unit = rememberUnitParams { viewModel.send(it) }
 
     ProfileScreenContent(
-        profileState = profileState,
-        photosState = photosState,
-        wallState = wallState,
+        state = state,
         paddingValues = paddingValues,
-        onRetryClick = {
-            viewModel.loadProfile()
-            viewModel.loadProfilePhotos()
-            viewModel.loadWall()
-        },
-        loadPhotos = viewModel::loadProfilePhotos,
-        loadWall = viewModel::loadWall
+        sendEvent = sendEvent,
+        onPhotoClick = onPhotoClick
     )
 }
 
 @Composable
 fun ProfileScreenContent(
-    profileState: State<ScreenState<ProfileModel>>,
-    photosState: State<ScreenState<List<PhotoModel>>>,
-    wallState: State<WallState>,
+    state: State<ProfileViewState>,
     paddingValues: PaddingValues,
-    onRetryClick: () -> Unit,
-    loadPhotos: () -> Unit,
-    loadWall: () -> Unit
-) {
-    when (val state = profileState.value) {
-        is ScreenState.Content -> Profile(
-            paddingValues = paddingValues,
-            model = state.data,
-            photosState = photosState,
-            wallState = wallState,
-            loadPhotos = loadPhotos,
-            loadWall = loadWall
-        )
-
-        is ScreenState.Empty -> Unit
-        is ScreenState.Loading -> ProgressBarDefault(modifier = Modifier.fillMaxSize())
-        is ScreenState.Error -> TextWithButton(
-            modifier = Modifier.fillMaxSize(),
-            title = stringResource(id = R.string.something_went_wrong),
-            onRetryClick = onRetryClick
-        )
-    }
-}
-
-@Composable
-fun Profile(
-    paddingValues: PaddingValues,
-    model: ProfileModel,
-    photosState: State<ScreenState<List<PhotoModel>>>,
-    wallState: State<WallState>,
-    loadPhotos: () -> Unit,
-    loadWall: () -> Unit
+    sendEvent: (ProfileEvent) -> Unit,
+    onPhotoClick: (Int) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier
@@ -103,9 +79,52 @@ fun Profile(
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        item { ProfileHeader(model = model) }
-        item { ProfileFriends(model = model) }
-        item { ProfilePhotosGrid(photosState = photosState, onRetryLoadPhotos = loadPhotos) }
+        val currentState = state.value
+        val profileState = currentState.profileState
+        val photosState = currentState.profilePhotosState
+
+        val stubModifier = Modifier.height(220.dp)
+
+        item {
+            Card(shape = Shapes.large) {
+                when (profileState) {
+                    is ContentState.Content -> ProfileHeader(model = profileState.data)
+                    is ContentState.Loading -> ShimmerDefault(modifier = stubModifier)
+                    is ContentState.Error -> TextWithButton(
+                        modifier = stubModifier,
+                        title = stringResource(id = R.string.profile_error),
+                        onClick = { sendEvent(ProfileEvent.GetProfile) })
+                }
+            }
+        }
+
+        item {
+            ProfileFriends(
+                modifier = Modifier.padding(top = 8.dp),
+                friendsCount = state.value.friendsCount
+            )
+        }
+
+        item {
+            Card(
+                modifier = Modifier.padding(top = 8.dp),
+                shape = Shapes.large
+            ) {
+                when (photosState) {
+                    is ContentState.Content -> ProfilePhotosGrid(
+                        photos = photosState.data,
+                        onPhotoClick = onPhotoClick
+                    )
+
+                    is ContentState.Loading -> ShimmerDefault(modifier = stubModifier)
+                    is ContentState.Error -> TextWithButton(
+                        modifier = stubModifier,
+                        title = stringResource(id = R.string.profile_photos_error),
+                        onClick = { sendEvent(ProfileEvent.GetProfilePhotos) }
+                    )
+                }
+            }
+        }
 
         item {
             Card(
@@ -121,13 +140,13 @@ fun Profile(
             }
         }
 
-        itemsIndexed(wallState.value.items) { index, item ->
+        itemsIndexed(currentState.wallItems) { index, item ->
             NewsCard(
                 modifier = Modifier.padding(bottom = 8.dp),
                 shape = if (index == 0) RoundedCornerShape(
                     bottomStart = 16.dp,
                     bottomEnd = 16.dp
-                ) else RoundedCornerShape(16.dp),
+                ) else Shapes.large,
                 newsModel = item,
                 onCommentsClick = {},
                 onLikesClick = {}
@@ -135,15 +154,23 @@ fun Profile(
         }
         item {
             when {
-                wallState.value.isLoading -> ProgressBarDefault(modifier = Modifier.padding(16.dp))
+                currentState.isWallLoading -> ProgressBarDefault(modifier = Modifier.padding(16.dp))
 
-                wallState.value.isError -> TextWithButton(
+                currentState.wallErrorMessage != null -> TextWithButton(
                     modifier = Modifier.padding(16.dp),
                     title = stringResource(id = R.string.load_data_error),
-                    onRetryClick = loadWall
+                    onClick = { sendEvent(ProfileEvent.GetWall) }
                 )
 
-                else -> SideEffect { loadWall() }
+                currentState.isWallPostsOver -> Text(
+                    modifier = Modifier.padding(16.dp),
+                    text = stringResource(id = R.string.set_count, currentState.wallItems.size),
+                    color = LightBlue,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Medium
+                )
+
+                else -> SideEffect { sendEvent(ProfileEvent.GetWall) }
             }
         }
     }

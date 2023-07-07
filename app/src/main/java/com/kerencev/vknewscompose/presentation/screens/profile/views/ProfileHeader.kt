@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -32,59 +30,53 @@ import com.kerencev.vknewscompose.presentation.common.views.IconWithText
 fun ProfileHeader(
     model: ProfileModel
 ) {
-    Card(
-        shape = RoundedCornerShape(16.dp)
+    AsyncImage(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(200.dp)
+            .blur(
+                radius = 32.dp,
+                edgeTreatment = BlurredEdgeTreatment(null)
+            )
+            .scale(3.0f)
+            .alpha(0.5f),
+        model = model.avatarUrl,
+        contentDescription = null,
+        contentScale = ContentScale.Crop
+    )
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 16.dp, start = 16.dp, end = 16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         AsyncImage(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(200.dp)
-                .blur(
-                    radius = 32.dp,
-                    edgeTreatment = BlurredEdgeTreatment(null)
-                )
-                .scale(3.0f)
-                .alpha(0.5f),
             model = model.avatarUrl,
-            contentDescription = null,
-            contentScale = ContentScale.Crop
-        )
-        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp, start = 16.dp, end = 16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .clip(CircleShape)
+                .height(160.dp),
+            contentDescription = stringResource(id = R.string.user_avatar)
+        )
+        Text(
+            modifier = Modifier.padding(top = 8.dp),
+            text = "${model.name} ${model.lastName}",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center
+        )
+        Row(
+            modifier = Modifier.padding(bottom = 8.dp)
         ) {
-            AsyncImage(
-                model = model.avatarUrl,
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .height(160.dp),
-                contentDescription = stringResource(
-                    id = R.string.user_avatar
-                )
+            IconWithText(
+                modifier = Modifier.weight(1f),
+                text = model.city.orEmpty(),
+                iconRes = R.drawable.ic_location
             )
-            Text(
-                modifier = Modifier.padding(top = 8.dp),
-                text = "${model.name} ${model.lastName}",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
+            IconWithText(
+                modifier = Modifier.weight(1f),
+                text = model.universityName.orEmpty(),
+                iconRes = R.drawable.ic_hat_education
             )
-            Row(
-                modifier = Modifier.padding(bottom = 8.dp)
-            ) {
-                IconWithText(
-                    modifier = Modifier.weight(1f),
-                    text = model.city.orEmpty(),
-                    iconRes = R.drawable.ic_location
-                )
-                IconWithText(
-                    modifier = Modifier.weight(1f),
-                    text = model.universityName.orEmpty(),
-                    iconRes = R.drawable.ic_hat_education
-                )
-            }
         }
     }
 }

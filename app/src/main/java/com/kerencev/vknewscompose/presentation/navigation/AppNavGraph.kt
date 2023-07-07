@@ -2,32 +2,35 @@ package com.kerencev.vknewscompose.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.kerencev.vknewscompose.domain.entities.NewsModel
-import com.kerencev.vknewscompose.presentation.model.NewsModelUi
+import androidx.navigation.navArgument
 
 @Composable
 fun AppNavGraph(
     navHostController: NavHostController,
-    newsScreenContent: @Composable () -> Unit,
-    favouriteScreenContent: @Composable () -> Unit,
-    profileScreenContent: @Composable () -> Unit,
-    commentsScreenContent: @Composable (NewsModelUi) -> Unit,
+    mainScreenContent: @Composable () -> Unit,
+    photosSliderScreenContent: @Composable (Int) -> Unit
 ) {
     NavHost(
         navController = navHostController,
-        startDestination = Screen.Home.route
+        startDestination = Screen.Main.route
     ) {
-        homeScreenNavGraph(
-            newsScreenContent = newsScreenContent,
-            commentsScreenContent = commentsScreenContent
-        )
-        composable(Screen.Favourite.route) {
-            favouriteScreenContent()
+        composable(Screen.Main.route) {
+            mainScreenContent()
         }
-        composable(Screen.Profile.route) {
-            profileScreenContent()
+        composable(
+            route = Screen.PhotosPager.route,
+            arguments = listOf(
+                navArgument(name = Screen.KEY_SELECTED_PHOTO) {
+                    type = NavType.IntType
+                }
+            )
+        ) {
+            val selectedPhotoNumber = it.arguments?.getInt(Screen.KEY_SELECTED_PHOTO)
+                ?: throw RuntimeException("Args for PhotosPager screen is null")
+            photosSliderScreenContent(selectedPhotoNumber)
         }
     }
 }

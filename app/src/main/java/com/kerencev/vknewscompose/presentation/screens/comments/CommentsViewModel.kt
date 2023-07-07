@@ -1,52 +1,57 @@
 package com.kerencev.vknewscompose.presentation.screens.comments
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.kerencev.vknewscompose.common.DataResult
-import com.kerencev.vknewscompose.domain.entities.CommentModel
-import com.kerencev.vknewscompose.domain.use_cases.get_comments.GetCommentsUseCase
-import com.kerencev.vknewscompose.presentation.common.ScreenState
+import com.kerencev.vknewscompose.presentation.common.mvi.BaseViewModel
+import com.kerencev.vknewscompose.presentation.common.mvi.VkAction
+import com.kerencev.vknewscompose.presentation.common.mvi.VkCommand
+import com.kerencev.vknewscompose.presentation.common.mvi.VkEffect
+import com.kerencev.vknewscompose.presentation.common.mvi.VkShot
 import com.kerencev.vknewscompose.presentation.mapper.NewsModelMapper
 import com.kerencev.vknewscompose.presentation.model.NewsModelUi
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.onStart
+import com.kerencev.vknewscompose.presentation.screens.comments.flow.CommentsEvent
+import com.kerencev.vknewscompose.presentation.screens.comments.flow.CommentsInputAction
+import com.kerencev.vknewscompose.presentation.screens.comments.flow.CommentsOutputAction
+import com.kerencev.vknewscompose.presentation.screens.comments.flow.CommentsViewState
+import com.kerencev.vknewscompose.presentation.screens.comments.flow.features.GetCommentsFeature
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class CommentsViewModel @Inject constructor(
-    private val newsModel: NewsModelUi,
-    private val getCommentsUseCase: GetCommentsUseCase,
+    newsModel: NewsModelUi,
+    private val getCommentsFeature: GetCommentsFeature,
     private val newsModelMapper: NewsModelMapper
-) : ViewModel() {
-
-    private val _screenState =
-        MutableStateFlow(ScreenState.Loading as ScreenState<List<CommentModel>>)
-    val screenState = _screenState.asStateFlow()
-
+) : BaseViewModel<CommentsEvent, CommentsViewState, VkShot>() {
 
     init {
-        loadData()
+        send(CommentsEvent.GetComments(newsModel))
     }
 
-    fun loadData() {
-        getCommentsUseCase(newsModelMapper.mapToEntity(newsModel))
-            .onEach { result ->
-                when (result) {
-                    is DataResult.Success -> _screenState.emit(
-                        if (result.data.isEmpty()) ScreenState.Empty
-                        else ScreenState.Content(data = result.data)
-                    )
+    override fun initState() = CommentsViewState()
 
-                    is DataResult.Loading -> _screenState.emit(ScreenState.Loading)
+    override fun produceCommand(event: CommentsEvent): VkCommand {
+        return when (event) {
+            is CommentsEvent.GetComments -> CommentsInputAction.GetComments(
+                newsModelMapper.mapToEntity(
+                    event.newsModel
+                )
+            )
+        }
+    }
 
-                    is DataResult.Error -> _screenState.emit(
-                        ScreenState.Error(throwable = result.throwable)
-                    )
-                }
-            }
-            .launchIn(viewModelScope)
+    override fun features(action: VkAction): Flow<VkCommand>? {
+        return when (action) {
+            is CommentsInputAction.GetComments -> getCommentsFeature(action, state())
+            else -> null
+        }
+    }
+
+    override suspend fun produceShot(effect: VkEffect) = Unit
+
+    override suspend fun produceState(action: VkAction) {
+        when (action) {
+            is CommentsOutputAction.SetComments -> setState { comments(action.result) }
+            is CommentsOutputAction.Loading -> setState { loading() }
+            is CommentsOutputAction.Error -> setState { error() }
+        }
     }
 
 }

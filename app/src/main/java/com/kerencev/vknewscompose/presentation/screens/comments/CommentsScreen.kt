@@ -9,12 +9,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kerencev.vknewscompose.R
 import com.kerencev.vknewscompose.di.getApplicationComponent
-import com.kerencev.vknewscompose.domain.entities.CommentModel
-import com.kerencev.vknewscompose.presentation.common.ScreenState
+import com.kerencev.vknewscompose.presentation.common.compose.rememberUnit
 import com.kerencev.vknewscompose.presentation.common.views.ProgressBarDefault
 import com.kerencev.vknewscompose.presentation.common.views.ScaffoldWithToolbar
 import com.kerencev.vknewscompose.presentation.common.views.TextWithButton
 import com.kerencev.vknewscompose.presentation.model.NewsModelUi
+import com.kerencev.vknewscompose.presentation.screens.comments.flow.CommentsEvent
+import com.kerencev.vknewscompose.presentation.screens.comments.flow.CommentsViewState
 import com.kerencev.vknewscompose.presentation.screens.comments.views.CommentsColumn
 
 @Composable
@@ -25,47 +26,53 @@ fun CommentsScreen(
     val component = getApplicationComponent()
         .getCommentsScreenComponentFactory()
         .create(newsModel)
+
     val viewModel: CommentsViewModel = viewModel(factory = component.getViewModelFactory())
-    val state = viewModel.screenState.collectAsState(ScreenState.Loading)
+    val state = viewModel.observedState.collectAsState()
+
+    val onRetryClick = rememberUnit { viewModel.send(CommentsEvent.GetComments(newsModel)) }
+
     CommentsScreenContent(
         state = state,
-        viewModel = viewModel,
         newsModel = newsModel,
-        onBackPressed = onBackPressed
+        onBackPressed = onBackPressed,
+        onRetryClick = onRetryClick
     )
 }
 
 @Composable
 fun CommentsScreenContent(
-    state: State<ScreenState<List<CommentModel>>>,
-    viewModel: CommentsViewModel,
+    state: State<CommentsViewState>,
     newsModel: NewsModelUi,
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
+    onRetryClick: () -> Unit
 ) {
     ScaffoldWithToolbar(
         title = newsModel.communityName,
         subTitle = stringResource(id = R.string.comments),
         onBackPressed = { onBackPressed() }
     ) { paddingValues ->
-        when (val currentState = state.value) {
-            is ScreenState.Empty -> TextWithButton(
-                modifier = Modifier.fillMaxSize(),
-                title = stringResource(id = R.string.empty_comments),
-                onRetryClick = viewModel::loadData
-            )
+        val currentState = state.value
 
-            is ScreenState.Loading -> ProgressBarDefault(modifier = Modifier.fillMaxSize())
+        when {
+            currentState.isLoading -> ProgressBarDefault(modifier = Modifier.fillMaxSize())
 
-            is ScreenState.Content -> CommentsColumn(
-                comments = currentState.data,
-                paddingValues = paddingValues
-            )
-
-            is ScreenState.Error -> TextWithButton(
+            currentState.isError -> TextWithButton(
                 modifier = Modifier.fillMaxSize(),
                 title = stringResource(id = R.string.something_went_wrong),
-                onRetryClick = viewModel::loadData
+                onClick = onRetryClick
+            )
+
+            currentState.commentsList.isEmpty() -> TextWithButton(
+                modifier = Modifier.fillMaxSize(),
+                title = stringResource(id = R.string.empty_comments),
+                onClick = onRetryClick
             )
         }
+
+        CommentsColumn(
+            comments = currentState.commentsList,
+            paddingValues = paddingValues
+        )
     }
 }

@@ -1,7 +1,6 @@
 package com.kerencev.vknewscompose.presentation.screens.profile.views
 
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -12,19 +11,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.kerencev.vknewscompose.R
-import com.kerencev.vknewscompose.domain.entities.ProfileModel
 import com.kerencev.vknewscompose.presentation.common.views.CardTitle
+import com.kerencev.vknewscompose.ui.theme.VkNewsComposeTheme
 
 @Composable
 fun ProfileFriends(
-    model: ProfileModel
+    modifier: Modifier = Modifier,
+    friendsCount: Int
 ) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 8.dp),
+        modifier = modifier,
         shape = RoundedCornerShape(16.dp)
     ) {
         Row(
@@ -33,7 +32,7 @@ fun ProfileFriends(
         ) {
             CardTitle(
                 modifier = Modifier.weight(1f),
-                text = "${model.friendsCount} ${getFriendWord(model.friendsCount)}"
+                text = "$friendsCount ${getFriendWord(friendsCount)}"
             )
             Icon(
                 modifier = Modifier.size(24.dp),
@@ -53,4 +52,12 @@ private fun getFriendWord(count: Int): String {
             else -> R.string.friends_a_lot
         }
     )
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun ProfileFriendsPreview() {
+    VkNewsComposeTheme() {
+        ProfileFriends(friendsCount = 10)
+    }
 }

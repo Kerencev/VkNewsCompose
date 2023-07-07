@@ -11,15 +11,19 @@ import androidx.compose.runtime.getValue
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.kerencev.vknewscompose.di.ViewModelFactory
-import com.kerencev.vknewscompose.presentation.navigation.AppNavGraph
+import com.kerencev.vknewscompose.presentation.navigation.BottomNavGraph
 import com.kerencev.vknewscompose.presentation.navigation.NavigationItem
 import com.kerencev.vknewscompose.presentation.navigation.rememberNavigationState
 import com.kerencev.vknewscompose.presentation.screens.comments.CommentsScreen
 import com.kerencev.vknewscompose.presentation.screens.home.HomeScreen
 import com.kerencev.vknewscompose.presentation.screens.profile.ProfileScreen
+import com.kerencev.vknewscompose.ui.theme.LightBlue
 
 @Composable
-fun MainScreen(viewModelFactory: ViewModelFactory) {
+fun MainScreen(
+    viewModelFactory: ViewModelFactory,
+    onPhotoClick: (Int) -> Unit
+) {
     val navigationState = rememberNavigationState()
 
     Scaffold(
@@ -46,14 +50,14 @@ fun MainScreen(viewModelFactory: ViewModelFactory) {
                         },
                         icon = { Icon(item.icon, contentDescription = item.title) },
                         label = { Text(text = item.title) },
-                        selectedContentColor = MaterialTheme.colors.onPrimary,
+                        selectedContentColor = LightBlue,
                         unselectedContentColor = MaterialTheme.colors.onSecondary
                     )
                 }
             }
         }
     ) { paddingValues ->
-        AppNavGraph(
+        BottomNavGraph(
             navHostController = navigationState.navHostController,
             newsScreenContent = {
                 HomeScreen(
@@ -76,7 +80,8 @@ fun MainScreen(viewModelFactory: ViewModelFactory) {
             profileScreenContent = {
                 ProfileScreen(
                     paddingValues = paddingValues,
-                    viewModelFactory = viewModelFactory
+                    viewModelFactory = viewModelFactory,
+                    onPhotoClick = onPhotoClick
                 )
             }
         )

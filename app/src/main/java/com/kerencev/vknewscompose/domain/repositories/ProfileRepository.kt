@@ -1,6 +1,5 @@
 package com.kerencev.vknewscompose.domain.repositories
 
-import com.kerencev.vknewscompose.common.DataResult
 import com.kerencev.vknewscompose.domain.entities.PhotoModel
 import com.kerencev.vknewscompose.domain.entities.ProfileModel
 import com.kerencev.vknewscompose.domain.entities.WallModel
@@ -8,10 +7,21 @@ import kotlinx.coroutines.flow.Flow
 
 interface ProfileRepository {
 
-    fun getProfile(): Flow<DataResult<ProfileModel>>
+    /**
+     * Get profile data
+     */
+    fun getProfile(): Flow<ProfileModel>
 
-    fun getProfilePhotos(): Flow<DataResult<List<PhotoModel>>>
+    /**
+     * Get all profile photos
+     */
+    fun getProfilePhotos(): Flow<List<PhotoModel>>
 
-    fun getWallData(page: Int): Flow<DataResult<WallModel>>
+    /**
+     * Get wall posts
+     * @param page - number of page
+     * @param pageSize - size of page
+     */
+    fun getWallData(page: Int, pageSize: Int): Flow<WallModel>
 
 }
