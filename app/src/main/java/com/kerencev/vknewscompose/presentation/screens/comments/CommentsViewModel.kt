@@ -12,9 +12,7 @@ import com.kerencev.vknewscompose.presentation.screens.comments.flow.CommentsInp
 import com.kerencev.vknewscompose.presentation.screens.comments.flow.CommentsOutputAction
 import com.kerencev.vknewscompose.presentation.screens.comments.flow.CommentsViewState
 import com.kerencev.vknewscompose.presentation.screens.comments.flow.features.GetCommentsFeature
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 class CommentsViewModel @Inject constructor(
@@ -44,7 +42,6 @@ class CommentsViewModel @Inject constructor(
             is CommentsInputAction.GetComments -> getCommentsFeature(action, state())
             else -> null
         }
-            ?.flowOn(Dispatchers.IO)
     }
 
     override suspend fun produceShot(effect: VkEffect) = Unit

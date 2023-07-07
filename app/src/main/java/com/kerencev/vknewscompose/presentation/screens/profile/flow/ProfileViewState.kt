@@ -12,7 +12,7 @@ import com.kerencev.vknewscompose.presentation.model.NewsModelUi
  *
  * @param profileState - Content with profile data or Loading or Error
  * @param friendsCount - Number of friends of this profile
- * @param photosState - Content with list of photos or Loading or Error
+ * @param profilePhotosState - Content with list of photos or Loading or Error
  * @param wallItems - List of wall posts
  * @param isWallLoading - Is wall posts loading
  * @param wallErrorMessage - Message when an error occurs during loading wall posts
@@ -22,7 +22,7 @@ import com.kerencev.vknewscompose.presentation.model.NewsModelUi
 data class ProfileViewState(
     val profileState: ContentState<ProfileModel> = ContentState.Loading,
     val friendsCount: Int = 0,
-    val photosState: ContentState<List<PhotoModel>> = ContentState.Loading,
+    val profilePhotosState: ContentState<List<PhotoModel>> = ContentState.Loading,
     val wallItems: List<NewsModelUi> = emptyList(),
     val isWallLoading: Boolean = true,
     val wallErrorMessage: String? = null,
@@ -42,16 +42,16 @@ data class ProfileViewState(
         profileState = ContentState.Error(message)
     )
 
-    fun setPhotos(photos: List<PhotoModel>) = copy(
-        photosState = ContentState.Content(photos)
+    fun setProfilePhotos(photos: List<PhotoModel>) = copy(
+        profilePhotosState = ContentState.Content(photos),
     )
 
-    fun photosLoading() = copy(
-        photosState = ContentState.Loading
+    fun profilePhotosLoading() = copy(
+        profilePhotosState = ContentState.Loading
     )
 
-    fun photosError(message: String) = copy(
-        photosState = ContentState.Error(message)
+    fun profilePhotosError(message: String) = copy(
+        profilePhotosState = ContentState.Error(message)
     )
 
     fun setWall(items: List<NewsModelUi>) = copy(

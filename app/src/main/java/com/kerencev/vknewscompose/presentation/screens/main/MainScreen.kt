@@ -11,7 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.kerencev.vknewscompose.di.ViewModelFactory
-import com.kerencev.vknewscompose.presentation.navigation.AppNavGraph
+import com.kerencev.vknewscompose.presentation.navigation.BottomNavGraph
 import com.kerencev.vknewscompose.presentation.navigation.NavigationItem
 import com.kerencev.vknewscompose.presentation.navigation.rememberNavigationState
 import com.kerencev.vknewscompose.presentation.screens.comments.CommentsScreen
@@ -20,7 +20,10 @@ import com.kerencev.vknewscompose.presentation.screens.profile.ProfileScreen
 import com.kerencev.vknewscompose.ui.theme.LightBlue
 
 @Composable
-fun MainScreen(viewModelFactory: ViewModelFactory) {
+fun MainScreen(
+    viewModelFactory: ViewModelFactory,
+    onPhotoClick: (Int) -> Unit
+) {
     val navigationState = rememberNavigationState()
 
     Scaffold(
@@ -54,7 +57,7 @@ fun MainScreen(viewModelFactory: ViewModelFactory) {
             }
         }
     ) { paddingValues ->
-        AppNavGraph(
+        BottomNavGraph(
             navHostController = navigationState.navHostController,
             newsScreenContent = {
                 HomeScreen(
@@ -78,7 +81,7 @@ fun MainScreen(viewModelFactory: ViewModelFactory) {
                 ProfileScreen(
                     paddingValues = paddingValues,
                     viewModelFactory = viewModelFactory,
-                    onPhotoClick = {} //TODO
+                    onPhotoClick = onPhotoClick
                 )
             }
         )

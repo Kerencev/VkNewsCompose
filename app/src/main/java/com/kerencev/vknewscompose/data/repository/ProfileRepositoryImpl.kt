@@ -3,6 +3,7 @@ package com.kerencev.vknewscompose.data.repository
 import com.kerencev.vknewscompose.data.api.ApiService
 import com.kerencev.vknewscompose.data.mapper.news_feed.NewsFeedMapper
 import com.kerencev.vknewscompose.data.mapper.profile.ProfileMapper
+import com.kerencev.vknewscompose.domain.entities.PhotoModel
 import com.kerencev.vknewscompose.domain.entities.WallModel
 import com.kerencev.vknewscompose.domain.repositories.ProfileRepository
 import com.vk.api.sdk.VKKeyValueStorage
@@ -25,6 +26,8 @@ class ProfileRepositoryImpl @Inject constructor(
     private val token
         get() = VKAccessToken.restore(storage)
 
+    private var profilePhotosCache: List<PhotoModel>? = null
+
     override fun getProfile() = flow {
         val response = apiService.getProfile(
             token = getAccessToken(),
@@ -36,13 +39,19 @@ class ProfileRepositoryImpl @Inject constructor(
     }
 
     override fun getProfilePhotos() = flow {
-        val response = apiService.getProfilePhotos(
-            token = getAccessToken(),
-            ownerId = token?.userId.toString()
-        )
-        if (response.response?.items == null || response.response.count == null)
-            throw IllegalStateException(PROFILE_PHOTOS_NOT_FOUND)
-        emit(profileMapper.mapToEntity(response.response))
+        val photos = profilePhotosCache ?: run {
+            val response = apiService.getProfilePhotos(
+                token = getAccessToken(),
+                ownerId = token?.userId.toString()
+            )
+
+            if (response.response?.items == null || response.response.count == null)
+                throw IllegalStateException(PROFILE_PHOTOS_NOT_FOUND)
+
+            profileMapper.mapToEntity(response.response)
+        }
+        profilePhotosCache = photos
+        emit(photos)
     }
 
     override fun getWallData(page: Int, pageSize: Int) = flow {

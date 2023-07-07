@@ -1,6 +1,7 @@
 package com.kerencev.vknewscompose.presentation.screens.profile
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -9,6 +10,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
@@ -25,6 +27,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kerencev.vknewscompose.R
 import com.kerencev.vknewscompose.di.ViewModelFactory
 import com.kerencev.vknewscompose.presentation.common.ContentState
+import com.kerencev.vknewscompose.presentation.common.compose.SetupStatusColors
 import com.kerencev.vknewscompose.presentation.common.compose.rememberUnitParams
 import com.kerencev.vknewscompose.presentation.common.views.CardTitle
 import com.kerencev.vknewscompose.presentation.common.views.ProgressBarDefault
@@ -43,11 +46,15 @@ import com.kerencev.vknewscompose.ui.theme.Shapes
 fun ProfileScreen(
     paddingValues: PaddingValues,
     viewModelFactory: ViewModelFactory,
-    onPhotoClick: () -> Unit
+    onPhotoClick: (Int) -> Unit
 ) {
+    SetupStatusColors(
+        color = MaterialTheme.colors.surface,
+        isAppearanceLightStatusBars = !isSystemInDarkTheme()
+    )
+
     val viewModel: ProfileViewModel = viewModel(factory = viewModelFactory)
     val state = viewModel.observedState.collectAsState()
-
     val sendEvent: (ProfileEvent) -> Unit = rememberUnitParams { viewModel.send(it) }
 
     ProfileScreenContent(
@@ -63,7 +70,7 @@ fun ProfileScreenContent(
     state: State<ProfileViewState>,
     paddingValues: PaddingValues,
     sendEvent: (ProfileEvent) -> Unit,
-    onPhotoClick: () -> Unit
+    onPhotoClick: (Int) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier
@@ -74,7 +81,7 @@ fun ProfileScreenContent(
     ) {
         val currentState = state.value
         val profileState = currentState.profileState
-        val photosState = currentState.photosState
+        val photosState = currentState.profilePhotosState
 
         val stubModifier = Modifier.height(220.dp)
 
@@ -113,7 +120,8 @@ fun ProfileScreenContent(
                     is ContentState.Error -> TextWithButton(
                         modifier = stubModifier,
                         title = stringResource(id = R.string.profile_photos_error),
-                        onClick = { sendEvent(ProfileEvent.GetPhotos) })
+                        onClick = { sendEvent(ProfileEvent.GetProfilePhotos) }
+                    )
                 }
             }
         }

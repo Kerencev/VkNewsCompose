@@ -9,11 +9,11 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 abstract class BaseViewModel<E : VkEvent, S : VkState, H : VkShot>(
     private val savedState: SavedStateHandle? = null,
@@ -78,11 +78,10 @@ abstract class BaseViewModel<E : VkEvent, S : VkState, H : VkShot>(
     }
 
     private fun executeFeature(feature: Flow<VkCommand>) {
-        viewModelScope.launch {
-            withContext(Dispatchers.Default) {
-                feature.onEach(commandFlow::emit).launchIn(this)
-            }
-        }
+        feature
+            .onEach(commandFlow::emit)
+            .flowOn(Dispatchers.IO)
+            .launchIn(viewModelScope)
     }
 
     /**

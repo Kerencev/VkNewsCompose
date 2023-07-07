@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,13 +27,11 @@ import com.kerencev.vknewscompose.ui.theme.LightBlue
 @Composable
 fun ProfilePhotosGrid(
     photos: List<PhotoModel>,
-    onPhotoClick: () -> Unit
+    onPhotoClick: (Int) -> Unit
 ) {
     Column {
         Row(
-            modifier = Modifier
-                .padding(start = 16.dp, end = 16.dp, top = 8.dp)
-                .clickable { onPhotoClick() },
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             CardTitle(
@@ -56,10 +54,12 @@ fun ProfilePhotosGrid(
             horizontalArrangement = Arrangement.spacedBy(2.dp),
             verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
-            items(photos, { it.id }) { photoItem ->
+            itemsIndexed(photos) { index, item ->
                 AsyncImage(
-                    modifier = Modifier.size(100.dp),
-                    model = photoItem.url,
+                    modifier = Modifier
+                        .size(100.dp)
+                        .clickable { onPhotoClick(index) },
+                    model = item.url,
                     contentDescription = null,
                     contentScale = ContentScale.Crop
                 )

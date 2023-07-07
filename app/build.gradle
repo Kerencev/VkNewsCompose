@@ -84,6 +84,9 @@ dependencies {
     //Shimmer
     implementation "com.valentinilk.shimmer:compose-shimmer:$versions.shimmer"
 
+    //Zoomable Image
+    implementation "com.github.SmartToolFactory:Compose-Zoom:$versions.zoom_image"
+
     //Test
     testImplementation "junit:junit:$versions.junit"
     androidTestImplementation "androidx.test.ext:junit:$versions.android_junit"

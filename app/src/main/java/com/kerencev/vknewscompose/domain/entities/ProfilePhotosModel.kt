@@ -1,10 +1,5 @@
 package com.kerencev.vknewscompose.domain.entities
 
-data class ProfilePhotosModel(
-    val count: Int,
-    val photos: List<PhotoModel>
-)
-
 data class PhotoModel(
     val id: Long,
     val date: Long?,

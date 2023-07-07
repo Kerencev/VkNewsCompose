@@ -13,9 +13,9 @@ sealed class ProfileInputAction : VkAction {
     object GetProfile : ProfileInputAction()
 
     /**
-     * Get profile photos
+     * Get all profile photos
      */
-    object GetPhotos : ProfileInputAction()
+    object GetProfilePhotos : ProfileInputAction()
 
     /**
      * Get wall posts
@@ -33,7 +33,7 @@ sealed class ProfileOutputAction : VkAction {
     /**
      * Set profile photos to viewState
      */
-    class SetPhotos(val result: List<PhotoModel>) : ProfileOutputAction()
+    class SetProfilePhotos(val result: List<PhotoModel>) : ProfileOutputAction()
 
     /**
      * Add wall posts to viewState
@@ -46,9 +46,9 @@ sealed class ProfileOutputAction : VkAction {
     object ProfileLoading : ProfileOutputAction()
 
     /**
-     * Set photos loading to viewState
+     * Set profile photos loading to viewState
      */
-    object PhotosLoading : ProfileOutputAction()
+    object ProfilePhotosLoading : ProfileOutputAction()
 
     /**
      * Set wall loading to viewState
@@ -61,9 +61,9 @@ sealed class ProfileOutputAction : VkAction {
     class ProfileError(val message: String) : ProfileOutputAction()
 
     /**
-     * Set photos error to viewState
+     * Set profile photos error to viewState
      */
-    class PhotosError(val message: String) : ProfileOutputAction()
+    class ProfilePhotosError(val message: String) : ProfileOutputAction()
 
     /**
      * Set wall error to viewState

@@ -5,10 +5,9 @@ import androidx.compose.runtime.remember
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.kerencev.vknewscompose.domain.entities.NewsModel
 import com.kerencev.vknewscompose.presentation.model.NewsModelUi
 
-class NavigationState(
+class BottomNavigationState(
     val navHostController: NavHostController
 ) {
 
@@ -31,8 +30,8 @@ class NavigationState(
 @Composable
 fun rememberNavigationState(
     navHostController: NavHostController = rememberNavController()
-): NavigationState {
+): BottomNavigationState {
     return remember {
-        NavigationState(navHostController = navHostController)
+        BottomNavigationState(navHostController = navHostController)
     }
 }

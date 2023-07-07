@@ -51,7 +51,6 @@ class HomeViewModel @Inject constructor(
             is HomeInputAction.DeleteNews -> deleteNewsFeature(action, state())
             else -> null
         }
-            ?.flowOn(Dispatchers.IO)
     }
 
     override suspend fun produceShot(effect: VkEffect) {

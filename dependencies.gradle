@@ -35,6 +35,9 @@ ext.versions = [
         //Shimmer
         shimmer           : '1.0.5',
 
+        //Zoomable Image
+        zoom_image        : '0.5.0',
+
         //Test
         junit             : '4.13.2',
         android_junit     : '1.1.5',

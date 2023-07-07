@@ -10,9 +10,9 @@ sealed class ProfileEvent : VkEvent {
     object GetProfile : ProfileEvent()
 
     /**
-     * Load profile photos
+     * Load all profile photos data
      */
-    object GetPhotos : ProfileEvent()
+    object GetProfilePhotos : ProfileEvent()
 
     /**
      * Load wall posts
