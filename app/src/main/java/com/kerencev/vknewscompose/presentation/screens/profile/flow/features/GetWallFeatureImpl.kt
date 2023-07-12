@@ -18,26 +18,19 @@ class GetWallFeatureImpl @Inject constructor(
     private val repository: ProfileRepository
 ) : GetWallFeature {
 
-    companion object {
-        private const val WALL_PAGE_SIZE = 5
-    }
-
-    private var wallPage = 0
-    private var wallPostsTotalCount = 0
-
     @OptIn(FlowPreview::class)
     override fun invoke(
         action: ProfileInputAction.GetWall,
         state: ProfileViewState
     ): Flow<VkCommand> {
-        if (wallPage != 0 && (wallPage * WALL_PAGE_SIZE) >= wallPostsTotalCount)
-            return flowOf(ProfileOutputAction.WallItemsIsOver)
-
-        return repository.getWallData(wallPage, WALL_PAGE_SIZE)
-            .flatMapConcat {
-                wallPage++
-                wallPostsTotalCount = it.totalCount
-                flowOf(ProfileOutputAction.SetWall(it) as VkCommand)
+        return repository.getWallData()
+            .flatMapConcat { result ->
+                flowOf(
+                    ProfileOutputAction.SetWall(
+                        wallItems = result.items,
+                        isItemsOver = result.isItemsOver
+                    ) as VkCommand
+                )
             }
             .onStart { emit(ProfileOutputAction.WallLoading) }
             .retryDefault()

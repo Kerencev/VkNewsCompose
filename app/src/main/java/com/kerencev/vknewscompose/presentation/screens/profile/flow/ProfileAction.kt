@@ -1,9 +1,10 @@
 package com.kerencev.vknewscompose.presentation.screens.profile.flow
 
+import com.kerencev.vknewscompose.domain.entities.NewsModel
 import com.kerencev.vknewscompose.domain.entities.PhotoModel
 import com.kerencev.vknewscompose.domain.entities.ProfileModel
-import com.kerencev.vknewscompose.domain.entities.WallModel
 import com.kerencev.vknewscompose.presentation.common.mvi.VkAction
+import com.kerencev.vknewscompose.presentation.common.mvi.VkEffect
 
 sealed class ProfileInputAction : VkAction {
 
@@ -21,6 +22,20 @@ sealed class ProfileInputAction : VkAction {
      * Get wall posts
      */
     object GetWall : ProfileInputAction()
+
+    /**
+     * Calculate the necessary UI parameters
+     */
+    class CalculateUiParams(
+        val firstVisibleItem: Int? = null,
+        val firstVisibleItemScrollOffset: Int? = null
+    ) : ProfileInputAction()
+
+    /**
+     * Get all profile data
+     * profile, photos, wall posts
+     */
+    object RefreshProfileData : ProfileInputAction()
 }
 
 sealed class ProfileOutputAction : VkAction {
@@ -37,8 +52,10 @@ sealed class ProfileOutputAction : VkAction {
 
     /**
      * Add wall posts to viewState
+     * @param wallItems - list of wall models
+     * @param isItemsOver - Have the posts ended
      */
-    class SetWall(val result: WallModel) : ProfileOutputAction()
+    class SetWall(val wallItems: List<NewsModel>, val isItemsOver: Boolean) : ProfileOutputAction()
 
     /**
      * Set profile loading to viewState
@@ -71,7 +88,42 @@ sealed class ProfileOutputAction : VkAction {
     class WallError(val message: String) : ProfileOutputAction()
 
     /**
-     * Set the end of data message
+     * Set the necessary UI parameters
+     * @param topBarAlpha - alpha of the Toolbar
+     * @param blurBackgroundAlpha - alpha of the background under user's avatar
+     * @param avatarAlpha - alpha of the user's avatar
+     * @param avatarSize - size of the user's avatar
      */
-    object WallItemsIsOver : ProfileOutputAction()
+    class SetUiParams(
+        val topBarAlpha: Float,
+        val blurBackgroundAlpha: Float,
+        val avatarAlpha: Float,
+        val avatarSize: Float
+    ) : ProfileOutputAction()
+
+    /**
+     * When the swipe-refresh is used
+     */
+    object AllProfileDataRefreshing : ProfileOutputAction()
+
+    /**
+     * Used after swipe-refresh
+     */
+    class SetAllProfileData(
+        val profile: ProfileModel,
+        val photos: List<PhotoModel>,
+        val wallItems: List<NewsModel>,
+        val isWallItemsOver: Boolean,
+    ) : ProfileOutputAction()
+}
+
+sealed class ProfileEffect : VkEffect {
+
+    /**
+     * Error after swipe-refresh
+     */
+    class AllProfileDataError(val message: String) : ProfileEffect()
+
+    object None : ProfileEffect()
+
 }

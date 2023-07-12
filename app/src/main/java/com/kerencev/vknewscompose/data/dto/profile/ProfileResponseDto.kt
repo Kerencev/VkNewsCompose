@@ -1,7 +1,6 @@
 package com.kerencev.vknewscompose.data.dto.profile
 
 import com.google.gson.annotations.SerializedName
-import com.kerencev.vknewscompose.data.dto.news_feed.Attachment
 
 data class ProfileResponseDto(
     val response: List<ProfileDto>?
@@ -14,7 +13,7 @@ data class ProfileDto(
     val city: City?,
     @SerializedName("university_name") val universityName: String?,
     val counters: Counters?,
-    @SerializedName("crop_photo") val cropPhoto: Attachment?
+    @SerializedName("photo_max") val avatarUrl: String?
 )
 
 data class City(

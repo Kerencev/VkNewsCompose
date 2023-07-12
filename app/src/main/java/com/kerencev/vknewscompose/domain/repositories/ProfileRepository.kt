@@ -9,19 +9,20 @@ interface ProfileRepository {
 
     /**
      * Get profile data
+     * @param isRefresh - Updating data or getting it from the cache
      */
-    fun getProfile(): Flow<ProfileModel>
+    fun getProfile(isRefresh: Boolean = false): Flow<ProfileModel>
 
     /**
      * Get all profile photos
+     * @param isRefresh - Updating data or getting it from the cache
      */
-    fun getProfilePhotos(): Flow<List<PhotoModel>>
+    fun getProfilePhotos(isRefresh: Boolean = false): Flow<List<PhotoModel>>
 
     /**
      * Get wall posts
-     * @param page - number of page
-     * @param pageSize - size of page
+     * @param isRefresh - Updating data or getting it from the cache
      */
-    fun getWallData(page: Int, pageSize: Int): Flow<WallModel>
+    fun getWallData(isRefresh: Boolean = false): Flow<WallModel>
 
 }

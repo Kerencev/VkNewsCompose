@@ -42,7 +42,7 @@ interface ApiService {
         @Query("post_id") postId: Long
     ): CommentsResponseDto
 
-    @GET("users.get?v=5.131&fields=city, education, counters, crop_photo")
+    @GET("users.get?v=5.131&fields=city, education, counters, photo_max")
     suspend fun getProfile(
         @Query("access_token") token: String,
         @Query("user_ids") usersIds: String

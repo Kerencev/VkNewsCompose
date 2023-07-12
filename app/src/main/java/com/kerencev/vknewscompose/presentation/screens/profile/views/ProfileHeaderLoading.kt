@@ -1,36 +1,33 @@
 package com.kerencev.vknewscompose.presentation.screens.profile.views
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
 import com.kerencev.vknewscompose.R
-import com.kerencev.vknewscompose.domain.entities.ProfileModel
-import com.kerencev.vknewscompose.presentation.common.views.IconWithText
+import com.kerencev.vknewscompose.ui.theme.LightGray
 import com.kerencev.vknewscompose.ui.theme.Shapes
+import com.valentinilk.shimmer.shimmer
 
 @Composable
-fun ProfileHeader(
-    model: ProfileModel,
+fun ProfileHeaderLoading(
     avatarAlpha: Float,
     avatarSize: Dp
 ) {
@@ -45,40 +42,44 @@ fun ProfileHeader(
                     .padding(top = 50.dp, start = 16.dp, end = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    modifier = Modifier.padding(top = 8.dp),
-                    text = "${model.name} ${model.lastName}",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center
-                )
-                Row(
-                    modifier = Modifier.padding(bottom = 8.dp)
+                Card(
+                    modifier = Modifier
+                        .padding(top = 8.dp)
+                        .height(20.dp)
+                        .width(200.dp)
                 ) {
-                    IconWithText(
-                        modifier = Modifier.weight(1f),
-                        text = model.city.orEmpty(),
-                        iconRes = R.drawable.ic_location
+                    Box(
+                        modifier = Modifier
+                            .shimmer()
+                            .background(LightGray)
                     )
-                    IconWithText(
-                        modifier = Modifier.weight(1f),
-                        text = model.universityName.orEmpty(),
-                        iconRes = R.drawable.ic_hat_education
+                }
+                Card(
+                    modifier = Modifier
+                        .padding(vertical = 8.dp, horizontal = 16.dp)
+                        .height(20.dp)
+                        .fillMaxWidth()
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .shimmer()
+                            .background(LightGray)
                     )
                 }
             }
         }
 
-        AsyncImage(
+        Image(
             modifier = Modifier
                 .alpha(avatarAlpha)
                 .size(avatarSize)
                 .clip(CircleShape)
                 .border(4.dp, MaterialTheme.colors.surface, CircleShape)
-                .align(Alignment.TopCenter),
-            model = model.avatarUrl,
-            contentDescription = stringResource(id = R.string.user_avatar),
+                .align(Alignment.TopCenter)
+                .shimmer()
+                .background(LightGray),
+            painter = painterResource(id = R.drawable.ic_people),
+            contentDescription = null,
         )
-
     }
 }

@@ -1,14 +1,17 @@
 package com.kerencev.vknewscompose.data.repository
 
 import com.kerencev.vknewscompose.data.api.ApiService
+import com.kerencev.vknewscompose.data.dto.profile.ProfileDto
+import com.kerencev.vknewscompose.data.dto.profile.ProfilePhotosDto
 import com.kerencev.vknewscompose.data.mapper.news_feed.NewsFeedMapper
 import com.kerencev.vknewscompose.data.mapper.profile.ProfileMapper
-import com.kerencev.vknewscompose.domain.entities.PhotoModel
+import com.kerencev.vknewscompose.domain.entities.NewsModel
 import com.kerencev.vknewscompose.domain.entities.WallModel
 import com.kerencev.vknewscompose.domain.repositories.ProfileRepository
 import com.vk.api.sdk.VKKeyValueStorage
 import com.vk.api.sdk.auth.VKAccessToken
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class ProfileRepositoryImpl @Inject constructor(
@@ -21,54 +24,72 @@ class ProfileRepositoryImpl @Inject constructor(
     companion object {
         private const val PROFILE_NOT_FOUND = "Profile not found"
         private const val PROFILE_PHOTOS_NOT_FOUND = "Profile photos not found"
+        private const val TOKEN_IS_NULL = "Token is null"
+        private const val WALL_PAGE_SIZE = 5
     }
 
     private val token
         get() = VKAccessToken.restore(storage)
 
-    private var profilePhotosCache: List<PhotoModel>? = null
+    private var profileCache: ProfileDto? = null
+    private var profilePhotosCache: ProfilePhotosDto? = null
+    private val wallItemsCache = mutableListOf<NewsModel>()
+    private var wallPage = 0
+    private var wallPostsTotalCount = 0
 
-    override fun getProfile() = flow {
-        val response = apiService.getProfile(
-            token = getAccessToken(),
-            usersIds = token?.userId.toString()
-        )
-        if (response.response?.firstOrNull() == null)
-            throw IllegalStateException(PROFILE_NOT_FOUND)
-        emit(profileMapper.mapToEntity(response.response.first()))
+    override fun getProfile(isRefresh: Boolean) = flow {
+        if (profileCache == null || isRefresh) {
+            val profileResponse = apiService.getProfile(
+                token = getAccessToken(),
+                usersIds = token?.userId.toString()
+            ).response?.firstOrNull() ?: throw IllegalStateException(PROFILE_NOT_FOUND)
+            profileCache = profileResponse
+            emit(profileResponse)
+        } else profileCache?.let { emit(it) }
     }
+        .map { profileMapper.mapToEntity(it) }
 
-    override fun getProfilePhotos() = flow {
-        val photos = profilePhotosCache ?: run {
-            val response = apiService.getProfilePhotos(
+    override fun getProfilePhotos(isRefresh: Boolean) = flow {
+        if (profilePhotosCache == null || isRefresh) {
+            val photosResponse = apiService.getProfilePhotos(
                 token = getAccessToken(),
                 ownerId = token?.userId.toString()
-            )
-
-            if (response.response?.items == null || response.response.count == null)
-                throw IllegalStateException(PROFILE_PHOTOS_NOT_FOUND)
-
-            profileMapper.mapToEntity(response.response)
-        }
-        profilePhotosCache = photos
-        emit(photos)
+            ).response ?: throw IllegalStateException(PROFILE_PHOTOS_NOT_FOUND)
+            profilePhotosCache = photosResponse
+            emit(photosResponse)
+        } else profilePhotosCache?.let { emit(it) }
     }
+        .map { profileMapper.mapToEntity(it) }
 
-    override fun getWallData(page: Int, pageSize: Int) = flow {
+    override fun getWallData(isRefresh: Boolean) = flow {
+        if (isRefresh) {
+            wallItemsCache.clear()
+            wallPage = 0
+            wallPostsTotalCount = 0
+        }
+
+        if (wallItemsCache.isNotEmpty() && wallItemsCache.size >= wallPostsTotalCount) {
+            emit(WallModel(items = wallItemsCache, isItemsOver = true))
+            return@flow
+        }
+
         val response = apiService.getWall(
             token = getAccessToken(),
-            offset = page * pageSize,
-            count = pageSize
+            offset = wallPage * WALL_PAGE_SIZE,
+            count = WALL_PAGE_SIZE
         )
+        wallPage++
+        wallPostsTotalCount = response.response?.count ?: 0
+        wallItemsCache.addAll(newsMapper.mapToEntity(response))
         emit(
             WallModel(
-                totalCount = response.response?.count ?: 0,
-                items = newsMapper.mapToEntity(response)
+                items = wallItemsCache,
+                isItemsOver = wallItemsCache.size >= wallPostsTotalCount
             )
         )
     }
 
     @Throws(IllegalStateException::class)
-    private fun getAccessToken() = token?.accessToken ?: error("Token is null")
+    private fun getAccessToken() = token?.accessToken ?: error(TOKEN_IS_NULL)
 
 }

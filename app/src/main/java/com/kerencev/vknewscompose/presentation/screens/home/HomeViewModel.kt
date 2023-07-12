@@ -14,9 +14,7 @@ import com.kerencev.vknewscompose.presentation.screens.home.flow.HomeViewState
 import com.kerencev.vknewscompose.presentation.screens.home.flow.features.ChangeLikeStatusFeature
 import com.kerencev.vknewscompose.presentation.screens.home.flow.features.DeleteNewsFeature
 import com.kerencev.vknewscompose.presentation.screens.home.flow.features.GetNewsFeature
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 class HomeViewModel @Inject constructor(
@@ -26,8 +24,9 @@ class HomeViewModel @Inject constructor(
     private val deleteNewsFeature: DeleteNewsFeature
 ) : BaseViewModel<HomeEvent, HomeViewState, HomeShot>() {
 
-    override fun initState() = HomeViewState()
     private var firstVisibleItemIndex = 0
+
+    override fun initState() = HomeViewState()
 
     override fun produceCommand(event: HomeEvent): VkCommand {
         return when (event) {

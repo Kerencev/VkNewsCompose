@@ -28,4 +28,5 @@
     <string name="new_posts">Свежие записи</string>
     <string name="news">Новости</string>
     <string name="set_count">Всего: %d</string>
+    <string name="empty_data">Данных нет</string>
 </resources>

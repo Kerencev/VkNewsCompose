@@ -15,7 +15,7 @@ class ProfileMapperImpl @Inject constructor() : ProfileMapper {
             lastName = dto.lastName.orEmpty(),
             city = dto.city?.title,
             universityName = dto.universityName,
-            avatarUrl = dto.cropPhoto?.photo?.sizes?.lastOrNull()?.url,
+            avatarUrl = dto.avatarUrl,
             friendsCount = dto.counters?.friends ?: 0
         )
     }

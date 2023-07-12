@@ -18,4 +18,22 @@ sealed class ProfileEvent : VkEvent {
      * Load wall posts
      */
     object GetWall : ProfileEvent()
+
+    /**
+     * When the user scroll
+     */
+    class OnUserScroll(
+        val firstVisibleItem: Int? = null,
+        val firstVisibleItemScrollOffset: Int? = null
+    ) : ProfileEvent()
+
+    /**
+     * When the user uses swipe-refresh
+     */
+    object RefreshProfileData : ProfileEvent()
+
+    /**
+     * Click on closing error SnackBar
+     */
+    object HideErrorSnackBar : ProfileEvent()
 }
