@@ -18,6 +18,7 @@
     <string name="all_photos">Все фотографии %s</string>
     <string name="photo">Фото</string>
     <string name="show_all">Показать все</string>
+    <string name="show_more">Показать еще</string>
     <string name="wall">Записи на стене</string>
     <string name="profile_photos_error">Не удалось загрузить фотографии</string>
     <string name="profile_error">Не удалось загрузить профиль</string>

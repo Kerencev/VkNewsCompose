@@ -31,7 +31,7 @@ import com.kerencev.vknewscompose.R
 import com.kerencev.vknewscompose.di.ViewModelFactory
 import com.kerencev.vknewscompose.presentation.common.compose.SetupStatusColors
 import com.kerencev.vknewscompose.presentation.common.views.ScaffoldWithCollapsingToolbar
-import com.kerencev.vknewscompose.presentation.screens.home.views.AsyncShimmerImage
+import com.kerencev.vknewscompose.presentation.common.views.AsyncShimmerImage
 import com.kerencev.vknewscompose.presentation.screens.profile_photos.flow.ProfilePhotosViewState
 import com.kerencev.vknewscompose.ui.theme.LightBlue
 

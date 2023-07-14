@@ -8,9 +8,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,7 +38,8 @@ fun ProfileHeader(
     Box {
         Card(
             modifier = Modifier.padding(top = avatarSize / 2),
-            shape = Shapes.large
+            shape = Shapes.large,
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colors.surface)
         ) {
             Column(
                 modifier = Modifier
@@ -73,8 +75,8 @@ fun ProfileHeader(
             modifier = Modifier
                 .alpha(avatarAlpha)
                 .size(avatarSize)
-                .clip(CircleShape)
                 .border(4.dp, MaterialTheme.colors.surface, CircleShape)
+                .clip(CircleShape)
                 .align(Alignment.TopCenter),
             model = model.avatarUrl,
             contentDescription = stringResource(id = R.string.user_avatar),

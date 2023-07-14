@@ -11,8 +11,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
+//import androidx.compose.material.Card
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,7 +36,8 @@ fun ProfileHeaderLoading(
     Box {
         Card(
             modifier = Modifier.padding(top = avatarSize / 2),
-            shape = Shapes.large
+            shape = Shapes.large,
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colors.surface)
         ) {
             Column(
                 modifier = Modifier
@@ -42,7 +45,7 @@ fun ProfileHeaderLoading(
                     .padding(top = 50.dp, start = 16.dp, end = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Card(
+                androidx.compose.material.Card(
                     modifier = Modifier
                         .padding(top = 8.dp)
                         .height(20.dp)
@@ -54,7 +57,7 @@ fun ProfileHeaderLoading(
                             .background(LightGray)
                     )
                 }
-                Card(
+                androidx.compose.material.Card(
                     modifier = Modifier
                         .padding(vertical = 8.dp, horizontal = 16.dp)
                         .height(20.dp)

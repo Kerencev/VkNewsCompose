@@ -1,4 +1,4 @@
-package com.kerencev.vknewscompose.presentation.screens.home.views
+package com.kerencev.vknewscompose.presentation.common.views
 
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
@@ -10,7 +10,6 @@ import androidx.compose.ui.unit.Dp
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.kerencev.vknewscompose.R
-import com.kerencev.vknewscompose.presentation.common.views.ShimmerDefault
 
 @Composable
 fun AsyncShimmerImage(

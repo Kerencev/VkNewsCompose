@@ -12,8 +12,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -198,7 +199,8 @@ fun ProfileScreenContent(
                 item {
                     Card(
                         modifier = Modifier.padding(top = 8.dp),
-                        shape = Shapes.large
+                        shape = Shapes.large,
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colors.surface)
                     ) {
                         when (photosState) {
                             is ContentState.Content -> ProfilePhotosGrid(
@@ -222,7 +224,8 @@ fun ProfileScreenContent(
                         modifier = Modifier
                             .fillParentMaxWidth()
                             .padding(top = 8.dp),
-                        shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
+                        shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colors.surface)
                     ) {
                         CardTitle(
                             modifier = Modifier.padding(
