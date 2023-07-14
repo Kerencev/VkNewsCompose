@@ -8,5 +8,5 @@ sealed class ContentState<out T> : VkState {
 
     object Loading : ContentState<Nothing>()
 
-    data class Error<T>(val message: String) : ContentState<T>()
+    data class Error(val message: String) : ContentState<Nothing>()
 }

@@ -19,6 +19,7 @@ class NewsFeedMapperImpl @Inject constructor() : NewsFeedMapper {
         posts?.let {
             for (post in posts) {
                 val group = groups?.firstOrNull() { it.id == post.sourceId?.absoluteValue }
+                val contentImage = post.attachments?.firstOrNull()?.photo?.sizes?.lastOrNull()
                 if (post.id == null || uniquePostsId.contains(post.id)) continue
                 uniquePostsId.add(post.id)
                 val newsModel = NewsModel(
@@ -30,7 +31,9 @@ class NewsFeedMapperImpl @Inject constructor() : NewsFeedMapper {
                     postTime = ((post.date ?: 0) * 1000).toDateTime(),
                     communityImageUrl = group?.avatar ?: profile?.photoUrl,
                     contentText = post.text.orEmpty(),
-                    contentImageUrl = post.attachments?.firstOrNull()?.photo?.sizes?.lastOrNull()?.url,
+                    contentImageUrl = contentImage?.url,
+                    contentImageHeight = contentImage?.height,
+                    contentImageWidth = contentImage?.width,
                     viewsCount = post.views?.count ?: 0,
                     sharesCount = post.reposts?.count ?: 0,
                     commentsCount = post.comments?.count ?: 0,

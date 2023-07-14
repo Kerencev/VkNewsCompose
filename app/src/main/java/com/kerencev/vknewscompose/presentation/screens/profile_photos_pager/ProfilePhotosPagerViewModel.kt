@@ -1,4 +1,4 @@
-package com.kerencev.vknewscompose.presentation.screens.profile_photos
+package com.kerencev.vknewscompose.presentation.screens.profile_photos_pager
 
 import com.kerencev.vknewscompose.presentation.common.mvi.BaseViewModel
 import com.kerencev.vknewscompose.presentation.common.mvi.VkAction
@@ -8,24 +8,24 @@ import com.kerencev.vknewscompose.presentation.common.mvi.VkShot
 import com.kerencev.vknewscompose.presentation.screens.profile.flow.ProfileInputAction
 import com.kerencev.vknewscompose.presentation.screens.profile.flow.ProfileOutputAction
 import com.kerencev.vknewscompose.presentation.screens.profile.flow.features.GetProfilePhotosFeature
-import com.kerencev.vknewscompose.presentation.screens.profile_photos.flow.ProfilePhotosEvent
-import com.kerencev.vknewscompose.presentation.screens.profile_photos.flow.ProfilePhotosViewState
+import com.kerencev.vknewscompose.presentation.screens.profile_photos_pager.flow.ProfilePhotosPagerEvent
+import com.kerencev.vknewscompose.presentation.screens.profile_photos_pager.flow.ProfilePhotosPagerViewState
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class ProfilePhotosViewModel @Inject constructor(
+class ProfilePhotosPagerViewModel @Inject constructor(
     private val getProfilePhotosFeature: GetProfilePhotosFeature
-) : BaseViewModel<ProfilePhotosEvent, ProfilePhotosViewState, VkShot>() {
+) : BaseViewModel<ProfilePhotosPagerEvent, ProfilePhotosPagerViewState, VkShot>() {
 
     init {
-        send(ProfilePhotosEvent.GetProfilePhotos)
+        send(ProfilePhotosPagerEvent.GetProfilePhotos)
     }
 
-    override fun initState() = ProfilePhotosViewState()
+    override fun initState() = ProfilePhotosPagerViewState()
 
-    override fun produceCommand(event: ProfilePhotosEvent): VkCommand {
+    override fun produceCommand(event: ProfilePhotosPagerEvent): VkCommand {
         return when (event) {
-            is ProfilePhotosEvent.GetProfilePhotos -> ProfileInputAction.GetProfilePhotos
+            is ProfilePhotosPagerEvent.GetProfilePhotos -> ProfileInputAction.GetProfilePhotos
         }
     }
 
@@ -41,6 +41,8 @@ class ProfilePhotosViewModel @Inject constructor(
     override suspend fun produceState(action: VkAction) {
         when (action) {
             is ProfileOutputAction.SetProfilePhotos -> setState { setPhotos(action.result) }
+            is ProfileOutputAction.ProfilePhotosLoading -> setState { loading() }
+            is ProfileOutputAction.ProfilePhotosError -> setState { error(action.message) }
         }
     }
 }

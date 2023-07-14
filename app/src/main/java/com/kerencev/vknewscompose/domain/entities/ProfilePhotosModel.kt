@@ -6,6 +6,8 @@ data class PhotoModel(
     val lat: Double?,
     val long: Double?,
     val url: String,
+    val height: Int,
+    val width: Int,
     val text: String,
     val likes: Int,
     val reposts: Int

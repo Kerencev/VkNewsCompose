@@ -17,12 +17,13 @@ import com.kerencev.vknewscompose.presentation.navigation.rememberNavigationStat
 import com.kerencev.vknewscompose.presentation.screens.comments.CommentsScreen
 import com.kerencev.vknewscompose.presentation.screens.home.HomeScreen
 import com.kerencev.vknewscompose.presentation.screens.profile.ProfileScreen
+import com.kerencev.vknewscompose.presentation.screens.profile_photos.ProfilePhotosScreen
 import com.kerencev.vknewscompose.ui.theme.LightBlue
 
 @Composable
 fun MainScreen(
     viewModelFactory: ViewModelFactory,
-    onPhotoClick: (Int) -> Unit
+    onPhotoClick: (index: Int) -> Unit
 ) {
     val navigationState = rememberNavigationState()
 
@@ -63,17 +64,13 @@ fun MainScreen(
                 HomeScreen(
                     viewModelFactory = viewModelFactory,
                     paddingValues = paddingValues,
-                    onCommentsClick = {
-                        navigationState.navigateToComments(it)
-                    }
+                    onCommentsClick = { navigationState.navigateToComments(it) }
                 )
             },
             commentsScreenContent = { newsModel ->
                 CommentsScreen(
                     newsModel = newsModel,
-                    onBackPressed = {
-                        navigationState.navHostController.popBackStack()
-                    }
+                    onBackPressed = { navigationState.navHostController.popBackStack() }
                 )
             },
             favouriteScreenContent = { Text(text = "favourite Screen") },
@@ -81,7 +78,16 @@ fun MainScreen(
                 ProfileScreen(
                     paddingValues = paddingValues,
                     viewModelFactory = viewModelFactory,
-                    onPhotoClick = onPhotoClick
+                    onPhotoClick = onPhotoClick,
+                    onShowAllPhotosClick = { navigationState.navigateToProfilePhotos() }
+                )
+            },
+            profilePhotosScreenContent = {
+                ProfilePhotosScreen(
+                    viewModelFactory = viewModelFactory,
+                    paddingValues = paddingValues,
+                    onPhotoClick = onPhotoClick,
+                    onBackPressed = { navigationState.navHostController.popBackStack() }
                 )
             }
         )

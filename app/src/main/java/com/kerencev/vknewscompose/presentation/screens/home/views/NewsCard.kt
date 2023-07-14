@@ -12,11 +12,8 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
-import com.kerencev.vknewscompose.R
 import com.kerencev.vknewscompose.extensions.notNullOrEmptyOrBlank
 import com.kerencev.vknewscompose.presentation.model.NewsModelUi
 
@@ -32,25 +29,22 @@ fun NewsCard(
         modifier = modifier,
         shape = shape
     ) {
-        Column(
-            modifier = Modifier
-                .padding(vertical = 8.dp)
-        ) {
+        Column(modifier = Modifier.padding(vertical = 8.dp)) {
             NewsHeader(newsModel = newsModel)
             Spacer(modifier = Modifier.height(4.dp))
             if (newsModel.contentText.notNullOrEmptyOrBlank()) Text(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp),
-                text = newsModel.contentText
+                modifier = Modifier.padding(horizontal = 8.dp),
+                text = newsModel.contentText,
+                maxLines = 4,
+                overflow = TextOverflow.Ellipsis
             )
             Spacer(modifier = Modifier.height(4.dp))
-            AsyncImage(
-                model = newsModel.contentImageUrl,
+            AsyncShimmerImage(
+                imageUrl = newsModel.contentImageUrl,
+                shimmerHeight = newsModel.contentImageHeight?.dp ?: 200.dp,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .wrapContentHeight(),
-                contentDescription = stringResource(id = R.string.post_content_image),
-                contentScale = ContentScale.FillWidth
+                    .wrapContentHeight()
             )
             Spacer(modifier = Modifier.height(8.dp))
             NewsFooter(newsModel = newsModel, onCommentsClick, onLikesClick)

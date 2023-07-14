@@ -25,6 +25,10 @@ class BottomNavigationState(
         navHostController.navigate(Screen.Comments.getRouteWithArgs(newsModel = newsModel))
     }
 
+    fun navigateToProfilePhotos() {
+        navHostController.navigate(Screen.ProfilePhotos.route)
+    }
+
 }
 
 @Composable

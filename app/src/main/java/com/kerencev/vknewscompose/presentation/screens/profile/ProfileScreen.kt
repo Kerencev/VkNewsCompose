@@ -68,7 +68,8 @@ import kotlinx.coroutines.flow.onEach
 fun ProfileScreen(
     paddingValues: PaddingValues,
     viewModelFactory: ViewModelFactory,
-    onPhotoClick: (Int) -> Unit
+    onPhotoClick: (Int) -> Unit,
+    onShowAllPhotosClick: () -> Unit
 ) {
     SetupStatusColors(
         color = MaterialTheme.colors.surface,
@@ -85,7 +86,8 @@ fun ProfileScreen(
         currentShot = shot,
         paddingValues = paddingValues,
         sendEvent = sendEvent,
-        onPhotoClick = onPhotoClick
+        onPhotoClick = onPhotoClick,
+        onShowAllPhotosClick = onShowAllPhotosClick
     )
 }
 
@@ -95,7 +97,8 @@ fun ProfileScreenContent(
     currentShot: State<ProfileShot>,
     paddingValues: PaddingValues,
     sendEvent: (ProfileEvent) -> Unit,
-    onPhotoClick: (Int) -> Unit
+    onPhotoClick: (Int) -> Unit,
+    onShowAllPhotosClick: () -> Unit
 ) {
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
@@ -200,7 +203,8 @@ fun ProfileScreenContent(
                         when (photosState) {
                             is ContentState.Content -> ProfilePhotosGrid(
                                 photos = photosState.data,
-                                onPhotoClick = onPhotoClick
+                                onPhotoClick = onPhotoClick,
+                                onShowAllClick = onShowAllPhotosClick
                             )
 
                             is ContentState.Loading -> ShimmerDefault(modifier = stubModifier)

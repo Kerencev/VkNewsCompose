@@ -10,9 +10,10 @@ import com.kerencev.vknewscompose.presentation.model.NewsModelUi
 fun BottomNavGraph(
     navHostController: NavHostController,
     newsScreenContent: @Composable () -> Unit,
+    commentsScreenContent: @Composable (NewsModelUi) -> Unit,
     favouriteScreenContent: @Composable () -> Unit,
     profileScreenContent: @Composable () -> Unit,
-    commentsScreenContent: @Composable (NewsModelUi) -> Unit,
+    profilePhotosScreenContent: @Composable () -> Unit,
 ) {
     NavHost(
         navController = navHostController,
@@ -25,8 +26,9 @@ fun BottomNavGraph(
         composable(Screen.Favourite.route) {
             favouriteScreenContent()
         }
-        composable(Screen.Profile.route) {
-            profileScreenContent()
-        }
+        profileScreenNavGraph(
+            profileScreenContent = profileScreenContent,
+            profilePhotosScreenContent = profilePhotosScreenContent
+        )
     }
 }

@@ -27,11 +27,14 @@ import com.kerencev.vknewscompose.ui.theme.LightBlue
 @Composable
 fun ProfilePhotosGrid(
     photos: List<PhotoModel>,
-    onPhotoClick: (Int) -> Unit
+    onPhotoClick: (Int) -> Unit,
+    onShowAllClick: () -> Unit
 ) {
     Column {
         Row(
-            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp),
+            modifier = Modifier
+                .padding(start = 16.dp, end = 16.dp, top = 8.dp)
+                .clickable { onShowAllClick() },
             verticalAlignment = Alignment.CenterVertically
         ) {
             CardTitle(

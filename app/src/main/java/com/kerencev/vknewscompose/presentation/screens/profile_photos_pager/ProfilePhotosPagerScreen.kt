@@ -1,4 +1,4 @@
-package com.kerencev.vknewscompose.presentation.screens.profile_photos
+package com.kerencev.vknewscompose.presentation.screens.profile_photos_pager
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -27,12 +27,12 @@ import coil.size.Size
 import com.kerencev.vknewscompose.di.ViewModelFactory
 import com.kerencev.vknewscompose.presentation.common.ContentState
 import com.kerencev.vknewscompose.presentation.common.compose.SetupStatusColors
-import com.kerencev.vknewscompose.presentation.screens.profile_photos.flow.ProfilePhotosViewState
+import com.kerencev.vknewscompose.presentation.screens.profile_photos_pager.flow.ProfilePhotosPagerViewState
 import com.smarttoolfactory.zoom.ZoomableImage
 import com.smarttoolfactory.zoom.rememberZoomState
 
 @Composable
-fun PhotosPagerScreen(
+fun ProfilePhotosPagerScreen(
     viewModelFactory: ViewModelFactory,
     selectedPhotoNumber: Int,
 ) {
@@ -41,10 +41,10 @@ fun PhotosPagerScreen(
         isAppearanceLightStatusBars = false,
     )
 
-    val viewModel: ProfilePhotosViewModel = viewModel(factory = viewModelFactory)
+    val viewModel: ProfilePhotosPagerViewModel = viewModel(factory = viewModelFactory)
     val state = viewModel.observedState.collectAsState()
 
-    PhotosSliderScreenContent(
+    ProfilePhotosPagerScreenContent(
         state = state,
         selectedPhotoNumber = selectedPhotoNumber,
     )
@@ -52,8 +52,8 @@ fun PhotosPagerScreen(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun PhotosSliderScreenContent(
-    state: State<ProfilePhotosViewState>,
+fun ProfilePhotosPagerScreenContent(
+    state: State<ProfilePhotosPagerViewState>,
     selectedPhotoNumber: Int,
 ) {
 

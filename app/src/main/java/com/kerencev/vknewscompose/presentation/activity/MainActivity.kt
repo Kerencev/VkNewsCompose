@@ -16,7 +16,7 @@ import com.kerencev.vknewscompose.presentation.navigation.AppNavGraph
 import com.kerencev.vknewscompose.presentation.navigation.Screen
 import com.kerencev.vknewscompose.presentation.screens.login.LoginScreen
 import com.kerencev.vknewscompose.presentation.screens.main.MainScreen
-import com.kerencev.vknewscompose.presentation.screens.profile_photos.PhotosPagerScreen
+import com.kerencev.vknewscompose.presentation.screens.profile_photos_pager.ProfilePhotosPagerScreen
 import com.kerencev.vknewscompose.ui.theme.VkNewsComposeTheme
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.auth.VKScope
@@ -62,7 +62,7 @@ class MainActivity : ComponentActivity() {
                                 )
                             },
                             photosSliderScreenContent = { number ->
-                                PhotosPagerScreen(
+                                ProfilePhotosPagerScreen(
                                     viewModelFactory = viewModelFactory,
                                     selectedPhotoNumber = number
                                 )

@@ -18,6 +18,8 @@ data class NewsModelUi(
     val communityImageUrl: String?,
     val contentText: String,
     val contentImageUrl: String?,
+    val contentImageHeight: Int?,
+    val contentImageWidth: Int?,
     val viewsCount: Int,
     val sharesCount: Int,
     val commentsCount: Int,

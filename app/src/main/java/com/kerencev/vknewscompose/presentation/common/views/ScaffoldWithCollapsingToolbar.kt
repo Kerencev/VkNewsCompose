@@ -17,19 +17,22 @@ import androidx.compose.ui.unit.dp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScaffoldWithCollapsingToolbar(
+    modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
     paddingValues: PaddingValues = PaddingValues(),
-    title: @Composable () -> Unit,
+    toolBarTitle: @Composable () -> Unit,
+    toolBarNavigationIcon: @Composable () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit
 ) {
     Scaffold(
-        modifier = Modifier
+        modifier = modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection)
             .padding(paddingValues),
         topBar = {
             Surface(elevation = 8.dp) {
                 TopAppBar(
-                    title = title,
+                    title = toolBarTitle,
+                    navigationIcon = toolBarNavigationIcon,
                     scrollBehavior = scrollBehavior,
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = MaterialTheme.colors.surface,

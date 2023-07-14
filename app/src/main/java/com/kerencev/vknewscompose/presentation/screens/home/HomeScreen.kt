@@ -107,7 +107,7 @@ fun HomeScreenContent(
 ) {
     ScaffoldWithCollapsingToolbar(
         paddingValues = paddingValues,
-        title = {
+        toolBarTitle = {
             Text(
                 text = stringResource(id = R.string.news),
                 maxLines = 1,

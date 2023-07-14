@@ -50,6 +50,8 @@ data class PhotoX(
 )
 
 data class SizeX(
+    val height: Int?,
+    val width: Int?,
     val url: String?
 )
 

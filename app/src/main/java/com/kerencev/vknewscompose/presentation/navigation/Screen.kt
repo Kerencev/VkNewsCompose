@@ -24,7 +24,11 @@ sealed class Screen(
 
     object Favourite : Screen(ROUTE_FAVOURITE)
 
+    object ProfileStart : Screen(ROUTE_PROFILE_START)
+
     object Profile : Screen(ROUTE_PROFILE)
+
+    object ProfilePhotos : Screen(ROUTE_PROFILE_PHOTOS)
 
     object Comments : Screen(ROUTE_COMMENTS) {
         private const val ROUTE_FOR_ARGS = "comments"
@@ -45,7 +49,9 @@ sealed class Screen(
         private const val ROUTE_HOME = "home"
         private const val ROUTE_NEWS = "news"
         private const val ROUTE_FAVOURITE = "favourite"
+        private const val ROUTE_PROFILE_START = "profile_start"
         private const val ROUTE_PROFILE = "profile"
+        private const val ROUTE_PROFILE_PHOTOS = "profile_photos"
         private const val ROUTE_COMMENTS = "comments/{$KEY_NEWS_POST}"
     }
 }
