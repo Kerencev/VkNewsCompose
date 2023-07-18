@@ -33,7 +33,7 @@ sealed class ProfileEvent : VkEvent {
     object RefreshProfileData : ProfileEvent()
 
     /**
-     * Click on closing error SnackBar
+     * When we invoked profile error lambda
      */
-    object HideErrorSnackBar : ProfileEvent()
+    object OnProfileErrorInvoked : ProfileEvent()
 }

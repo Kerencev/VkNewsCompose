@@ -46,7 +46,7 @@ class ProfileViewModel @Inject constructor(
                 firstVisibleItemScrollOffset = event.firstVisibleItemScrollOffset
             )
             is ProfileEvent.RefreshProfileData -> ProfileInputAction.RefreshProfileData
-            is ProfileEvent.HideErrorSnackBar -> ProfileEffect.None
+            is ProfileEvent.OnProfileErrorInvoked -> ProfileEffect.None
         }
     }
 

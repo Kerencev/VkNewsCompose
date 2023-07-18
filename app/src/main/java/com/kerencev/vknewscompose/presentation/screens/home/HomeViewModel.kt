@@ -37,7 +37,7 @@ class HomeViewModel @Inject constructor(
             is HomeEvent.DeleteNews -> HomeInputAction.DeleteNews(
                 newsModelMapper.mapToEntity(event.newsModelUi)
             )
-            is HomeEvent.HideSnackBar -> HomeEffect.None
+            is HomeEvent.OnErrorInvoked -> HomeEffect.None
             is HomeEvent.OnScrollToTop -> HomeOutputAction.OnScrollToTop
             is HomeEvent.OnUserScroll -> HomeOutputAction.OnUserScroll(event.firstVisibleItemIndex)
         }
@@ -55,6 +55,7 @@ class HomeViewModel @Inject constructor(
     override suspend fun produceShot(effect: VkEffect) {
         when (effect) {
             is HomeEffect.LikeError -> setShot { HomeShot.ShowErrorMessage(effect.message) }
+            is HomeEffect.RefreshNewsError -> setShot { HomeShot.ShowErrorMessage(effect.message) }
             is HomeEffect.None -> setShot { HomeShot.None }
         }
     }
@@ -82,7 +83,8 @@ class HomeViewModel @Inject constructor(
                 setState {
                     setScrollToTopVisible(
                         isScrollToTopVisible =
-                        action.firstVisibleItemIndex in 1 until firstVisibleItemIndex
+                        action.firstVisibleItemIndex in 1 until firstVisibleItemIndex &&
+                                !state().isSwipeRefreshing
                     )
                 }
                 firstVisibleItemIndex = action.firstVisibleItemIndex

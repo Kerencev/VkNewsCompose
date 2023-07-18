@@ -4,8 +4,8 @@ import android.content.Context
 import com.kerencev.vknewscompose.di.ViewModelFactory
 import com.kerencev.vknewscompose.di.annotation.ApplicationScope
 import com.kerencev.vknewscompose.di.module.DataModule
-import com.kerencev.vknewscompose.di.module.DomainModule
 import com.kerencev.vknewscompose.di.module.HomeFeatureModule
+import com.kerencev.vknewscompose.di.module.MainFeatureModule
 import com.kerencev.vknewscompose.di.module.PresentationModule
 import com.kerencev.vknewscompose.di.module.ProfileFeatureModule
 import com.kerencev.vknewscompose.di.module.ViewModelModule
@@ -17,8 +17,8 @@ import dagger.Component
     modules = [
         DataModule::class,
         ViewModelModule::class,
-        DomainModule::class,
         PresentationModule::class,
+        MainFeatureModule::class,
         HomeFeatureModule::class,
         ProfileFeatureModule::class,
     ]

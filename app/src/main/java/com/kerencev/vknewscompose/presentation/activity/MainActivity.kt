@@ -16,6 +16,8 @@ import com.kerencev.vknewscompose.presentation.navigation.AppNavGraph
 import com.kerencev.vknewscompose.presentation.navigation.Screen
 import com.kerencev.vknewscompose.presentation.screens.login.LoginScreen
 import com.kerencev.vknewscompose.presentation.screens.main.MainScreen
+import com.kerencev.vknewscompose.presentation.screens.main.flow.MainEvent
+import com.kerencev.vknewscompose.presentation.screens.main.flow.MainState
 import com.kerencev.vknewscompose.presentation.screens.profile_photos_pager.ProfilePhotosPagerScreen
 import com.kerencev.vknewscompose.ui.theme.VkNewsComposeTheme
 import com.vk.api.sdk.VK
@@ -31,12 +33,12 @@ class MainActivity : ComponentActivity() {
             val component = getApplicationComponent()
             val viewModelFactory = component.getViewModelFactory()
             val viewModel: MainViewModel = viewModel(factory = viewModelFactory)
-            val authState = viewModel.authState.collectAsState(AuthState.INITIAL)
+            val state = viewModel.observedState.collectAsState(MainState())
 
             val launcher = rememberLauncherForActivityResult(
                 contract = VK.getVKAuthActivityResultContract()
             ) {
-                viewModel.performAuthResult()
+                viewModel.send(MainEvent.CheckAuthState)
             }
 
             VkNewsComposeTheme {
@@ -45,12 +47,13 @@ class MainActivity : ComponentActivity() {
                     isAppearanceLightStatusBars = !isSystemInDarkTheme()
                 )
 
-                when (authState.value) {
+                when (state.value.authState) {
                     AuthState.AUTHORIZED -> {
                         AppNavGraph(
                             navHostController = navController,
                             mainScreenContent = {
                                 MainScreen(
+                                    mainViewModel = viewModel,
                                     viewModelFactory = viewModelFactory,
                                     onPhotoClick = { number ->
                                         navController.navigate(
@@ -64,7 +67,8 @@ class MainActivity : ComponentActivity() {
                             photosSliderScreenContent = { number ->
                                 ProfilePhotosPagerScreen(
                                     viewModelFactory = viewModelFactory,
-                                    selectedPhotoNumber = number
+                                    selectedPhotoNumber = number,
+                                    onDismiss = { navController.popBackStack() }
                                 )
                             }
                         )

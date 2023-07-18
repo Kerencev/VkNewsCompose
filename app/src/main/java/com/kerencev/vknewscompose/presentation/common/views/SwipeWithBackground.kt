@@ -35,7 +35,8 @@ fun SwipeWithBackground(
     if (dismissState.isDismissed(dismissDirection)) {
         onDismiss()
     }
-    SwipeToDismiss(modifier = modifier,
+    SwipeToDismiss(
+        modifier = modifier,
         directions = setOf(dismissDirection),
         state = dismissState,
         background = {

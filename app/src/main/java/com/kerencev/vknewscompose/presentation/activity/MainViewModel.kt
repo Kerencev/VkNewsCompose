@@ -1,23 +1,54 @@
 package com.kerencev.vknewscompose.presentation.activity
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.kerencev.vknewscompose.domain.use_cases.change_auth_state.CheckAuthStateUseCase
-import com.kerencev.vknewscompose.domain.use_cases.get_auth_state.GetAuthStateUseCase
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.kerencev.vknewscompose.presentation.common.mvi.BaseViewModel
+import com.kerencev.vknewscompose.presentation.common.mvi.VkAction
+import com.kerencev.vknewscompose.presentation.common.mvi.VkCommand
+import com.kerencev.vknewscompose.presentation.common.mvi.VkEffect
+import com.kerencev.vknewscompose.presentation.screens.main.flow.MainEffect
+import com.kerencev.vknewscompose.presentation.screens.main.flow.MainEvent
+import com.kerencev.vknewscompose.presentation.screens.main.flow.MainInputAction
+import com.kerencev.vknewscompose.presentation.screens.main.flow.MainOutputAction
+import com.kerencev.vknewscompose.presentation.screens.main.flow.MainShot
+import com.kerencev.vknewscompose.presentation.screens.main.flow.MainState
+import com.kerencev.vknewscompose.presentation.screens.main.flow.features.CheckAuthStateFeature
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
-    getAuthStateUseCase: GetAuthStateUseCase,
-    private val checkAuthStateUseCase: CheckAuthStateUseCase
-) : ViewModel() {
+    private val checkAuthStateFeature: CheckAuthStateFeature
+) : BaseViewModel<MainEvent, MainState, MainShot>() {
 
-    val authState = getAuthStateUseCase()
+    init {
+        send(MainEvent.CheckAuthState)
+    }
 
-    fun performAuthResult() {
-        viewModelScope.launch(Dispatchers.IO) {
-            checkAuthStateUseCase()
+    override fun initState() = MainState()
+
+    override fun produceCommand(event: MainEvent): VkCommand {
+        return when (event) {
+            is MainEvent.CheckAuthState -> MainInputAction.CheckAuthState
+            is MainEvent.ShowErrorMessage -> MainEffect.ShowErrorMessage(event.message)
+            is MainEvent.OnSnackBarDismiss -> MainEffect.None
+        }
+    }
+
+    override fun features(action: VkAction): Flow<VkCommand>? {
+        return when (action) {
+            is MainInputAction.CheckAuthState -> checkAuthStateFeature(action, state())
+            else -> null
+        }
+    }
+
+    override suspend fun produceShot(effect: VkEffect) {
+        when (effect) {
+            is MainEffect.ShowErrorMessage -> setShot { MainShot.ShowErrorMessage(effect.message) }
+            is MainEffect.None -> setShot { MainShot.None }
+        }
+    }
+
+    override suspend fun produceState(action: VkAction) {
+        when (action) {
+            is MainOutputAction.SetAuthState -> setState { setAuthState(action.result) }
         }
     }
 

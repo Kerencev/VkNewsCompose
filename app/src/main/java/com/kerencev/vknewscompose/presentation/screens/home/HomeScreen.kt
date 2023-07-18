@@ -34,11 +34,9 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.kerencev.vknewscompose.R
 import com.kerencev.vknewscompose.di.ViewModelFactory
-import com.kerencev.vknewscompose.presentation.common.compose.rememberUnit
 import com.kerencev.vknewscompose.presentation.common.compose.rememberUnitParams
 import com.kerencev.vknewscompose.presentation.common.views.ProgressBarDefault
 import com.kerencev.vknewscompose.presentation.common.views.ScaffoldWithCollapsingToolbar
-import com.kerencev.vknewscompose.presentation.common.views.SnackBarWithAction
 import com.kerencev.vknewscompose.presentation.common.views.SwipeWithBackground
 import com.kerencev.vknewscompose.presentation.common.views.TextWithButton
 import com.kerencev.vknewscompose.presentation.common.views.TopPopupCard
@@ -58,22 +56,14 @@ import kotlinx.coroutines.flow.onEach
 fun HomeScreen(
     viewModelFactory: ViewModelFactory,
     paddingValues: PaddingValues,
-    onCommentsClick: (newsModel: NewsModelUi) -> Unit
+    onCommentsClick: (newsModel: NewsModelUi) -> Unit,
+    onError: (message: String) -> Unit,
 ) {
     val viewModel: HomeViewModel = viewModel(factory = viewModelFactory)
     val coroutineScope = rememberCoroutineScope()
     val state = viewModel.observedState.collectAsState()
     val shot = viewModel.observedShot.collectAsState(HomeShot.None)
-
-    val loadNews: (Boolean) -> Unit = rememberUnitParams { viewModel.send(HomeEvent.GetNews(it)) }
-    val onLikeClick: (NewsModelUi) -> Unit =
-        rememberUnitParams { viewModel.send(HomeEvent.ChangeLikeStatus(it)) }
-    val onItemDismiss: (NewsModelUi) -> Unit =
-        rememberUnitParams { viewModel.send(HomeEvent.DeleteNews(it)) }
-    val hideSnackBar = rememberUnit { viewModel.send(HomeEvent.HideSnackBar) }
-    val onScrollToTop = rememberUnit { viewModel.send(HomeEvent.OnScrollToTop) }
-    val onUserScroll: (Int) -> Unit =
-        rememberUnitParams { viewModel.send(HomeEvent.OnUserScroll(it)) }
+    val sendEvent: (HomeEvent) -> Unit = rememberUnitParams { viewModel.send(it) }
 
     HomeScreenContent(
         state = state,
@@ -81,12 +71,8 @@ fun HomeScreen(
         coroutineScope = coroutineScope,
         paddingValues = paddingValues,
         onCommentsClick = onCommentsClick,
-        onItemDismiss = onItemDismiss,
-        onLikeClick = onLikeClick,
-        loadNews = loadNews,
-        onSnackBarClick = hideSnackBar,
-        onScrollToTop = onScrollToTop,
-        onUserScroll = onUserScroll
+        sendEvent = sendEvent,
+        onError = onError,
     )
 }
 
@@ -98,12 +84,8 @@ fun HomeScreenContent(
     coroutineScope: CoroutineScope,
     paddingValues: PaddingValues,
     onCommentsClick: (newsModel: NewsModelUi) -> Unit,
-    onItemDismiss: (newsModel: NewsModelUi) -> Unit,
-    onLikeClick: (newsModel: NewsModelUi) -> Unit,
-    loadNews: (isRefresh: Boolean) -> Unit,
-    onSnackBarClick: () -> Unit,
-    onScrollToTop: () -> Unit,
-    onUserScroll: (Int) -> Unit
+    sendEvent: (HomeEvent) -> Unit,
+    onError: (message: String) -> Unit,
 ) {
     ScaffoldWithCollapsingToolbar(
         paddingValues = paddingValues,
@@ -126,7 +108,7 @@ fun HomeScreenContent(
 
                 SwipeRefresh(
                     state = SwipeRefreshState(isRefreshing = currentState.isSwipeRefreshing),
-                    onRefresh = { loadNews(true) },
+                    onRefresh = { sendEvent(HomeEvent.GetNews(isRefresh = true)) },
                 ) {
                     val listState = rememberLazyListState()
 
@@ -139,14 +121,15 @@ fun HomeScreenContent(
                         items(currentState.newsList, { it.id }) { newsItem ->
                             SwipeWithBackground(
                                 modifier = Modifier.animateItemPlacement(),
-                                onDismiss = { onItemDismiss(newsItem) },
+                                onDismiss = { sendEvent(HomeEvent.DeleteNews(newsItem)) },
                                 backgroundColor = Color.Red,
                                 backgroundText = stringResource(id = R.string.delete),
                                 backgroundTextColor = Color.White
                             ) {
                                 NewsCard(newsModel = newsItem,
                                     onCommentsClick = onCommentsClick,
-                                    onLikesClick = { onLikeClick(newsItem) })
+                                    onLikesClick = { sendEvent(HomeEvent.ChangeLikeStatus(newsItem)) }
+                                )
                             }
                         }
                         item {
@@ -160,10 +143,10 @@ fun HomeScreenContent(
                                 currentState.isError -> TextWithButton(
                                     modifier = Modifier.padding(16.dp),
                                     title = stringResource(id = R.string.load_data_error),
-                                    onClick = { loadNews(false) }
+                                    onClick = { sendEvent(HomeEvent.GetNews()) }
                                 )
 
-                                else -> SideEffect { loadNews(false) }
+                                else -> SideEffect { sendEvent(HomeEvent.GetNews()) }
                             }
                         }
                     }
@@ -171,9 +154,7 @@ fun HomeScreenContent(
                     LaunchedEffect(listState) {
                         snapshotFlow { listState.firstVisibleItemIndex }
                             .distinctUntilChanged()
-                            .onEach {
-                                onUserScroll(it)
-                            }
+                            .onEach { sendEvent(HomeEvent.OnUserScroll(it)) }
                             .flowOn(Dispatchers.IO)
                             .launchIn(coroutineScope)
                     }
@@ -181,12 +162,14 @@ fun HomeScreenContent(
                     LaunchedEffect(key1 = currentState.scrollToTop) {
                         if (currentState.scrollToTop) {
                             listState.scrollToItem(0)
-                            onScrollToTop()
+                            sendEvent(HomeEvent.OnScrollToTop)
                         }
                     }
                 }
 
-                val visibilityState by animateFloatAsState(targetValue = if (currentState.isScrollToTopVisible) 1f else 0f)
+                val visibilityState by animateFloatAsState(
+                    targetValue = if (currentState.isScrollToTopVisible) 1f else 0f
+                )
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.TopCenter
@@ -197,27 +180,18 @@ fun HomeScreenContent(
                             .alpha(visibilityState),
                         text = stringResource(id = R.string.new_posts),
                         iconRes = R.drawable.ic_arrow_up,
-                        onClick = { if (currentState.isScrollToTopVisible) loadNews(true) }
+                        onClick = {
+                            if (currentState.isScrollToTopVisible)
+                                sendEvent(HomeEvent.GetNews(isRefresh = true))
+                        }
                     )
                 }
             }
 
             when (val currentShot = shot.value) {
                 is HomeShot.ShowErrorMessage -> {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.BottomCenter
-                    ) {
-                        SnackBarWithAction(
-                            modifier = Modifier.padding(start = 8.dp, end = 8.dp, bottom = 64.dp),
-                            text = stringResource(
-                                id = R.string.set_error_cause,
-                                currentShot.message
-                            ),
-                            actionLabel = stringResource(id = R.string.ok),
-                            onClick = onSnackBarClick
-                        )
-                    }
+                    onError(currentShot.message)
+                    sendEvent(HomeEvent.OnErrorInvoked)
                 }
 
                 is HomeShot.None -> Unit

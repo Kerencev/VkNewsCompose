@@ -3,6 +3,7 @@ package com.kerencev.vknewscompose.presentation.screens.home.flow.features
 import com.kerencev.vknewscompose.domain.repositories.NewsFeedRepository
 import com.kerencev.vknewscompose.extensions.retryDefault
 import com.kerencev.vknewscompose.presentation.common.mvi.VkCommand
+import com.kerencev.vknewscompose.presentation.screens.home.flow.HomeEffect
 import com.kerencev.vknewscompose.presentation.screens.home.flow.HomeInputAction
 import com.kerencev.vknewscompose.presentation.screens.home.flow.HomeOutputAction
 import com.kerencev.vknewscompose.presentation.screens.home.flow.HomeViewState
@@ -34,6 +35,9 @@ class GetNewsFeatureImpl @Inject constructor(
                 else emit(HomeOutputAction.GetNewsLoading)
             }
             .retryDefault()
-            .catch { emit(HomeOutputAction.GetNewsError(it)) }
+            .catch {
+                emit(HomeOutputAction.GetNewsError(it))
+                if (action.isRefresh) emit(HomeEffect.RefreshNewsError(it.message.orEmpty()))
+            }
     }
 }

@@ -46,7 +46,6 @@ import com.kerencev.vknewscompose.presentation.common.compose.rememberUnitParams
 import com.kerencev.vknewscompose.presentation.common.views.CardTitle
 import com.kerencev.vknewscompose.presentation.common.views.ProgressBarDefault
 import com.kerencev.vknewscompose.presentation.common.views.ShimmerDefault
-import com.kerencev.vknewscompose.presentation.common.views.SnackBarWithAction
 import com.kerencev.vknewscompose.presentation.common.views.TextWithButton
 import com.kerencev.vknewscompose.presentation.screens.home.views.NewsCard
 import com.kerencev.vknewscompose.presentation.screens.profile.flow.ProfileEvent
@@ -69,8 +68,9 @@ import kotlinx.coroutines.flow.onEach
 fun ProfileScreen(
     paddingValues: PaddingValues,
     viewModelFactory: ViewModelFactory,
-    onPhotoClick: (Int) -> Unit,
-    onShowAllPhotosClick: () -> Unit
+    onPhotoClick: (index: Int) -> Unit,
+    onShowAllPhotosClick: () -> Unit,
+    onProfileRefreshError: (message: String) -> Unit,
 ) {
     SetupStatusColors(
         color = MaterialTheme.colors.surface,
@@ -88,7 +88,8 @@ fun ProfileScreen(
         paddingValues = paddingValues,
         sendEvent = sendEvent,
         onPhotoClick = onPhotoClick,
-        onShowAllPhotosClick = onShowAllPhotosClick
+        onShowAllPhotosClick = onShowAllPhotosClick,
+        onProfileRefreshError = onProfileRefreshError
     )
 }
 
@@ -99,7 +100,8 @@ fun ProfileScreenContent(
     paddingValues: PaddingValues,
     sendEvent: (ProfileEvent) -> Unit,
     onPhotoClick: (Int) -> Unit,
-    onShowAllPhotosClick: () -> Unit
+    onShowAllPhotosClick: () -> Unit,
+    onProfileRefreshError: (message: String) -> Unit
 ) {
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
@@ -281,17 +283,8 @@ fun ProfileScreenContent(
 
             when (val shot = currentShot.value) {
                 is ProfileShot.ShowErrorMessage -> {
-                    SnackBarWithAction(
-                        modifier = Modifier
-                            .padding(8.dp)
-                            .align(Alignment.BottomCenter),
-                        text = stringResource(
-                            id = R.string.set_error_cause,
-                            shot.message
-                        ),
-                        actionLabel = stringResource(id = R.string.ok),
-                        onClick = { sendEvent(ProfileEvent.HideErrorSnackBar) }
-                    )
+                    onProfileRefreshError(shot.message)
+                    sendEvent(ProfileEvent.OnProfileErrorInvoked)
                 }
 
                 is ProfileShot.None -> Unit

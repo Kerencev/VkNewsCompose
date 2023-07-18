@@ -24,9 +24,9 @@ sealed class HomeEvent : VkEvent {
     class ChangeLikeStatus(val newsModelUi: NewsModelUi) : HomeEvent()
 
     /**
-     * Positive SnackBar click event
+     * When we invoked error lambda
      */
-    object HideSnackBar : HomeEvent()
+    object OnErrorInvoked : HomeEvent()
 
     /**
      * Event after scrolling up

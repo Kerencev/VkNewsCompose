@@ -82,6 +82,11 @@ sealed class HomeEffect : VkEffect {
      */
     class LikeError(val message: String) : HomeEffect()
 
+    /**
+     * Occurrence of an error when refreshing the news
+     */
+    class RefreshNewsError(val message: String) : HomeEffect()
+
     object None : HomeEffect()
 
 }

@@ -5,29 +5,48 @@ import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
+import androidx.compose.material.SnackbarDuration
 import androidx.compose.material.Text
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.kerencev.vknewscompose.R
 import com.kerencev.vknewscompose.di.ViewModelFactory
+import com.kerencev.vknewscompose.presentation.activity.MainViewModel
+import com.kerencev.vknewscompose.presentation.common.compose.rememberUnitParams
 import com.kerencev.vknewscompose.presentation.navigation.BottomNavGraph
 import com.kerencev.vknewscompose.presentation.navigation.NavigationItem
 import com.kerencev.vknewscompose.presentation.navigation.rememberNavigationState
 import com.kerencev.vknewscompose.presentation.screens.comments.CommentsScreen
 import com.kerencev.vknewscompose.presentation.screens.home.HomeScreen
+import com.kerencev.vknewscompose.presentation.screens.main.flow.MainEvent
+import com.kerencev.vknewscompose.presentation.screens.main.flow.MainShot
 import com.kerencev.vknewscompose.presentation.screens.profile.ProfileScreen
 import com.kerencev.vknewscompose.presentation.screens.profile_photos.ProfilePhotosScreen
 import com.kerencev.vknewscompose.ui.theme.LightBlue
+import kotlinx.coroutines.launch
 
 @Composable
 fun MainScreen(
+    mainViewModel: MainViewModel,
     viewModelFactory: ViewModelFactory,
     onPhotoClick: (index: Int) -> Unit
 ) {
     val navigationState = rememberNavigationState()
+    val scaffoldState = rememberScaffoldState()
+    val coroutineScope = rememberCoroutineScope()
+
+    val shot = mainViewModel.observedShot.collectAsState(initial = MainShot.None).value
+    val sendEvent: (MainEvent) -> Unit = rememberUnitParams { mainViewModel.send(it) }
 
     Scaffold(
+        scaffoldState = scaffoldState,
         bottomBar = {
             BottomNavigation {
                 val navBackStackEntry by navigationState.navHostController.currentBackStackEntryAsState()
@@ -64,7 +83,8 @@ fun MainScreen(
                 HomeScreen(
                     viewModelFactory = viewModelFactory,
                     paddingValues = paddingValues,
-                    onCommentsClick = { navigationState.navigateToComments(it) }
+                    onCommentsClick = { navigationState.navigateToComments(it) },
+                    onError = { sendEvent(MainEvent.ShowErrorMessage(it)) }
                 )
             },
             commentsScreenContent = { newsModel ->
@@ -79,7 +99,8 @@ fun MainScreen(
                     paddingValues = paddingValues,
                     viewModelFactory = viewModelFactory,
                     onPhotoClick = onPhotoClick,
-                    onShowAllPhotosClick = { navigationState.navigateToProfilePhotos() }
+                    onShowAllPhotosClick = { navigationState.navigateToProfilePhotos() },
+                    onProfileRefreshError = { sendEvent(MainEvent.ShowErrorMessage(it)) }
                 )
             },
             profilePhotosScreenContent = {
@@ -91,5 +112,24 @@ fun MainScreen(
                 )
             }
         )
+    }
+
+    when (shot) {
+        is MainShot.ShowErrorMessage -> {
+            val message = stringResource(id = R.string.set_error_cause, shot.message)
+            val actionLabel = stringResource(id = R.string.ok)
+            LaunchedEffect(key1 = scaffoldState.snackbarHostState) {
+                coroutineScope.launch {
+                    scaffoldState.snackbarHostState.showSnackbar(
+                        message = message,
+                        actionLabel = actionLabel,
+                        duration = SnackbarDuration.Short
+                    )
+                    sendEvent(MainEvent.OnSnackBarDismiss)
+                }
+            }
+        }
+
+        is MainShot.None -> Unit
     }
 }
