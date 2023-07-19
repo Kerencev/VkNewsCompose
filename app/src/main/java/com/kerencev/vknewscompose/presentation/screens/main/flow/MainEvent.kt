@@ -16,4 +16,6 @@ sealed class MainEvent : VkEvent {
      */
     object OnSnackBarDismiss : MainEvent()
 
+    object Logout : MainEvent()
+
 }

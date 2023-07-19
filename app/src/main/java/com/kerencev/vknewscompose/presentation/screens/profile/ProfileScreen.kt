@@ -4,13 +4,16 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material3.Card
@@ -28,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.blur
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -55,6 +59,7 @@ import com.kerencev.vknewscompose.presentation.screens.profile.views.ProfileFrie
 import com.kerencev.vknewscompose.presentation.screens.profile.views.ProfileHeader
 import com.kerencev.vknewscompose.presentation.screens.profile.views.ProfileHeaderError
 import com.kerencev.vknewscompose.presentation.screens.profile.views.ProfileHeaderLoading
+import com.kerencev.vknewscompose.presentation.screens.profile.views.ProfileMenu
 import com.kerencev.vknewscompose.presentation.screens.profile.views.ProfilePhotosGrid
 import com.kerencev.vknewscompose.presentation.screens.profile.views.ProfileToolbar
 import com.kerencev.vknewscompose.ui.theme.LightBlue
@@ -71,6 +76,7 @@ fun ProfileScreen(
     onPhotoClick: (index: Int) -> Unit,
     onShowAllPhotosClick: () -> Unit,
     onProfileRefreshError: (message: String) -> Unit,
+    onLogoutClick: () -> Unit,
 ) {
     SetupStatusColors(
         color = MaterialTheme.colors.surface,
@@ -89,7 +95,8 @@ fun ProfileScreen(
         sendEvent = sendEvent,
         onPhotoClick = onPhotoClick,
         onShowAllPhotosClick = onShowAllPhotosClick,
-        onProfileRefreshError = onProfileRefreshError
+        onProfileRefreshError = onProfileRefreshError,
+        onLogoutClick = onLogoutClick,
     )
 }
 
@@ -101,7 +108,8 @@ fun ProfileScreenContent(
     sendEvent: (ProfileEvent) -> Unit,
     onPhotoClick: (Int) -> Unit,
     onShowAllPhotosClick: () -> Unit,
-    onProfileRefreshError: (message: String) -> Unit
+    onProfileRefreshError: (message: String) -> Unit,
+    onLogoutClick: () -> Unit,
 ) {
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
@@ -156,6 +164,22 @@ fun ProfileScreenContent(
                 title = toolbarTitle,
                 userAvatarModel = userAvatarSrc,
                 modifier = Modifier.alpha(state.topBarAlpha)
+            )
+
+            Spacer(
+                modifier = Modifier
+                    .alpha(state.blurBackgroundAlpha)
+                    .size(48.dp)
+                    .padding(8.dp)
+                    .clip(CircleShape)
+                    .align(Alignment.TopEnd)
+                    .background(MaterialTheme.colors.surface)
+            )
+
+            ProfileMenu(
+                modifier = Modifier.align(Alignment.TopEnd),
+                onRefreshClick = { sendEvent(ProfileEvent.RefreshProfileData) },
+                onLogoutClick = onLogoutClick,
             )
 
             LazyColumn(

@@ -48,6 +48,8 @@ class MainActivity : ComponentActivity() {
                 )
 
                 when (state.value.authState) {
+                    AuthState.INITIAL -> Unit
+
                     AuthState.AUTHORIZED -> {
                         AppNavGraph(
                             navHostController = navController,
@@ -80,7 +82,12 @@ class MainActivity : ComponentActivity() {
                         }
                     }
 
-                    AuthState.INITIAL -> Unit
+                    AuthState.LOG_OUT -> {
+                        navController.graph.clear()
+                        LoginScreen {
+                            launcher.launch(listOf(VKScope.WALL, VKScope.FRIENDS, VKScope.PHOTOS))
+                        }
+                    }
                 }
             }
         }

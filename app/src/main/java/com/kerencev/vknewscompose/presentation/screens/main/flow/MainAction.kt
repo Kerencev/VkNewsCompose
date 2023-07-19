@@ -11,6 +11,8 @@ sealed class MainInputAction : VkAction {
      */
     object CheckAuthState : MainInputAction()
 
+    object Logout : MainInputAction()
+
 }
 
 sealed class MainOutputAction : VkAction {

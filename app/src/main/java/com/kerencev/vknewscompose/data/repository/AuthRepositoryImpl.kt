@@ -20,4 +20,8 @@ class AuthRepositoryImpl @Inject constructor(
         emit(if (loggedIn) AuthState.AUTHORIZED else AuthState.NOT_AUTHORIZED)
     }
 
+    override fun logout() {
+        VKAccessToken.remove(storage)
+    }
+
 }

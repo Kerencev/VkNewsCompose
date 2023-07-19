@@ -7,4 +7,6 @@ interface AuthRepository {
 
     fun checkAuthState(): Flow<AuthState>
 
+    fun logout()
+
 }

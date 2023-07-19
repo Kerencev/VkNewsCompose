@@ -100,7 +100,8 @@ fun MainScreen(
                     viewModelFactory = viewModelFactory,
                     onPhotoClick = onPhotoClick,
                     onShowAllPhotosClick = { navigationState.navigateToProfilePhotos() },
-                    onProfileRefreshError = { sendEvent(MainEvent.ShowErrorMessage(it)) }
+                    onProfileRefreshError = { sendEvent(MainEvent.ShowErrorMessage(it)) },
+                    onLogoutClick = { sendEvent(MainEvent.Logout) },
                 )
             },
             profilePhotosScreenContent = {

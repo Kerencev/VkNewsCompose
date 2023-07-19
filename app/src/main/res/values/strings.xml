@@ -31,4 +31,6 @@
     <string name="set_count">Всего: %d</string>
     <string name="empty_data">Данных нет</string>
     <string name="set_photos_count">Фотографии: %d</string>
+    <string name="refresh">Обновить</string>
+    <string name="log_out">Выйти</string>
 </resources>
