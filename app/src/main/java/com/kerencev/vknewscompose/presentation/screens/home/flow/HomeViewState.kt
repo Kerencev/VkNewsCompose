@@ -23,12 +23,12 @@ data class HomeViewState(
     val isScrollToTopVisible: Boolean = false
 ) : VkState {
 
-    fun setNews(list: List<NewsModelUi>) = copy(
-        newsList = newsList + list,
+    fun setNews(list: List<NewsModelUi>, scrollToTop: Boolean) = copy(
+        newsList = list,
         isLoading = false,
         isError = false,
         isSwipeRefreshing = false,
-        scrollToTop = false,
+        scrollToTop = scrollToTop,
         isScrollToTopVisible = false
     )
 

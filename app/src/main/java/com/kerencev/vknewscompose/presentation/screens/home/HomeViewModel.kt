@@ -61,9 +61,10 @@ class HomeViewModel @Inject constructor(
 
     override suspend fun produceState(action: VkAction) {
         when (action) {
-            is HomeOutputAction.GetNewsSuccess -> setState {
+            is HomeOutputAction.GetNewsSuccess -> {
                 val data = action.result.map { it.mapToUiModel() }
-                if (action.isRefresh) setNews(data) else setNews(state().newsList + data)
+                val newsItems = if (action.isRefresh) data else state().newsList + data
+                setState { setNews(list = newsItems, scrollToTop = action.isRefresh) }
             }
 
             is HomeOutputAction.GetNewsLoading -> setState { loading() }
@@ -76,13 +77,9 @@ class HomeViewModel @Inject constructor(
             is HomeOutputAction.GetNewsRefreshing -> setState { refreshing() }
             is HomeOutputAction.OnScrollToTop -> setState { onScrollToTop() }
             is HomeOutputAction.OnUserScroll -> {
-                setState {
-                    setScrollToTopVisible(
-                        isScrollToTopVisible =
-                        action.firstVisibleItemIndex in 1 until firstVisibleItemIndex &&
-                                !state().isSwipeRefreshing
-                    )
-                }
+                val isScrollToTopVisible = action.firstVisibleItemIndex in 1 until firstVisibleItemIndex &&
+                        !state().isSwipeRefreshing
+                setState { setScrollToTopVisible(isScrollToTopVisible) }
                 firstVisibleItemIndex = action.firstVisibleItemIndex
             }
         }
