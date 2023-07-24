@@ -1,7 +1,7 @@
 package com.kerencev.vknewscompose.data.repository
 
 import com.kerencev.vknewscompose.data.api.ApiService
-import com.kerencev.vknewscompose.data.mapper.comments.CommentsMapper
+import com.kerencev.vknewscompose.data.mapper.mapToModel
 import com.kerencev.vknewscompose.domain.entities.NewsModel
 import com.kerencev.vknewscompose.domain.repositories.CommentsRepository
 import com.vk.api.sdk.VKKeyValueStorage
@@ -12,7 +12,6 @@ import javax.inject.Inject
 class CommentsRepositoryImpl @Inject constructor(
     private val apiService: ApiService,
     private val storage: VKKeyValueStorage,
-    private val commentsMapper: CommentsMapper
 ) : CommentsRepository {
 
     private val token
@@ -24,7 +23,7 @@ class CommentsRepositoryImpl @Inject constructor(
             ownerId = newsModel.communityId,
             postId = newsModel.id
         )
-        emit(commentsMapper.mapToEntity(response))
+        emit(response.mapToModel())
     }
 
     @Throws(IllegalStateException::class)

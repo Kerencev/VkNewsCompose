@@ -3,8 +3,7 @@ package com.kerencev.vknewscompose.data.repository
 import com.kerencev.vknewscompose.data.api.ApiService
 import com.kerencev.vknewscompose.data.dto.profile.ProfileDto
 import com.kerencev.vknewscompose.data.dto.profile.ProfilePhotosDto
-import com.kerencev.vknewscompose.data.mapper.news_feed.NewsFeedMapper
-import com.kerencev.vknewscompose.data.mapper.profile.ProfileMapper
+import com.kerencev.vknewscompose.data.mapper.mapToModel
 import com.kerencev.vknewscompose.domain.entities.NewsModel
 import com.kerencev.vknewscompose.domain.entities.WallModel
 import com.kerencev.vknewscompose.domain.repositories.ProfileRepository
@@ -17,8 +16,6 @@ import javax.inject.Inject
 class ProfileRepositoryImpl @Inject constructor(
     private val apiService: ApiService,
     private val storage: VKKeyValueStorage,
-    private val profileMapper: ProfileMapper,
-    private val newsMapper: NewsFeedMapper
 ) : ProfileRepository {
 
     companion object {
@@ -47,7 +44,7 @@ class ProfileRepositoryImpl @Inject constructor(
             emit(profileResponse)
         } else profileCache?.let { emit(it) }
     }
-        .map { profileMapper.mapToEntity(it) }
+        .map { it.mapToModel() }
 
     override fun getProfilePhotos(isRefresh: Boolean) = flow {
         if (profilePhotosCache == null || isRefresh) {
@@ -59,7 +56,7 @@ class ProfileRepositoryImpl @Inject constructor(
             emit(photosResponse)
         } else profilePhotosCache?.let { emit(it) }
     }
-        .map { profileMapper.mapToEntity(it) }
+        .map { it.mapToModel() }
 
     override fun getWallData(isRefresh: Boolean) = flow {
         if (isRefresh) {
@@ -80,7 +77,7 @@ class ProfileRepositoryImpl @Inject constructor(
         )
         wallPage++
         wallPostsTotalCount = response.response?.count ?: 0
-        wallItemsCache.addAll(newsMapper.mapToEntity(response))
+        wallItemsCache.addAll(response.mapToModel())
         emit(
             WallModel(
                 items = wallItemsCache,

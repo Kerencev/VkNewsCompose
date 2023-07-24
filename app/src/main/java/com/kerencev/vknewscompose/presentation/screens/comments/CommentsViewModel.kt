@@ -5,7 +5,7 @@ import com.kerencev.vknewscompose.presentation.common.mvi.VkAction
 import com.kerencev.vknewscompose.presentation.common.mvi.VkCommand
 import com.kerencev.vknewscompose.presentation.common.mvi.VkEffect
 import com.kerencev.vknewscompose.presentation.common.mvi.VkShot
-import com.kerencev.vknewscompose.presentation.mapper.NewsModelMapper
+import com.kerencev.vknewscompose.presentation.mapper.mapToModel
 import com.kerencev.vknewscompose.presentation.model.NewsModelUi
 import com.kerencev.vknewscompose.presentation.screens.comments.flow.CommentsEvent
 import com.kerencev.vknewscompose.presentation.screens.comments.flow.CommentsInputAction
@@ -18,7 +18,6 @@ import javax.inject.Inject
 class CommentsViewModel @Inject constructor(
     newsModel: NewsModelUi,
     private val getCommentsFeature: GetCommentsFeature,
-    private val newsModelMapper: NewsModelMapper
 ) : BaseViewModel<CommentsEvent, CommentsViewState, VkShot>() {
 
     init {
@@ -30,9 +29,7 @@ class CommentsViewModel @Inject constructor(
     override fun produceCommand(event: CommentsEvent): VkCommand {
         return when (event) {
             is CommentsEvent.GetComments -> CommentsInputAction.GetComments(
-                newsModelMapper.mapToEntity(
-                    event.newsModel
-                )
+                event.newsModel.mapToModel()
             )
         }
     }

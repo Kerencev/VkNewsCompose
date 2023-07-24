@@ -32,15 +32,6 @@ data class HomeViewState(
         isScrollToTopVisible = false
     )
 
-    fun refreshNews(list: List<NewsModelUi>) = copy(
-        newsList = list,
-        isLoading = false,
-        isError = false,
-        isSwipeRefreshing = false,
-        scrollToTop = true,
-        isScrollToTopVisible = false
-    )
-
     fun loading() = copy(
         isLoading = true,
         isError = false,

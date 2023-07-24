@@ -1,7 +1,7 @@
 package com.kerencev.vknewscompose.data.repository
 
 import com.kerencev.vknewscompose.data.api.ApiService
-import com.kerencev.vknewscompose.data.mapper.news_feed.NewsFeedMapper
+import com.kerencev.vknewscompose.data.mapper.mapToModel
 import com.kerencev.vknewscompose.domain.entities.NewsModel
 import com.kerencev.vknewscompose.domain.repositories.NewsFeedRepository
 import com.vk.api.sdk.VKKeyValueStorage
@@ -14,7 +14,6 @@ import javax.inject.Inject
 class NewsFeedRepositoryImpl @Inject constructor(
     private val apiService: ApiService,
     private val storage: VKKeyValueStorage,
-    private val newsMapper: NewsFeedMapper
 ) : NewsFeedRepository {
 
     private val token
@@ -27,7 +26,7 @@ class NewsFeedRepositoryImpl @Inject constructor(
         val response = if (startFrom == null) apiService.loadNewsFeed(getAccessToken())
         else apiService.loadNewsFeed(getAccessToken(), startFrom.orEmpty())
         startFrom = response.response?.nextFrom
-        emit(newsMapper.mapToEntity(response))
+        emit(response.mapToModel())
     }
 
     override fun changeLikeStatus(newsModel: NewsModel) = flow {

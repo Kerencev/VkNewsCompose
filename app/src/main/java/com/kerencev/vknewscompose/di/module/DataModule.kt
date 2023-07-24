@@ -3,12 +3,6 @@ package com.kerencev.vknewscompose.di.module
 import android.content.Context
 import com.kerencev.vknewscompose.data.api.ApiFactory
 import com.kerencev.vknewscompose.data.api.ApiService
-import com.kerencev.vknewscompose.data.mapper.comments.CommentsMapper
-import com.kerencev.vknewscompose.data.mapper.comments.CommentsMapperImpl
-import com.kerencev.vknewscompose.data.mapper.news_feed.NewsFeedMapper
-import com.kerencev.vknewscompose.data.mapper.news_feed.NewsFeedMapperImpl
-import com.kerencev.vknewscompose.data.mapper.profile.ProfileMapper
-import com.kerencev.vknewscompose.data.mapper.profile.ProfileMapperImpl
 import com.kerencev.vknewscompose.data.repository.AuthRepositoryImpl
 import com.kerencev.vknewscompose.data.repository.CommentsRepositoryImpl
 import com.kerencev.vknewscompose.data.repository.NewsFeedRepositoryImpl
@@ -56,17 +50,5 @@ interface DataModule {
     @ApplicationScope
     @Binds
     fun bindProfileRepository(impl: ProfileRepositoryImpl): ProfileRepository
-
-    @ApplicationScope
-    @Binds
-    fun bindCommentsMapper(impl: CommentsMapperImpl): CommentsMapper
-
-    @ApplicationScope
-    @Binds
-    fun bindNewsFeedMapper(impl: NewsFeedMapperImpl): NewsFeedMapper
-
-    @ApplicationScope
-    @Binds
-    fun bindProfileMapper(impl: ProfileMapperImpl): ProfileMapper
 
 }

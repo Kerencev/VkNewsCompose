@@ -4,7 +4,7 @@ import com.kerencev.vknewscompose.presentation.common.mvi.BaseViewModel
 import com.kerencev.vknewscompose.presentation.common.mvi.VkAction
 import com.kerencev.vknewscompose.presentation.common.mvi.VkCommand
 import com.kerencev.vknewscompose.presentation.common.mvi.VkEffect
-import com.kerencev.vknewscompose.presentation.mapper.NewsModelMapper
+import com.kerencev.vknewscompose.presentation.mapper.mapToUiModel
 import com.kerencev.vknewscompose.presentation.screens.profile.flow.ProfileEffect
 import com.kerencev.vknewscompose.presentation.screens.profile.flow.ProfileEvent
 import com.kerencev.vknewscompose.presentation.screens.profile.flow.ProfileInputAction
@@ -12,10 +12,10 @@ import com.kerencev.vknewscompose.presentation.screens.profile.flow.ProfileOutpu
 import com.kerencev.vknewscompose.presentation.screens.profile.flow.ProfileShot
 import com.kerencev.vknewscompose.presentation.screens.profile.flow.ProfileViewState
 import com.kerencev.vknewscompose.presentation.screens.profile.flow.features.CalculateProfileParamsFeature
+import com.kerencev.vknewscompose.presentation.screens.profile.flow.features.GetAllProfileDataFeature
 import com.kerencev.vknewscompose.presentation.screens.profile.flow.features.GetProfileFeature
 import com.kerencev.vknewscompose.presentation.screens.profile.flow.features.GetProfilePhotosFeature
 import com.kerencev.vknewscompose.presentation.screens.profile.flow.features.GetWallFeature
-import com.kerencev.vknewscompose.presentation.screens.profile.flow.features.GetAllProfileDataFeature
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -25,7 +25,6 @@ class ProfileViewModel @Inject constructor(
     private val getProfilePhotosFeature: GetProfilePhotosFeature,
     private val calculateProfileParamsFeature: CalculateProfileParamsFeature,
     private val getAllProfileDataFeature: GetAllProfileDataFeature,
-    private val newsModelMapper: NewsModelMapper
 ) : BaseViewModel<ProfileEvent, ProfileViewState, ProfileShot>() {
 
     init {
@@ -45,6 +44,7 @@ class ProfileViewModel @Inject constructor(
                 firstVisibleItem = event.firstVisibleItem,
                 firstVisibleItemScrollOffset = event.firstVisibleItemScrollOffset
             )
+
             is ProfileEvent.RefreshProfileData -> ProfileInputAction.RefreshProfileData
             is ProfileEvent.OnProfileErrorInvoked -> ProfileEffect.None
         }
@@ -55,7 +55,11 @@ class ProfileViewModel @Inject constructor(
             is ProfileInputAction.GetProfile -> getProfileFeature(action, state())
             is ProfileInputAction.GetProfilePhotos -> getProfilePhotosFeature(action, state())
             is ProfileInputAction.GetWall -> getWallFeature(action, state())
-            is ProfileInputAction.CalculateUiParams -> calculateProfileParamsFeature(action, state())
+            is ProfileInputAction.CalculateUiParams -> calculateProfileParamsFeature(
+                action,
+                state()
+            )
+
             is ProfileInputAction.RefreshProfileData -> getAllProfileDataFeature(action, state())
             else -> null
         }
@@ -67,6 +71,7 @@ class ProfileViewModel @Inject constructor(
                 setState { allDataRefreshing(false) }
                 setShot { ProfileShot.ShowErrorMessage(effect.message) }
             }
+
             is ProfileEffect.None -> setShot { ProfileShot.None }
         }
     }
@@ -81,10 +86,11 @@ class ProfileViewModel @Inject constructor(
             is ProfileOutputAction.ProfilePhotosError -> setState { profilePhotosError(action.message) }
             is ProfileOutputAction.SetWall -> setState {
                 setWall(
-                    items = action.wallItems.map { newsModelMapper.mapToUi(it) },
+                    items = action.wallItems.map { it.mapToUiModel() },
                     isItemsOver = action.isItemsOver
                 )
             }
+
             is ProfileOutputAction.WallLoading -> setState { wallLoading() }
             is ProfileOutputAction.WallError -> setState { wallError(action.message) }
             is ProfileOutputAction.SetUiParams -> {
@@ -97,14 +103,16 @@ class ProfileViewModel @Inject constructor(
                     )
                 }
             }
+
             is ProfileOutputAction.AllProfileDataRefreshing -> setState {
                 allDataRefreshing(true)
             }
+
             is ProfileOutputAction.SetAllProfileData -> setState {
                 setAllData(
                     profile = action.profile,
                     photos = action.photos,
-                    wallItems = action.wallItems.map { newsModelMapper.mapToUi(it) },
+                    wallItems = action.wallItems.map { it.mapToUiModel() },
                     isWallItemsOver = action.isWallItemsOver
                 )
             }

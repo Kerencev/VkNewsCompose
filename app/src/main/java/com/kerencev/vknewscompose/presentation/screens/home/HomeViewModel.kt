@@ -4,7 +4,8 @@ import com.kerencev.vknewscompose.presentation.common.mvi.BaseViewModel
 import com.kerencev.vknewscompose.presentation.common.mvi.VkAction
 import com.kerencev.vknewscompose.presentation.common.mvi.VkCommand
 import com.kerencev.vknewscompose.presentation.common.mvi.VkEffect
-import com.kerencev.vknewscompose.presentation.mapper.NewsModelMapper
+import com.kerencev.vknewscompose.presentation.mapper.mapToModel
+import com.kerencev.vknewscompose.presentation.mapper.mapToUiModel
 import com.kerencev.vknewscompose.presentation.screens.home.flow.HomeEffect
 import com.kerencev.vknewscompose.presentation.screens.home.flow.HomeEvent
 import com.kerencev.vknewscompose.presentation.screens.home.flow.HomeInputAction
@@ -18,7 +19,6 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class HomeViewModel @Inject constructor(
-    private val newsModelMapper: NewsModelMapper,
     private val getNewsFeature: GetNewsFeature,
     private val changeLikeStatusFeature: ChangeLikeStatusFeature,
     private val deleteNewsFeature: DeleteNewsFeature
@@ -32,11 +32,10 @@ class HomeViewModel @Inject constructor(
         return when (event) {
             is HomeEvent.GetNews -> HomeInputAction.GetNews(event.isRefresh)
             is HomeEvent.ChangeLikeStatus -> HomeInputAction.ChangeLikeStatus(
-                newsModelMapper.mapToEntity(event.newsModelUi)
+                event.newsModelUi.mapToModel()
             )
-            is HomeEvent.DeleteNews -> HomeInputAction.DeleteNews(
-                newsModelMapper.mapToEntity(event.newsModelUi)
-            )
+
+            is HomeEvent.DeleteNews -> HomeInputAction.DeleteNews(event.newsModelUi.mapToModel())
             is HomeEvent.OnErrorInvoked -> HomeEffect.None
             is HomeEvent.OnScrollToTop -> HomeOutputAction.OnScrollToTop
             is HomeEvent.OnUserScroll -> HomeOutputAction.OnUserScroll(event.firstVisibleItemIndex)
@@ -63,20 +62,17 @@ class HomeViewModel @Inject constructor(
     override suspend fun produceState(action: VkAction) {
         when (action) {
             is HomeOutputAction.GetNewsSuccess -> setState {
-                val data = action.result.map { newsModelMapper.mapToUi(it) }
-                if (action.isRefresh) refreshNews(data) else setNews(data)
+                val data = action.result.map { it.mapToUiModel() }
+                if (action.isRefresh) setNews(data) else setNews(state().newsList + data)
             }
 
             is HomeOutputAction.GetNewsLoading -> setState { loading() }
             is HomeOutputAction.GetNewsError -> setState { error() }
             is HomeOutputAction.ChangeLikeStatus -> setState {
-                updateItem(newsModelMapper.mapToUi(action.newsModel))
+                updateItem(action.newsModel.mapToUiModel())
             }
 
-            is HomeOutputAction.DeleteNews -> setState {
-                deleteItem(newsModelMapper.mapToUi(action.newsModel))
-            }
-
+            is HomeOutputAction.DeleteNews -> setState { deleteItem(action.newsModel.mapToUiModel()) }
             is HomeOutputAction.GetNewsRefreshing -> setState { refreshing() }
             is HomeOutputAction.OnScrollToTop -> setState { onScrollToTop() }
             is HomeOutputAction.OnUserScroll -> {
