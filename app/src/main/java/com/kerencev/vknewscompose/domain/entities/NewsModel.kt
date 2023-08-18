@@ -7,12 +7,17 @@ data class NewsModel(
     val postTime: String,
     val communityImageUrl: String?,
     val contentText: String,
-    val contentImageUrl: String?,
-    val contentImageHeight: Int?,
-    val contentImageWidth: Int?,
+    val imageContent: List<ImageContentModel>,
     val viewsCount: Int,
     val sharesCount: Int,
     val commentsCount: Int,
     val likesCount: Int,
     val isLiked: Boolean
+)
+
+data class ImageContentModel(
+    val id: Long,
+    val url: String,
+    val height: Int,
+    val width: Int,
 )

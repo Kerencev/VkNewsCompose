@@ -7,7 +7,7 @@ import com.kerencev.vknewscompose.presentation.screens.home.flow.HomeEffect
 import com.kerencev.vknewscompose.presentation.screens.home.flow.HomeInputAction
 import com.kerencev.vknewscompose.presentation.screens.home.flow.HomeOutputAction
 import com.kerencev.vknewscompose.presentation.screens.home.flow.HomeViewState
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flatMapConcat
@@ -19,7 +19,7 @@ class GetNewsFeatureImpl @Inject constructor(
     private val repository: NewsFeedRepository
 ) : GetNewsFeature {
 
-    @OptIn(FlowPreview::class)
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun invoke(action: HomeInputAction.GetNews, state: HomeViewState): Flow<VkCommand> {
         return repository.getNewsFeed(action.isRefresh)
             .flatMapConcat {

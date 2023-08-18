@@ -1,15 +1,16 @@
 package com.kerencev.vknewscompose.presentation.screens.profile
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -45,7 +46,6 @@ import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.kerencev.vknewscompose.R
 import com.kerencev.vknewscompose.di.ViewModelFactory
 import com.kerencev.vknewscompose.presentation.common.ContentState
-import com.kerencev.vknewscompose.presentation.common.compose.SetupStatusColors
 import com.kerencev.vknewscompose.presentation.common.compose.rememberUnitParams
 import com.kerencev.vknewscompose.presentation.common.views.CardTitle
 import com.kerencev.vknewscompose.presentation.common.views.ProgressBarDefault
@@ -74,15 +74,11 @@ fun ProfileScreen(
     paddingValues: PaddingValues,
     viewModelFactory: ViewModelFactory,
     onPhotoClick: (index: Int) -> Unit,
+    onWallItemClick: (index: Int, itemId: Long) -> Unit,
     onShowAllPhotosClick: () -> Unit,
     onProfileRefreshError: (message: String) -> Unit,
     onLogoutClick: () -> Unit,
 ) {
-    SetupStatusColors(
-        color = MaterialTheme.colors.surface,
-        isAppearanceLightStatusBars = !isSystemInDarkTheme()
-    )
-
     val viewModel: ProfileViewModel = viewModel(factory = viewModelFactory)
     val state = viewModel.observedState.collectAsState()
     val shot = viewModel.observedShot.collectAsState(ProfileShot.None)
@@ -94,6 +90,7 @@ fun ProfileScreen(
         paddingValues = paddingValues,
         sendEvent = sendEvent,
         onPhotoClick = onPhotoClick,
+        onWallItemClick = onWallItemClick,
         onShowAllPhotosClick = onShowAllPhotosClick,
         onProfileRefreshError = onProfileRefreshError,
         onLogoutClick = onLogoutClick,
@@ -107,6 +104,7 @@ fun ProfileScreenContent(
     paddingValues: PaddingValues,
     sendEvent: (ProfileEvent) -> Unit,
     onPhotoClick: (Int) -> Unit,
+    onWallItemClick: (index: Int, itemId: Long) -> Unit,
     onShowAllPhotosClick: () -> Unit,
     onProfileRefreshError: (message: String) -> Unit,
     onLogoutClick: () -> Unit,
@@ -139,7 +137,6 @@ fun ProfileScreenContent(
         state = SwipeRefreshState(isRefreshing = state.isSwipeRefreshing),
         onRefresh = { sendEvent(ProfileEvent.RefreshProfileData) },
     ) {
-
         Box(
             modifier = Modifier
                 .background(color = colorResource(id = R.color.background_news))
@@ -149,7 +146,7 @@ fun ProfileScreenContent(
                 modifier = Modifier
                     .alpha(state.blurBackgroundAlpha)
                     .fillMaxWidth()
-                    .height(120.dp)
+                    .height(160.dp)
                     .blur(
                         radius = 32.dp,
                         edgeTreatment = BlurredEdgeTreatment(null)
@@ -166,25 +163,42 @@ fun ProfileScreenContent(
                 modifier = Modifier.alpha(state.topBarAlpha)
             )
 
-            Spacer(
+            Box(
                 modifier = Modifier
+                    .padding(
+                        top = 8.dp + WindowInsets.systemBars
+                            .asPaddingValues()
+                            .calculateTopPadding(),
+                        end = 8.dp,
+                        start = 8.dp,
+                        bottom = 8.dp
+                    )
                     .alpha(state.blurBackgroundAlpha)
-                    .size(48.dp)
-                    .padding(8.dp)
+                    .size(32.dp)
                     .clip(CircleShape)
                     .align(Alignment.TopEnd)
                     .background(MaterialTheme.colors.surface)
             )
 
             ProfileMenu(
-                modifier = Modifier.align(Alignment.TopEnd),
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(
+                        top = WindowInsets.systemBars
+                            .asPaddingValues()
+                            .calculateTopPadding()
+                    ),
                 onRefreshClick = { sendEvent(ProfileEvent.RefreshProfileData) },
                 onLogoutClick = onLogoutClick,
             )
 
             LazyColumn(
                 modifier = Modifier
-                    .padding(top = 54.dp)
+                    .padding(
+                        top = 54.dp + WindowInsets.systemBars
+                            .asPaddingValues()
+                            .calculateTopPadding()
+                    )
                     .fillMaxSize(),
                 state = listState,
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -272,7 +286,10 @@ fun ProfileScreenContent(
                         ) else Shapes.large,
                         newsModel = item,
                         onCommentsClick = {},
-                        onLikesClick = {}
+                        onLikesClick = {},
+                        onImageClick = { imageIndex ->
+                            onWallItemClick(imageIndex, item.id)
+                        }
                     )
                 }
                 item {

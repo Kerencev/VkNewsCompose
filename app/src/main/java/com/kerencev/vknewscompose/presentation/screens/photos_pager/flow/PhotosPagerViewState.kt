@@ -1,4 +1,4 @@
-package com.kerencev.vknewscompose.presentation.screens.profile_photos_pager.flow
+package com.kerencev.vknewscompose.presentation.screens.photos_pager.flow
 
 import androidx.compose.runtime.Stable
 import com.kerencev.vknewscompose.domain.entities.PhotoModel
@@ -6,8 +6,9 @@ import com.kerencev.vknewscompose.presentation.common.ContentState
 import com.kerencev.vknewscompose.presentation.common.mvi.VkState
 
 @Stable
-data class ProfilePhotosPagerViewState(
-    val photosState: ContentState<List<PhotoModel>> = ContentState.Loading
+data class PhotosPagerViewState(
+    val photosState: ContentState<List<PhotoModel>> = ContentState.Loading,
+    val isToolbarVisible: Boolean = true
 ) : VkState {
 
     fun setPhotos(photos: List<PhotoModel>) = copy(
@@ -20,6 +21,10 @@ data class ProfilePhotosPagerViewState(
 
     fun error(message: String) = copy(
         photosState = ContentState.Error(message)
+    )
+
+    fun setToolbarVisibility(isVisible: Boolean) = copy(
+        isToolbarVisible = isVisible
     )
 
 }

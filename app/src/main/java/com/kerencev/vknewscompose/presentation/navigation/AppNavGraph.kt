@@ -6,12 +6,13 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.kerencev.vknewscompose.presentation.model.PhotoType
 
 @Composable
 fun AppNavGraph(
     navHostController: NavHostController,
     mainScreenContent: @Composable () -> Unit,
-    photosSliderScreenContent: @Composable (Int) -> Unit
+    photosPagerScreenContent: @Composable (type: PhotoType, initialPage: Int, newsModelId: Long) -> Unit
 ) {
     NavHost(
         navController = navHostController,
@@ -23,14 +24,30 @@ fun AppNavGraph(
         composable(
             route = Screen.PhotosPager.route,
             arguments = listOf(
+                navArgument(name = Screen.KEY_PHOTO_TYPE) {
+                    type = NavType.StringType
+                },
                 navArgument(name = Screen.KEY_SELECTED_PHOTO) {
                     type = NavType.IntType
+                },
+                navArgument(name = Screen.KEY_NEWS_MODEL_ID) {
+                    type = NavType.LongType
                 }
             )
         ) {
-            val selectedPhotoNumber = it.arguments?.getInt(Screen.KEY_SELECTED_PHOTO)
-                ?: throw RuntimeException("Args for PhotosPager screen is null")
-            photosSliderScreenContent(selectedPhotoNumber)
+            val type = it.arguments?.getString(Screen.KEY_PHOTO_TYPE).orEmpty()
+            val selectedPhotoNumber = it.arguments?.getInt(Screen.KEY_SELECTED_PHOTO) ?: 0
+            val newsModelId = it.arguments?.getLong(Screen.KEY_NEWS_MODEL_ID) ?: 0
+            photosPagerScreenContent(
+                type = when (type) {
+                    PhotoType.PROFILE.name -> PhotoType.PROFILE
+                    PhotoType.WALL.name -> PhotoType.WALL
+                    PhotoType.NEWS.name -> PhotoType.NEWS
+                    else -> PhotoType.NEWS
+                },
+                initialPage = selectedPhotoNumber,
+                newsModelId = newsModelId
+            )
         }
     }
 }

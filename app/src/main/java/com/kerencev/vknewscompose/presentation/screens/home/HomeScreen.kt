@@ -1,7 +1,6 @@
 package com.kerencev.vknewscompose.presentation.screens.home
 
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,7 +23,6 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -37,7 +35,6 @@ import com.kerencev.vknewscompose.di.ViewModelFactory
 import com.kerencev.vknewscompose.presentation.common.compose.rememberUnitParams
 import com.kerencev.vknewscompose.presentation.common.views.ProgressBarDefault
 import com.kerencev.vknewscompose.presentation.common.views.ScaffoldWithCollapsingToolbar
-import com.kerencev.vknewscompose.presentation.common.views.SwipeWithBackground
 import com.kerencev.vknewscompose.presentation.common.views.TextWithButton
 import com.kerencev.vknewscompose.presentation.common.views.TopPopupCard
 import com.kerencev.vknewscompose.presentation.model.NewsModelUi
@@ -58,6 +55,7 @@ fun HomeScreen(
     paddingValues: PaddingValues,
     onCommentsClick: (newsModel: NewsModelUi) -> Unit,
     onError: (message: String) -> Unit,
+    onImageClick: (index: Int, newsModelId: Long) -> Unit,
 ) {
     val viewModel: HomeViewModel = viewModel(factory = viewModelFactory)
     val coroutineScope = rememberCoroutineScope()
@@ -73,10 +71,11 @@ fun HomeScreen(
         onCommentsClick = onCommentsClick,
         sendEvent = sendEvent,
         onError = onError,
+        onImageClick = onImageClick,
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreenContent(
     state: State<HomeViewState>,
@@ -86,6 +85,7 @@ fun HomeScreenContent(
     onCommentsClick: (newsModel: NewsModelUi) -> Unit,
     sendEvent: (HomeEvent) -> Unit,
     onError: (message: String) -> Unit,
+    onImageClick: (index: Int, newsModelId: Long) -> Unit,
 ) {
     ScaffoldWithCollapsingToolbar(
         paddingValues = paddingValues,
@@ -99,7 +99,6 @@ fun HomeScreenContent(
         content = { innerPadding ->
             Box(
                 modifier = Modifier
-                    .padding(innerPadding)
                     .fillMaxSize()
                     .background(color = colorResource(id = R.color.background_news)),
                 contentAlignment = Alignment.Center
@@ -109,35 +108,30 @@ fun HomeScreenContent(
                 SwipeRefresh(
                     state = SwipeRefreshState(isRefreshing = currentState.isSwipeRefreshing),
                     onRefresh = { sendEvent(HomeEvent.GetNews(isRefresh = true)) },
+                    indicatorPadding = PaddingValues(top = innerPadding.calculateTopPadding()),
                 ) {
                     val listState = rememberLazyListState()
 
                     LazyColumn(
                         state = listState,
-                        contentPadding = PaddingValues(vertical = 8.dp),
+                        contentPadding = PaddingValues(top = innerPadding.calculateTopPadding() + 8.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         items(currentState.newsList, { it.id }) { newsItem ->
-                            SwipeWithBackground(
-                                modifier = Modifier.animateItemPlacement(),
-                                onDismiss = { sendEvent(HomeEvent.DeleteNews(newsItem)) },
-                                backgroundColor = Color.Red,
-                                backgroundText = stringResource(id = R.string.delete),
-                                backgroundTextColor = Color.White
-                            ) {
-                                NewsCard(newsModel = newsItem,
-                                    onCommentsClick = onCommentsClick,
-                                    onLikesClick = { sendEvent(HomeEvent.ChangeLikeStatus(newsItem)) }
-                                )
-                            }
+                            NewsCard(
+                                newsModel = newsItem,
+                                onCommentsClick = onCommentsClick,
+                                onLikesClick = { sendEvent(HomeEvent.ChangeLikeStatus(newsItem)) },
+                                onImageClick = { index ->
+                                    onImageClick(index, newsItem.id)
+                                }
+                            )
                         }
                         item {
                             when {
                                 currentState.isLoading -> ProgressBarDefault(
-                                    modifier = Modifier.padding(
-                                        16.dp
-                                    )
+                                    modifier = Modifier.padding(16.dp)
                                 )
 
                                 currentState.isError -> TextWithButton(
@@ -176,7 +170,7 @@ fun HomeScreenContent(
                 ) {
                     TopPopupCard(
                         modifier = Modifier
-                            .padding(8.dp)
+                            .padding(top = innerPadding.calculateTopPadding() + 8.dp)
                             .alpha(visibilityState),
                         text = stringResource(id = R.string.new_posts),
                         iconRes = R.drawable.ic_arrow_up,

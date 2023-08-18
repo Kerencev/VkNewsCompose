@@ -18,12 +18,6 @@ sealed class HomeInputAction : VkAction {
      */
     class ChangeLikeStatus(val newsModel: NewsModel) : HomeInputAction()
 
-    /**
-     * Action when deleting a post
-     * @param newsModel - model to be deleted
-     */
-    class DeleteNews(val newsModel: NewsModel) : HomeInputAction()
-
 }
 
 sealed class HomeOutputAction : VkAction {
@@ -50,12 +44,6 @@ sealed class HomeOutputAction : VkAction {
      * @param newsModel - model with an updated like status
      */
     class ChangeLikeStatus(val newsModel: NewsModel) : HomeOutputAction()
-
-    /**
-     * Emits after successful deletion of the post
-     * @param newsModel - model that was deleted
-     */
-    class DeleteNews(val newsModel: NewsModel) : HomeOutputAction()
 
     /**
      * Loading data with swipe-to-refresh

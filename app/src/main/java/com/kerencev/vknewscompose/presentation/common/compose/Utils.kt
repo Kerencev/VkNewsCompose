@@ -1,13 +1,12 @@
 package com.kerencev.vknewscompose.presentation.common.compose
 
-import android.app.Activity
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalView
-import androidx.core.view.WindowCompat
+import com.google.accompanist.systemuicontroller.SystemUiController
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 /**
  * Wrapper functions for optimizing Compose when working with lambdas
@@ -96,16 +95,17 @@ inline fun <T> rememberUnitParams(
 }
 
 @Composable
-fun SetupStatusColors(color: Color, isAppearanceLightStatusBars: Boolean) {
-    val view = LocalView.current
-    if (!view.isInEditMode) {
-        SideEffect {
-            val window = (view.context as Activity).window
-            window.statusBarColor = color.toArgb()
-            window.navigationBarColor = color.toArgb()
-            val windowInsetsController =
-                WindowCompat.getInsetsController(window, window.decorView)
-            windowInsetsController.isAppearanceLightStatusBars = isAppearanceLightStatusBars
-        }
+fun SetupSystemBar(
+    isNavigationBarContrastEnforced: Boolean = true,
+    darkIcons: Boolean = !isSystemInDarkTheme(),
+    color: Color = Color.Transparent
+) {
+    val systemUiController: SystemUiController = rememberSystemUiController()
+    SideEffect {
+        systemUiController.setSystemBarsColor(
+            color = color,
+            darkIcons = darkIcons,
+            isNavigationBarContrastEnforced = isNavigationBarContrastEnforced,
+        )
     }
 }

@@ -1,9 +1,7 @@
 package com.kerencev.vknewscompose.presentation.screens.profile_photos
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,9 +27,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kerencev.vknewscompose.R
 import com.kerencev.vknewscompose.di.ViewModelFactory
-import com.kerencev.vknewscompose.presentation.common.compose.SetupStatusColors
-import com.kerencev.vknewscompose.presentation.common.views.ScaffoldWithCollapsingToolbar
 import com.kerencev.vknewscompose.presentation.common.views.AsyncShimmerImage
+import com.kerencev.vknewscompose.presentation.common.views.ScaffoldWithCollapsingToolbar
 import com.kerencev.vknewscompose.presentation.screens.profile_photos.flow.ProfilePhotosViewState
 import com.kerencev.vknewscompose.ui.theme.LightBlue
 
@@ -42,11 +39,6 @@ fun ProfilePhotosScreen(
     onPhotoClick: (index: Int) -> Unit,
     onBackPressed: () -> Unit,
 ) {
-    SetupStatusColors(
-        color = MaterialTheme.colors.surface,
-        isAppearanceLightStatusBars = !isSystemInDarkTheme()
-    )
-
     val viewModel: ProfilePhotosViewModel = viewModel(factory = viewModelFactory)
     val state = viewModel.observedState.collectAsState()
 
@@ -58,7 +50,7 @@ fun ProfilePhotosScreen(
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfilePhotosScreenContent(
     state: State<ProfilePhotosViewState>,
@@ -91,7 +83,10 @@ fun ProfilePhotosScreenContent(
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colors.surface),
-            contentPadding = innerPadding,
+            contentPadding = PaddingValues(
+                top = innerPadding.calculateTopPadding() + 8.dp,
+                bottom = 8.dp
+            ),
             horizontalArrangement = Arrangement.spacedBy(2.dp),
             verticalItemSpacing = 2.dp,
         ) {

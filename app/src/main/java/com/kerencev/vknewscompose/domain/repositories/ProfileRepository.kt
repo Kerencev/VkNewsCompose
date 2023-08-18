@@ -25,4 +25,6 @@ interface ProfileRepository {
      */
     fun getWallData(isRefresh: Boolean = false): Flow<WallModel>
 
+    fun getWallItemPhotos(itemId: Long): Flow<List<PhotoModel>>
+
 }

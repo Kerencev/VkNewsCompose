@@ -1,7 +1,11 @@
 package com.kerencev.vknewscompose.presentation.common.views
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -31,6 +35,8 @@ fun ScaffoldWithCollapsingToolbar(
         topBar = {
             Surface(elevation = 8.dp) {
                 TopAppBar(
+                    windowInsets = WindowInsets.systemBars
+                        .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
                     title = toolBarTitle,
                     navigationIcon = toolBarNavigationIcon,
                     scrollBehavior = scrollBehavior,

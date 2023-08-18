@@ -13,7 +13,6 @@ import com.kerencev.vknewscompose.presentation.screens.home.flow.HomeOutputActio
 import com.kerencev.vknewscompose.presentation.screens.home.flow.HomeShot
 import com.kerencev.vknewscompose.presentation.screens.home.flow.HomeViewState
 import com.kerencev.vknewscompose.presentation.screens.home.flow.features.ChangeLikeStatusFeature
-import com.kerencev.vknewscompose.presentation.screens.home.flow.features.DeleteNewsFeature
 import com.kerencev.vknewscompose.presentation.screens.home.flow.features.GetNewsFeature
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -21,7 +20,6 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val getNewsFeature: GetNewsFeature,
     private val changeLikeStatusFeature: ChangeLikeStatusFeature,
-    private val deleteNewsFeature: DeleteNewsFeature
 ) : BaseViewModel<HomeEvent, HomeViewState, HomeShot>() {
 
     private var firstVisibleItemIndex = 0
@@ -35,7 +33,6 @@ class HomeViewModel @Inject constructor(
                 event.newsModelUi.mapToModel()
             )
 
-            is HomeEvent.DeleteNews -> HomeInputAction.DeleteNews(event.newsModelUi.mapToModel())
             is HomeEvent.OnErrorInvoked -> HomeEffect.None
             is HomeEvent.OnScrollToTop -> HomeOutputAction.OnScrollToTop
             is HomeEvent.OnUserScroll -> HomeOutputAction.OnUserScroll(event.firstVisibleItemIndex)
@@ -46,7 +43,6 @@ class HomeViewModel @Inject constructor(
         return when (action) {
             is HomeInputAction.GetNews -> getNewsFeature(action, state())
             is HomeInputAction.ChangeLikeStatus -> changeLikeStatusFeature(action, state())
-            is HomeInputAction.DeleteNews -> deleteNewsFeature(action, state())
             else -> null
         }
     }
@@ -63,8 +59,7 @@ class HomeViewModel @Inject constructor(
         when (action) {
             is HomeOutputAction.GetNewsSuccess -> {
                 val data = action.result.map { it.mapToUiModel() }
-                val newsItems = if (action.isRefresh) data else state().newsList + data
-                setState { setNews(list = newsItems, scrollToTop = action.isRefresh) }
+                setState { setNews(list = data, scrollToTop = action.isRefresh) }
             }
 
             is HomeOutputAction.GetNewsLoading -> setState { loading() }
@@ -73,12 +68,12 @@ class HomeViewModel @Inject constructor(
                 updateItem(action.newsModel.mapToUiModel())
             }
 
-            is HomeOutputAction.DeleteNews -> setState { deleteItem(action.newsModel.mapToUiModel()) }
             is HomeOutputAction.GetNewsRefreshing -> setState { refreshing() }
             is HomeOutputAction.OnScrollToTop -> setState { onScrollToTop() }
             is HomeOutputAction.OnUserScroll -> {
-                val isScrollToTopVisible = action.firstVisibleItemIndex in 1 until firstVisibleItemIndex &&
-                        !state().isSwipeRefreshing
+                val isScrollToTopVisible =
+                    action.firstVisibleItemIndex in 1 until firstVisibleItemIndex &&
+                            !state().isSwipeRefreshing
                 setState { setScrollToTopVisible(isScrollToTopVisible) }
                 firstVisibleItemIndex = action.firstVisibleItemIndex
             }

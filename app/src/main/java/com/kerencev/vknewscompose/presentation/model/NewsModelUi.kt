@@ -17,9 +17,7 @@ data class NewsModelUi(
     val postTime: String,
     val communityImageUrl: String?,
     val contentText: String,
-    val contentImageUrl: String?,
-    val contentImageHeight: Int?,
-    val contentImageWidth: Int?,
+    val imageContent: List<ImageContentModelUi>,
     val viewsCount: Int,
     val sharesCount: Int,
     val commentsCount: Int,
@@ -46,3 +44,11 @@ data class NewsModelUi(
 
     }
 }
+
+@Parcelize
+data class ImageContentModelUi(
+    val id: Long,
+    val url: String,
+    val height: Int,
+    val width: Int,
+) : Parcelable

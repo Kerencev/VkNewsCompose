@@ -3,6 +3,7 @@ package com.kerencev.vknewscompose.presentation.navigation
 import com.google.gson.Gson
 import com.kerencev.vknewscompose.presentation.extensions.encode
 import com.kerencev.vknewscompose.presentation.model.NewsModelUi
+import com.kerencev.vknewscompose.presentation.model.PhotoType
 
 sealed class Screen(
     val route: String
@@ -13,8 +14,8 @@ sealed class Screen(
     object PhotosPager : Screen(ROUTE_PHOTOS_PAGER) {
         private const val ROUTE_FOR_ARGS = "photos_pager"
 
-        fun getRouteWithArgs(initialNumber: Int): String {
-            return "$ROUTE_FOR_ARGS/$initialNumber"
+        fun getRouteWithArgs(type: PhotoType, initialNumber: Int, newsModelId: Long): String {
+            return "$ROUTE_FOR_ARGS/$initialNumber/${type.name}/$newsModelId"
         }
     }
 
@@ -43,9 +44,12 @@ sealed class Screen(
     companion object {
         const val KEY_NEWS_POST = "news_post"
         const val KEY_SELECTED_PHOTO = "selected_photo"
+        const val KEY_PHOTO_TYPE = "photo_type"
+        const val KEY_NEWS_MODEL_ID = "news_model_id"
 
         private const val ROUTE_MAIN = "main"
-        private const val ROUTE_PHOTOS_PAGER = "photos_pager/{$KEY_SELECTED_PHOTO}"
+        private const val ROUTE_PHOTOS_PAGER =
+            "photos_pager/{$KEY_SELECTED_PHOTO}/{$KEY_PHOTO_TYPE}/{$KEY_NEWS_MODEL_ID}"
         private const val ROUTE_HOME = "home"
         private const val ROUTE_NEWS = "news"
         private const val ROUTE_FAVOURITE = "favourite"

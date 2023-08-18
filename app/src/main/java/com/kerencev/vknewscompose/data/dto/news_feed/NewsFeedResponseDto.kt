@@ -42,10 +42,16 @@ data class ItemNewsDto(
 )
 
 data class Attachment(
+    val type: AttachmentType,
     val photo: PhotoX?
 )
 
+enum class AttachmentType {
+    photo, video, audio
+}
+
 data class PhotoX(
+    val id: Long,
     val sizes: List<SizeX>?
 )
 

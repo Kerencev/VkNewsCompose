@@ -1,6 +1,7 @@
 package com.kerencev.vknewscompose.domain.repositories
 
 import com.kerencev.vknewscompose.domain.entities.NewsModel
+import com.kerencev.vknewscompose.domain.entities.PhotoModel
 import kotlinx.coroutines.flow.Flow
 
 interface NewsFeedRepository {
@@ -17,8 +18,8 @@ interface NewsFeedRepository {
     fun changeLikeStatus(newsModel: NewsModel): Flow<NewsModel>
 
     /**
-     * Just for fun :-)
+     * Get photos of a post by its id
      */
-    fun deleteNews(newsModel: NewsModel): Flow<Unit>
+    fun getPostPhotosById(newsModelId: Long): Flow<List<PhotoModel>>
 
 }

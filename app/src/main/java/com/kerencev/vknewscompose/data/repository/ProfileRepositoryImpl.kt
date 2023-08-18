@@ -5,10 +5,12 @@ import com.kerencev.vknewscompose.data.dto.profile.ProfileDto
 import com.kerencev.vknewscompose.data.dto.profile.ProfilePhotosDto
 import com.kerencev.vknewscompose.data.mapper.mapToModel
 import com.kerencev.vknewscompose.domain.entities.NewsModel
+import com.kerencev.vknewscompose.domain.entities.PhotoModel
 import com.kerencev.vknewscompose.domain.entities.WallModel
 import com.kerencev.vknewscompose.domain.repositories.ProfileRepository
 import com.vk.api.sdk.VKKeyValueStorage
 import com.vk.api.sdk.auth.VKAccessToken
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -84,6 +86,29 @@ class ProfileRepositoryImpl @Inject constructor(
                 isItemsOver = wallItemsCache.size >= wallPostsTotalCount
             )
         )
+    }
+
+    override fun getWallItemPhotos(itemId: Long): Flow<List<PhotoModel>> = flow {
+        val post = wallItemsCache.firstOrNull { it.id == itemId }
+        if (post == null) emit(emptyList())
+        else {
+            emit(
+                post.imageContent.map { image ->
+                    PhotoModel(
+                        id = image.id,
+                        date = null,
+                        lat = null,
+                        long = null,
+                        url = image.url,
+                        height = image.height,
+                        width = image.width,
+                        text = "",
+                        likes = 0,
+                        reposts = 0
+                    )
+                }
+            )
+        }
     }
 
     @Throws(IllegalStateException::class)

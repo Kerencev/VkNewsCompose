@@ -1,5 +1,10 @@
 package com.kerencev.vknewscompose.presentation.screens.main
 
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
@@ -13,13 +18,16 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.kerencev.vknewscompose.R
 import com.kerencev.vknewscompose.di.ViewModelFactory
 import com.kerencev.vknewscompose.presentation.activity.MainViewModel
+import com.kerencev.vknewscompose.presentation.common.compose.SetupSystemBar
 import com.kerencev.vknewscompose.presentation.common.compose.rememberUnitParams
+import com.kerencev.vknewscompose.presentation.model.PhotoType
 import com.kerencev.vknewscompose.presentation.navigation.BottomNavGraph
 import com.kerencev.vknewscompose.presentation.navigation.NavigationItem
 import com.kerencev.vknewscompose.presentation.navigation.rememberNavigationState
@@ -36,8 +44,10 @@ import kotlinx.coroutines.launch
 fun MainScreen(
     mainViewModel: MainViewModel,
     viewModelFactory: ViewModelFactory,
-    onPhotoClick: (index: Int) -> Unit
+    onPhotoClick: (type: PhotoType, index: Int, newsModelId: Long) -> Unit
 ) {
+    SetupSystemBar()
+
     val navigationState = rememberNavigationState()
     val scaffoldState = rememberScaffoldState()
     val coroutineScope = rememberCoroutineScope()
@@ -48,7 +58,12 @@ fun MainScreen(
     Scaffold(
         scaffoldState = scaffoldState,
         bottomBar = {
-            BottomNavigation {
+            BottomNavigation(
+                modifier = Modifier.windowInsetsPadding(
+                    WindowInsets.systemBars
+                        .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom)
+                )
+            ) {
                 val navBackStackEntry by navigationState.navHostController.currentBackStackEntryAsState()
 
                 val items = listOf(
@@ -84,7 +99,10 @@ fun MainScreen(
                     viewModelFactory = viewModelFactory,
                     paddingValues = paddingValues,
                     onCommentsClick = { navigationState.navigateToComments(it) },
-                    onError = { sendEvent(MainEvent.ShowErrorMessage(it)) }
+                    onError = { sendEvent(MainEvent.ShowErrorMessage(it)) },
+                    onImageClick = { index, newsModelId ->
+                        onPhotoClick(PhotoType.NEWS, index, newsModelId)
+                    }
                 )
             },
             commentsScreenContent = { newsModel ->
@@ -98,7 +116,12 @@ fun MainScreen(
                 ProfileScreen(
                     paddingValues = paddingValues,
                     viewModelFactory = viewModelFactory,
-                    onPhotoClick = onPhotoClick,
+                    onPhotoClick = { index ->
+                        onPhotoClick(PhotoType.PROFILE, index, 0)
+                    },
+                    onWallItemClick = { index, itemId ->
+                        onPhotoClick(PhotoType.WALL, index, itemId)
+                    },
                     onShowAllPhotosClick = { navigationState.navigateToProfilePhotos() },
                     onProfileRefreshError = { sendEvent(MainEvent.ShowErrorMessage(it)) },
                     onLogoutClick = { sendEvent(MainEvent.Logout) },
@@ -108,7 +131,9 @@ fun MainScreen(
                 ProfilePhotosScreen(
                     viewModelFactory = viewModelFactory,
                     paddingValues = paddingValues,
-                    onPhotoClick = onPhotoClick,
+                    onPhotoClick = { index ->
+                        onPhotoClick(PhotoType.PROFILE, index, 0)
+                    },
                     onBackPressed = { navigationState.navHostController.popBackStack() }
                 )
             }

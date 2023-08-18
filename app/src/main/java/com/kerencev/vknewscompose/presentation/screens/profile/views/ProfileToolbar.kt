@@ -2,11 +2,16 @@ package com.kerencev.vknewscompose.presentation.screens.profile.views
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material3.Text
@@ -28,31 +33,37 @@ fun ProfileToolbar(
     modifier: Modifier = Modifier,
     userAvatarModel: Any? = null,
 ) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(54.dp)
-            .background(MaterialTheme.colors.surface),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        AsyncImage(
+    Column(modifier = modifier
+        .background(MaterialTheme.colors.surface)
+        .fillMaxWidth()) {
+        Spacer(
             modifier = Modifier
-                .padding(start = 16.dp)
-                .size(40.dp)
-                .clip(CircleShape)
-                .border(2.dp, MaterialTheme.colors.surface, CircleShape),
-            model = userAvatarModel,
-            contentDescription = stringResource(id = R.string.user_avatar),
+                .height(WindowInsets.systemBars.asPaddingValues().calculateTopPadding())
         )
+        Row(
+            modifier = Modifier
+                .height(54.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            AsyncImage(
+                modifier = Modifier
+                    .padding(start = 16.dp)
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .border(2.dp, MaterialTheme.colors.surface, CircleShape),
+                model = userAvatarModel,
+                contentDescription = stringResource(id = R.string.user_avatar),
+            )
 
-        Text(
-            modifier = Modifier.padding(start = 8.dp, end = 16.dp),
-            text = title,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Medium,
-            color = MaterialTheme.colors.onPrimary
-        )
+            Text(
+                modifier = Modifier.padding(start = 8.dp, end = 16.dp),
+                text = title,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colors.onPrimary
+            )
+        }
     }
 }

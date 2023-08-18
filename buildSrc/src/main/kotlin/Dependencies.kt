@@ -39,13 +39,14 @@ object Dependencies {
     const val COIL = "io.coil-kt:coil-compose:$COIL_VERSION"
     const val ZOOMABLE_IMAGE = "com.github.SmartToolFactory:Compose-Zoom:$ZOOMABLE_IMAGE_VERSION"
 
-    //Swiperefresh
-    private const val SWIPEREFRESH_VERSION = "0.24.13-rc"
-    const val SWIPEREFRESH = "com.google.accompanist:accompanist-swiperefresh:$SWIPEREFRESH_VERSION"
-
     //Shimmer
     private const val SHIMMER_VERSION = "1.0.5"
     const val SHIMMER = "com.valentinilk.shimmer:compose-shimmer:$SHIMMER_VERSION"
+
+    //Accompanist
+    private const val ACCOMPANIST_VERSION = "0.33.0-alpha"
+    const val SWIPEREFRESH = "com.google.accompanist:accompanist-swiperefresh:$ACCOMPANIST_VERSION"
+    const val SYSTEM_UI_CONTROLLER = "com.google.accompanist:accompanist-systemuicontroller:$ACCOMPANIST_VERSION"
 
     //Test
     private const val JUNIT_VERSION = "4.13.2"

@@ -88,6 +88,9 @@ dependencies {
     //Shimmer
     implementation(Dependencies.SHIMMER)
 
+    //System UI
+    implementation(Dependencies.SYSTEM_UI_CONTROLLER)
+
     //Test
     testImplementation(Dependencies.JUNIT)
     androidTestImplementation(Dependencies.JUNIT_ANDROID)

@@ -6,7 +6,7 @@ import com.kerencev.vknewscompose.presentation.activity.MainViewModel
 import com.kerencev.vknewscompose.presentation.screens.home.HomeViewModel
 import com.kerencev.vknewscompose.presentation.screens.profile.ProfileViewModel
 import com.kerencev.vknewscompose.presentation.screens.profile_photos.ProfilePhotosViewModel
-import com.kerencev.vknewscompose.presentation.screens.profile_photos_pager.ProfilePhotosPagerViewModel
+import com.kerencev.vknewscompose.presentation.screens.photos_pager.PhotosPagerViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -30,9 +30,9 @@ interface ViewModelModule {
     fun bindProfileViewModel(viewModel: ProfileViewModel): ViewModel
 
     @IntoMap
-    @ViewModelKey(ProfilePhotosPagerViewModel::class)
+    @ViewModelKey(PhotosPagerViewModel::class)
     @Binds
-    fun bindProfilePhotosPagerViewModel(viewModel: ProfilePhotosPagerViewModel): ViewModel
+    fun bindProfilePhotosPagerViewModel(viewModel: PhotosPagerViewModel): ViewModel
 
     @IntoMap
     @ViewModelKey(ProfilePhotosViewModel::class)

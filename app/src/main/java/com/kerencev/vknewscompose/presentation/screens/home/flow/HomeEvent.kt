@@ -12,12 +12,6 @@ sealed class HomeEvent : VkEvent {
     class GetNews(val isRefresh: Boolean = false) : HomeEvent()
 
     /**
-     * Event for deleting item
-     * @param newsModelUi - item to be deleted
-     */
-    class DeleteNews(val newsModelUi: NewsModelUi) : HomeEvent()
-
-    /**
      * Event when clicking on a like
      * @param newsModelUi - item to be liked
      */

@@ -24,7 +24,7 @@ fun AsyncShimmerImage(
             .build(),
         modifier = modifier,
         contentDescription = stringResource(id = R.string.post_content_image),
-        contentScale = ContentScale.FillWidth,
+        contentScale = ContentScale.Crop,
         loading = { ShimmerDefault(modifier = Modifier.height(shimmerHeight)) }
     )
 }
