@@ -41,6 +41,8 @@ sealed class Screen(
 
     }
 
+    object Friends : Screen(ROUTE_FRIENDS)
+
     companion object {
         const val KEY_NEWS_POST = "news_post"
         const val KEY_SELECTED_PHOTO = "selected_photo"
@@ -57,5 +59,6 @@ sealed class Screen(
         private const val ROUTE_PROFILE = "profile"
         private const val ROUTE_PROFILE_PHOTOS = "profile_photos"
         private const val ROUTE_COMMENTS = "comments/{$KEY_NEWS_POST}"
+        private const val ROUTE_FRIENDS = "friends"
     }
 }

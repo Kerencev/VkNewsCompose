@@ -3,10 +3,11 @@ package com.kerencev.vknewscompose.di.module
 import androidx.lifecycle.ViewModel
 import com.kerencev.vknewscompose.di.annotation.ViewModelKey
 import com.kerencev.vknewscompose.presentation.activity.MainViewModel
+import com.kerencev.vknewscompose.presentation.screens.friends.FriendsViewModel
 import com.kerencev.vknewscompose.presentation.screens.home.HomeViewModel
+import com.kerencev.vknewscompose.presentation.screens.photos_pager.PhotosPagerViewModel
 import com.kerencev.vknewscompose.presentation.screens.profile.ProfileViewModel
 import com.kerencev.vknewscompose.presentation.screens.profile_photos.ProfilePhotosViewModel
-import com.kerencev.vknewscompose.presentation.screens.photos_pager.PhotosPagerViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -38,5 +39,10 @@ interface ViewModelModule {
     @ViewModelKey(ProfilePhotosViewModel::class)
     @Binds
     fun bindProfilePhotosViewModel(viewModel: ProfilePhotosViewModel): ViewModel
+
+    @IntoMap
+    @ViewModelKey(FriendsViewModel::class)
+    @Binds
+    fun bindFriendsViewModel(viewModel: FriendsViewModel): ViewModel
 
 }

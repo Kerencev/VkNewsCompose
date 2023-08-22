@@ -5,11 +5,13 @@ import com.kerencev.vknewscompose.data.api.ApiFactory
 import com.kerencev.vknewscompose.data.api.ApiService
 import com.kerencev.vknewscompose.data.repository.AuthRepositoryImpl
 import com.kerencev.vknewscompose.data.repository.CommentsRepositoryImpl
+import com.kerencev.vknewscompose.data.repository.FriendsRepositoryImpl
 import com.kerencev.vknewscompose.data.repository.NewsFeedRepositoryImpl
 import com.kerencev.vknewscompose.data.repository.ProfileRepositoryImpl
 import com.kerencev.vknewscompose.di.annotation.ApplicationScope
 import com.kerencev.vknewscompose.domain.repositories.AuthRepository
 import com.kerencev.vknewscompose.domain.repositories.CommentsRepository
+import com.kerencev.vknewscompose.domain.repositories.FriendsRepository
 import com.kerencev.vknewscompose.domain.repositories.NewsFeedRepository
 import com.kerencev.vknewscompose.domain.repositories.ProfileRepository
 import com.vk.api.sdk.VKKeyValueStorage
@@ -50,5 +52,9 @@ interface DataModule {
     @ApplicationScope
     @Binds
     fun bindProfileRepository(impl: ProfileRepositoryImpl): ProfileRepository
+
+    @ApplicationScope
+    @Binds
+    fun bindFriendsRepository(impl: FriendsRepositoryImpl): FriendsRepository
 
 }

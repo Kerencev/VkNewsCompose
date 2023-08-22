@@ -4,6 +4,7 @@ import android.content.Context
 import com.kerencev.vknewscompose.di.ViewModelFactory
 import com.kerencev.vknewscompose.di.annotation.ApplicationScope
 import com.kerencev.vknewscompose.di.module.DataModule
+import com.kerencev.vknewscompose.di.module.FriendsFeatureModule
 import com.kerencev.vknewscompose.di.module.HomeFeatureModule
 import com.kerencev.vknewscompose.di.module.MainFeatureModule
 import com.kerencev.vknewscompose.di.module.ProfileFeatureModule
@@ -19,6 +20,7 @@ import dagger.Component
         MainFeatureModule::class,
         HomeFeatureModule::class,
         ProfileFeatureModule::class,
+        FriendsFeatureModule::class,
     ]
 )
 interface ApplicationComponent {

@@ -16,6 +16,7 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -24,6 +25,7 @@ fun ScaffoldWithCollapsingToolbar(
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
     paddingValues: PaddingValues = PaddingValues(),
+    elevation: Dp = 8.dp,
     toolBarTitle: @Composable () -> Unit,
     toolBarNavigationIcon: @Composable () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit
@@ -33,7 +35,7 @@ fun ScaffoldWithCollapsingToolbar(
             .nestedScroll(scrollBehavior.nestedScrollConnection)
             .padding(paddingValues),
         topBar = {
-            Surface(elevation = 8.dp) {
+            Surface(elevation = elevation) {
                 TopAppBar(
                     windowInsets = WindowInsets.systemBars
                         .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),

@@ -1,6 +1,7 @@
 package com.kerencev.vknewscompose.data.api
 
 import com.kerencev.vknewscompose.data.dto.comments.CommentsResponseDto
+import com.kerencev.vknewscompose.data.dto.friends.FriendsResponseDto
 import com.kerencev.vknewscompose.data.dto.likes.LikesCountResponseDto
 import com.kerencev.vknewscompose.data.dto.news_feed.NewsFeedResponseDto
 import com.kerencev.vknewscompose.data.dto.profile.ProfilePhotosResponseDto
@@ -60,5 +61,13 @@ interface ApiService {
         @Query("offset") offset: Int,
         @Query("count") count: Int
     ): NewsFeedResponseDto
+
+    @GET("friends.search?v=5.131&fields=photo_200, online")
+    suspend fun getFriends(
+        @Query("access_token") token: String,
+        @Query("q") searchText: String,
+        @Query("offset") offset: Int,
+        @Query("count") count: Int
+    ): FriendsResponseDto
 
 }

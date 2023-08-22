@@ -32,6 +32,7 @@ import com.kerencev.vknewscompose.presentation.navigation.BottomNavGraph
 import com.kerencev.vknewscompose.presentation.navigation.NavigationItem
 import com.kerencev.vknewscompose.presentation.navigation.rememberNavigationState
 import com.kerencev.vknewscompose.presentation.screens.comments.CommentsScreen
+import com.kerencev.vknewscompose.presentation.screens.friends.FriendsScreen
 import com.kerencev.vknewscompose.presentation.screens.home.HomeScreen
 import com.kerencev.vknewscompose.presentation.screens.main.flow.MainEvent
 import com.kerencev.vknewscompose.presentation.screens.main.flow.MainShot
@@ -125,6 +126,7 @@ fun MainScreen(
                     onShowAllPhotosClick = { navigationState.navigateToProfilePhotos() },
                     onProfileRefreshError = { sendEvent(MainEvent.ShowErrorMessage(it)) },
                     onLogoutClick = { sendEvent(MainEvent.Logout) },
+                    onFriendsClick = { navigationState.navigateToFriends() },
                 )
             },
             profilePhotosScreenContent = {
@@ -135,6 +137,14 @@ fun MainScreen(
                         onPhotoClick(PhotoType.PROFILE, index, 0)
                     },
                     onBackPressed = { navigationState.navHostController.popBackStack() }
+                )
+            },
+            friendsScreenContent = {
+                FriendsScreen(
+                    viewModelFactory = viewModelFactory,
+                    paddingValues = paddingValues,
+                    onBackPressed = { navigationState.navHostController.popBackStack() },
+                    onFriendClick = {  },
                 )
             }
         )

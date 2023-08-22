@@ -1,6 +1,7 @@
 package com.kerencev.vknewscompose.presentation.screens.profile
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
@@ -78,6 +79,7 @@ fun ProfileScreen(
     onShowAllPhotosClick: () -> Unit,
     onProfileRefreshError: (message: String) -> Unit,
     onLogoutClick: () -> Unit,
+    onFriendsClick: () -> Unit,
 ) {
     val viewModel: ProfileViewModel = viewModel(factory = viewModelFactory)
     val state = viewModel.observedState.collectAsState()
@@ -94,6 +96,7 @@ fun ProfileScreen(
         onShowAllPhotosClick = onShowAllPhotosClick,
         onProfileRefreshError = onProfileRefreshError,
         onLogoutClick = onLogoutClick,
+        onFriendsClick = onFriendsClick
     )
 }
 
@@ -108,6 +111,7 @@ fun ProfileScreenContent(
     onShowAllPhotosClick: () -> Unit,
     onProfileRefreshError: (message: String) -> Unit,
     onLogoutClick: () -> Unit,
+    onFriendsClick: () -> Unit,
 ) {
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
@@ -231,7 +235,9 @@ fun ProfileScreenContent(
 
                 item {
                     ProfileFriends(
-                        modifier = Modifier.padding(top = 8.dp),
+                        modifier = Modifier
+                            .padding(top = 8.dp)
+                            .clickable { onFriendsClick() },
                         friendsCount = state.friendsCount
                     )
                 }

@@ -14,6 +14,7 @@ fun BottomNavGraph(
     favouriteScreenContent: @Composable () -> Unit,
     profileScreenContent: @Composable () -> Unit,
     profilePhotosScreenContent: @Composable () -> Unit,
+    friendsScreenContent: @Composable () -> Unit,
 ) {
     NavHost(
         navController = navHostController,
@@ -28,7 +29,8 @@ fun BottomNavGraph(
         }
         profileScreenNavGraph(
             profileScreenContent = profileScreenContent,
-            profilePhotosScreenContent = profilePhotosScreenContent
+            profilePhotosScreenContent = profilePhotosScreenContent,
+            friendsScreenContent = friendsScreenContent
         )
     }
 }

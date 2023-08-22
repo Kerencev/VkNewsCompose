@@ -8,6 +8,7 @@ import androidx.navigation.navigation
 fun NavGraphBuilder.profileScreenNavGraph(
     profileScreenContent: @Composable () -> Unit,
     profilePhotosScreenContent: @Composable () -> Unit,
+    friendsScreenContent: @Composable () -> Unit,
 ) {
     navigation(
         startDestination = Screen.ProfileStart.route,
@@ -19,6 +20,8 @@ fun NavGraphBuilder.profileScreenNavGraph(
         composable(Screen.ProfilePhotos.route) {
             profilePhotosScreenContent()
         }
-
+        composable(Screen.Friends.route) {
+            friendsScreenContent()
+        }
     }
 }

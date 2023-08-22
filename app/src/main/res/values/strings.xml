@@ -34,4 +34,6 @@
     <string name="refresh">Обновить</string>
     <string name="log_out">Выйти</string>
     <string name="set_page">%d из %d</string>
+    <string name="friends">Друзья</string>
+    <string name="search_friends_label">"Введите имя и фамилию"</string>
 </resources>

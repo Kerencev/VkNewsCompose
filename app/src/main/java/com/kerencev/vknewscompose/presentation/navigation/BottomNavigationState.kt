@@ -29,6 +29,10 @@ class BottomNavigationState(
         navHostController.navigate(Screen.ProfilePhotos.route)
     }
 
+    fun navigateToFriends() {
+        navHostController.navigate(Screen.Friends.route)
+    }
+
 }
 
 @Composable
