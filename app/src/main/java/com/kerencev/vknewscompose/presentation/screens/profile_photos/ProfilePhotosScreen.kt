@@ -9,12 +9,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.itemsIndexed
-import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
@@ -28,9 +24,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kerencev.vknewscompose.R
 import com.kerencev.vknewscompose.di.ViewModelFactory
 import com.kerencev.vknewscompose.presentation.common.views.AsyncShimmerImage
+import com.kerencev.vknewscompose.presentation.common.views.IconBack
 import com.kerencev.vknewscompose.presentation.common.views.ScaffoldWithCollapsingToolbar
 import com.kerencev.vknewscompose.presentation.screens.profile_photos.flow.ProfilePhotosViewState
-import com.kerencev.vknewscompose.ui.theme.LightBlue
 
 @Composable
 fun ProfilePhotosScreen(
@@ -68,15 +64,7 @@ fun ProfilePhotosScreenContent(
                 fontWeight = FontWeight.Medium
             )
         },
-        toolBarNavigationIcon = {
-            IconButton(onClick = { onBackPressed() }) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowBack,
-                    contentDescription = null,
-                    tint = LightBlue
-                )
-            }
-        }
+        toolBarNavigationIcon = { IconBack(onBackPressed = onBackPressed) }
     ) { innerPadding ->
         LazyVerticalStaggeredGrid(
             columns = StaggeredGridCells.Adaptive(100.dp),

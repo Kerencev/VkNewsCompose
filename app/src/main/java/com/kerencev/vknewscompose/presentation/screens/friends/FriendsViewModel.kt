@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class FriendsViewModel @Inject constructor(
+    private val userId: Long,
     private val getFriendsFeature: GetFriendsFeature
 ) : BaseViewModel<FriendsEvent, FriendsViewState, VkShot>() {
 
@@ -23,19 +24,19 @@ class FriendsViewModel @Inject constructor(
         return when (event) {
             is FriendsEvent.GetFriends -> {
                 FriendsInputAction.GetFriends(
-                    searchText = event.searchText,
+                    userId = userId,
+                    searchText = state().searchText,
                     isRefresh = event.isRefresh
                 )
             }
+
+            is FriendsEvent.SearchFriends -> handleSearchEvent(event)
         }
     }
 
     override fun features(action: VkAction): Flow<VkCommand>? {
         return when (action) {
-            is FriendsInputAction.GetFriends -> {
-                getFriendsFeature(action, state())
-            }
-
+            is FriendsInputAction.GetFriends -> getFriendsFeature(action, state())
             else -> null
         }
     }
@@ -46,6 +47,7 @@ class FriendsViewModel @Inject constructor(
         when (action) {
             is FriendsOutputAction.SetFriends -> setState {
                 setFriends(
+                    searchText = action.searchText,
                     friends = action.friends,
                     isFriendsOver = action.isFriendsOver
                 )
@@ -54,5 +56,27 @@ class FriendsViewModel @Inject constructor(
             is FriendsOutputAction.Loading -> setState { loading(action.isRefresh) }
             is FriendsOutputAction.Error -> setState { error(action.message) }
         }
+    }
+
+    private fun handleSearchEvent(event: FriendsEvent.SearchFriends): VkAction {
+        val searchText = event.searchText
+        return if (isSearchParametersSame(searchText)) {
+            FriendsOutputAction.SetFriends(
+                searchText = searchText,
+                friends = state().friendsList,
+                isFriendsOver = state().isFriendsOver
+            )
+        } else {
+            FriendsInputAction.GetFriends(
+                userId = userId,
+                searchText = searchText,
+                isRefresh = true
+            )
+        }
+    }
+
+    private fun isSearchParametersSame(searchText: String): Boolean {
+        return (searchText.isEmpty() && state().friendsList.isEmpty() && !state().isFriendsOver) ||
+                searchText == state().searchText
     }
 }

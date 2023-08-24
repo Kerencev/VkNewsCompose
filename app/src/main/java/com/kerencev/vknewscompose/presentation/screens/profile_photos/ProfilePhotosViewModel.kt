@@ -25,7 +25,7 @@ class ProfilePhotosViewModel @Inject constructor(
 
     override fun produceCommand(event: ProfilePhotosEvent): VkCommand {
         return when (event) {
-            is ProfilePhotosEvent.GetProfilePhotos -> ProfileInputAction.GetProfilePhotos
+            is ProfilePhotosEvent.GetProfilePhotos -> ProfileInputAction.GetProfilePhotos(0)
         }
     }
 

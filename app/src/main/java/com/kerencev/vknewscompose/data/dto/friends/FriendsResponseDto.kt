@@ -12,7 +12,7 @@ data class FriendsDto(
 )
 
 data class FriendDto(
-    val id: Int,
+    val id: Long,
     @SerializedName("first_name") val firstName: String?,
     @SerializedName("last_name") val lastName: String?,
     val online: Int?,

@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class ProfileViewModel @Inject constructor(
+    private val userId: Long,
     private val getWallFeature: GetWallFeature,
     private val getProfileFeature: GetProfileFeature,
     private val getProfilePhotosFeature: GetProfilePhotosFeature,
@@ -27,25 +28,23 @@ class ProfileViewModel @Inject constructor(
     private val getAllProfileDataFeature: GetAllProfileDataFeature,
 ) : BaseViewModel<ProfileEvent, ProfileViewState, ProfileShot>() {
 
-    init {
-        send(ProfileEvent.GetProfile)
-        send(ProfileEvent.GetProfilePhotos)
-        send(ProfileEvent.GetWall)
+    companion object {
+        const val DEFAULT_USER_ID: Long = 0L
     }
 
     override fun initState() = ProfileViewState()
 
     override fun produceCommand(event: ProfileEvent): VkCommand {
         return when (event) {
-            is ProfileEvent.GetProfile -> ProfileInputAction.GetProfile
-            is ProfileEvent.GetProfilePhotos -> ProfileInputAction.GetProfilePhotos
-            is ProfileEvent.GetWall -> ProfileInputAction.GetWall
+            is ProfileEvent.GetProfile -> ProfileInputAction.GetProfile(userId)
+            is ProfileEvent.GetProfilePhotos -> ProfileInputAction.GetProfilePhotos(userId)
+            is ProfileEvent.GetWall -> ProfileInputAction.GetWall(userId)
             is ProfileEvent.OnUserScroll -> ProfileInputAction.CalculateUiParams(
                 firstVisibleItem = event.firstVisibleItem,
                 firstVisibleItemScrollOffset = event.firstVisibleItemScrollOffset
             )
 
-            is ProfileEvent.RefreshProfileData -> ProfileInputAction.RefreshProfileData
+            is ProfileEvent.RefreshProfileData -> ProfileInputAction.RefreshProfileData(userId)
             is ProfileEvent.OnProfileErrorInvoked -> ProfileEffect.None
         }
     }

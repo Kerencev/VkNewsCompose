@@ -6,7 +6,7 @@ import com.kerencev.vknewscompose.presentation.common.mvi.VkCommand
 import com.kerencev.vknewscompose.presentation.screens.profile.flow.ProfileInputAction
 import com.kerencev.vknewscompose.presentation.screens.profile.flow.ProfileOutputAction
 import com.kerencev.vknewscompose.presentation.screens.profile.flow.ProfileViewState
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flatMapConcat
@@ -18,12 +18,12 @@ class GetWallFeatureImpl @Inject constructor(
     private val repository: ProfileRepository
 ) : GetWallFeature {
 
-    @OptIn(FlowPreview::class)
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun invoke(
         action: ProfileInputAction.GetWall,
         state: ProfileViewState
     ): Flow<VkCommand> {
-        return repository.getWallData()
+        return repository.getWallData(userId = action.userId)
             .flatMapConcat { result ->
                 flowOf(
                     ProfileOutputAction.SetWall(

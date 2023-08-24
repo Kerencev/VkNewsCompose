@@ -9,19 +9,19 @@ import com.kerencev.vknewscompose.presentation.common.mvi.VkEffect
 sealed class ProfileInputAction : VkAction {
 
     /**
-     * Get profile data
+     * Get profile data by user id
      */
-    object GetProfile : ProfileInputAction()
+    class GetProfile(val userId: Long) : ProfileInputAction()
 
     /**
-     * Get all profile photos
+     * Get all profile photos by user id
      */
-    object GetProfilePhotos : ProfileInputAction()
+    class GetProfilePhotos(val userId: Long) : ProfileInputAction()
 
     /**
-     * Get wall posts
+     * Get wall posts by user id
      */
-    object GetWall : ProfileInputAction()
+    class GetWall(val userId: Long) : ProfileInputAction()
 
     /**
      * Calculate the necessary UI parameters
@@ -32,10 +32,10 @@ sealed class ProfileInputAction : VkAction {
     ) : ProfileInputAction()
 
     /**
-     * Get all profile data
+     * Get all profile data by user id
      * profile, photos, wall posts
      */
-    object RefreshProfileData : ProfileInputAction()
+    class RefreshProfileData(val userId: Long) : ProfileInputAction()
 }
 
 sealed class ProfileOutputAction : VkAction {

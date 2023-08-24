@@ -58,6 +58,7 @@ interface ApiService {
     @GET("wall.get?v=5.131&extended=true")
     suspend fun getWall(
         @Query("access_token") token: String,
+        @Query("owner_id") userId: String,
         @Query("offset") offset: Int,
         @Query("count") count: Int
     ): NewsFeedResponseDto
@@ -65,6 +66,7 @@ interface ApiService {
     @GET("friends.search?v=5.131&fields=photo_200, online")
     suspend fun getFriends(
         @Query("access_token") token: String,
+        @Query("user_id") userId: String,
         @Query("q") searchText: String,
         @Query("offset") offset: Int,
         @Query("count") count: Int

@@ -11,14 +11,16 @@ data class FriendsViewState(
     val errorMessage: String? = null,
     val isFriendsOver: Boolean = false,
     val isSwipeRefreshing: Boolean = false,
+    val searchText: String = ""
 ) : VkState {
 
-    fun setFriends(friends: List<FriendModel>, isFriendsOver: Boolean) = copy(
+    fun setFriends(searchText: String, friends: List<FriendModel>, isFriendsOver: Boolean) = copy(
         friendsList = friends,
         isLoading = false,
         errorMessage = null,
         isFriendsOver = isFriendsOver,
-        isSwipeRefreshing = false
+        isSwipeRefreshing = false,
+        searchText = searchText
     )
 
     fun loading(isRefresh: Boolean) = copy(

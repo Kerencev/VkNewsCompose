@@ -24,12 +24,14 @@ class GetFriendsFeatureImpl @Inject constructor(
         state: FriendsViewState
     ): Flow<VkCommand> {
         return friendsRepository.getFriends(
+            userId = action.userId,
             searchText = action.searchText,
             isRefresh = action.isRefresh
         )
             .flatMapConcat { friends ->
                 flowOf(
                     FriendsOutputAction.SetFriends(
+                        searchText = action.searchText,
                         friends = friends.friends,
                         isFriendsOver = friends.isFriendsOver
                     ) as FriendsOutputAction

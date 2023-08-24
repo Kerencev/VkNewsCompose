@@ -9,22 +9,29 @@ interface ProfileRepository {
 
     /**
      * Get profile data
+     * @param userId - Id of the user for whom the data will be received
      * @param isRefresh - Updating data or getting it from the cache
      */
-    fun getProfile(isRefresh: Boolean = false): Flow<ProfileModel>
+    fun getProfile(userId: Long, isRefresh: Boolean = false): Flow<ProfileModel>
 
     /**
      * Get all profile photos
+     * @param userId - Id of the user for whom the data will be received
      * @param isRefresh - Updating data or getting it from the cache
      */
-    fun getProfilePhotos(isRefresh: Boolean = false): Flow<List<PhotoModel>>
+    fun getProfilePhotos(userId: Long, isRefresh: Boolean = false): Flow<List<PhotoModel>>
 
     /**
      * Get wall posts
+     * @param userId - Id of the user for whom the data will be received
      * @param isRefresh - Updating data or getting it from the cache
      */
-    fun getWallData(isRefresh: Boolean = false): Flow<WallModel>
+    fun getWallData(userId: Long, isRefresh: Boolean = false): Flow<WallModel>
 
+    /**
+     * Get a list of photos for the wall post
+     * @param itemId - Id of the wall post
+     */
     fun getWallItemPhotos(itemId: Long): Flow<List<PhotoModel>>
 
 }

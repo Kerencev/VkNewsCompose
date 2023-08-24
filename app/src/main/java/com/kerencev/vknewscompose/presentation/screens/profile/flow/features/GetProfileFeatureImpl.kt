@@ -6,7 +6,7 @@ import com.kerencev.vknewscompose.presentation.common.mvi.VkCommand
 import com.kerencev.vknewscompose.presentation.screens.profile.flow.ProfileInputAction
 import com.kerencev.vknewscompose.presentation.screens.profile.flow.ProfileOutputAction
 import com.kerencev.vknewscompose.presentation.screens.profile.flow.ProfileViewState
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flatMapConcat
@@ -18,12 +18,12 @@ class GetProfileFeatureImpl @Inject constructor(
     private val repository: ProfileRepository
 ) : GetProfileFeature {
 
-    @OptIn(FlowPreview::class)
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun invoke(
         action: ProfileInputAction.GetProfile,
         state: ProfileViewState
     ): Flow<VkCommand> {
-        return repository.getProfile()
+        return repository.getProfile(userId = action.userId)
             .flatMapConcat { flowOf(ProfileOutputAction.SetProfile(it) as VkCommand) }
             .onStart { emit(ProfileOutputAction.ProfileLoading) }
             .retryDefault()

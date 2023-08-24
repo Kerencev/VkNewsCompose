@@ -27,7 +27,7 @@ class PhotosPagerViewModel @Inject constructor(
 
     override fun produceCommand(event: PhotosPagerEvent): VkCommand {
         return when (event) {
-            is PhotosPagerEvent.GetProfilePhotos -> ProfileInputAction.GetProfilePhotos
+            is PhotosPagerEvent.GetProfilePhotos -> ProfileInputAction.GetProfilePhotos(0)
             is PhotosPagerEvent.GetNewsPostPhotos -> PhotosPagerInputAction.GetNewsPostPhotos(
                 event.newsModelId
             )

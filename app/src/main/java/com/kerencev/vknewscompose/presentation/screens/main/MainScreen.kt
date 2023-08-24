@@ -113,10 +113,10 @@ fun MainScreen(
                 )
             },
             favouriteScreenContent = { Text(text = "favourite Screen") },
-            profileScreenContent = {
+            profileScreenContent = { userId ->
                 ProfileScreen(
+                    userId = userId,
                     paddingValues = paddingValues,
-                    viewModelFactory = viewModelFactory,
                     onPhotoClick = { index ->
                         onPhotoClick(PhotoType.PROFILE, index, 0)
                     },
@@ -126,7 +126,8 @@ fun MainScreen(
                     onShowAllPhotosClick = { navigationState.navigateToProfilePhotos() },
                     onProfileRefreshError = { sendEvent(MainEvent.ShowErrorMessage(it)) },
                     onLogoutClick = { sendEvent(MainEvent.Logout) },
-                    onFriendsClick = { navigationState.navigateToFriends() },
+                    onFriendsClick = { navigationState.navigateToFriends(it) },
+                    onBackPressed = { navigationState.navHostController.popBackStack() },
                 )
             },
             profilePhotosScreenContent = {
@@ -139,12 +140,12 @@ fun MainScreen(
                     onBackPressed = { navigationState.navHostController.popBackStack() }
                 )
             },
-            friendsScreenContent = {
+            friendsScreenContent = { userId ->
                 FriendsScreen(
-                    viewModelFactory = viewModelFactory,
                     paddingValues = paddingValues,
                     onBackPressed = { navigationState.navHostController.popBackStack() },
-                    onFriendClick = {  },
+                    onFriendClick = { navigationState.navigateToProfile(it) },
+                    userId = userId
                 )
             }
         )

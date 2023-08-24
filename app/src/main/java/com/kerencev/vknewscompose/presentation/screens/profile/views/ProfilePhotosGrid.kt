@@ -27,7 +27,7 @@ import com.kerencev.vknewscompose.ui.theme.LightBlue
 @Composable
 fun ProfilePhotosGrid(
     photos: List<PhotoModel>,
-    onPhotoClick: (Int) -> Unit,
+    onPhotoClick: (index: Int) -> Unit,
     onShowAllClick: () -> Unit
 ) {
     Column {

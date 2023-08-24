@@ -1,6 +1,7 @@
 package com.kerencev.vknewscompose.data.repository
 
 import com.kerencev.vknewscompose.data.api.ApiService
+import com.kerencev.vknewscompose.data.dto.news_feed.NewsFeedResponseDto
 import com.kerencev.vknewscompose.data.dto.profile.ProfileDto
 import com.kerencev.vknewscompose.data.dto.profile.ProfilePhotosDto
 import com.kerencev.vknewscompose.data.mapper.mapToModel
@@ -8,6 +9,7 @@ import com.kerencev.vknewscompose.domain.entities.NewsModel
 import com.kerencev.vknewscompose.domain.entities.PhotoModel
 import com.kerencev.vknewscompose.domain.entities.WallModel
 import com.kerencev.vknewscompose.domain.repositories.ProfileRepository
+import com.kerencev.vknewscompose.presentation.screens.profile.ProfileViewModel
 import com.vk.api.sdk.VKKeyValueStorage
 import com.vk.api.sdk.auth.VKAccessToken
 import kotlinx.coroutines.flow.Flow
@@ -30,66 +32,59 @@ class ProfileRepositoryImpl @Inject constructor(
     private val token
         get() = VKAccessToken.restore(storage)
 
-    private var profileCache: ProfileDto? = null
-    private var profilePhotosCache: ProfilePhotosDto? = null
-    private val wallItemsCache = mutableListOf<NewsModel>()
-    private var wallPage = 0
-    private var wallPostsTotalCount = 0
+    private val profileCache = mutableMapOf<Long, ProfileDto?>()
+    private val profilePhotosCache = mutableMapOf<Long, ProfilePhotosDto?>()
+    private val wallItemsCache = mutableMapOf<Long, MutableList<NewsModel>>()
+    private var wallPage = mutableMapOf<Long, Int>()
+    private var wallPostsTotalCount = mutableMapOf<Long, Int>()
 
-    override fun getProfile(isRefresh: Boolean) = flow {
-        if (profileCache == null || isRefresh) {
+    override fun getProfile(userId: Long, isRefresh: Boolean) = flow {
+        if (profileCache[userId] == null || isRefresh) {
             val profileResponse = apiService.getProfile(
                 token = getAccessToken(),
-                usersIds = token?.userId.toString()
+                usersIds = getCorrectUserId(userId)
             ).response?.firstOrNull() ?: throw IllegalStateException(PROFILE_NOT_FOUND)
-            profileCache = profileResponse
+            profileCache[userId] = profileResponse
             emit(profileResponse)
-        } else profileCache?.let { emit(it) }
+        } else profileCache[userId]?.let { emit(it) }
     }
         .map { it.mapToModel() }
 
-    override fun getProfilePhotos(isRefresh: Boolean) = flow {
-        if (profilePhotosCache == null || isRefresh) {
+    override fun getProfilePhotos(userId: Long, isRefresh: Boolean) = flow {
+        if (profilePhotosCache[userId] == null || isRefresh) {
             val photosResponse = apiService.getProfilePhotos(
                 token = getAccessToken(),
-                ownerId = token?.userId.toString()
+                ownerId = getCorrectUserId(userId)
             ).response ?: throw IllegalStateException(PROFILE_PHOTOS_NOT_FOUND)
-            profilePhotosCache = photosResponse
+            profilePhotosCache[userId] = photosResponse
             emit(photosResponse)
-        } else profilePhotosCache?.let { emit(it) }
+        } else profilePhotosCache[userId]?.let { emit(it) }
     }
         .map { it.mapToModel() }
 
-    override fun getWallData(isRefresh: Boolean) = flow {
-        if (isRefresh) {
-            wallItemsCache.clear()
-            wallPage = 0
-            wallPostsTotalCount = 0
-        }
-
-        if (wallItemsCache.isNotEmpty() && wallItemsCache.size >= wallPostsTotalCount) {
-            emit(WallModel(items = wallItemsCache, isItemsOver = true))
+    override fun getWallData(userId: Long, isRefresh: Boolean) = flow {
+        if (isRefresh) clearWallCacheById(userId)
+        if (isWallItemsOver(userId)) {
+            emit(WallModel(items = getWallItemsById(userId), isItemsOver = true))
             return@flow
         }
-
         val response = apiService.getWall(
             token = getAccessToken(),
-            offset = wallPage * WALL_PAGE_SIZE,
+            userId = userId.toString(),
+            offset = getWallPageById(userId) * WALL_PAGE_SIZE,
             count = WALL_PAGE_SIZE
         )
-        wallPage++
-        wallPostsTotalCount = response.response?.count ?: 0
-        wallItemsCache.addAll(response.mapToModel())
+        val wallItems = updateWallCacheById(userId, response)
         emit(
             WallModel(
-                items = wallItemsCache,
-                isItemsOver = wallItemsCache.size >= wallPostsTotalCount
+                items = wallItems,
+                isItemsOver = wallItems.size >= getWallItemsTotalCountById(userId)
             )
         )
     }
 
     override fun getWallItemPhotos(itemId: Long): Flow<List<PhotoModel>> = flow {
-        val post = wallItemsCache.firstOrNull { it.id == itemId }
+        val post = wallItemsCache[0]?.firstOrNull { it.id == itemId }
         if (post == null) emit(emptyList())
         else {
             emit(
@@ -113,5 +108,49 @@ class ProfileRepositoryImpl @Inject constructor(
 
     @Throws(IllegalStateException::class)
     private fun getAccessToken() = token?.accessToken ?: error(TOKEN_IS_NULL)
+
+    private fun clearWallCacheById(userId: Long) {
+        wallItemsCache[userId]?.clear()
+        wallPage[userId] = 0
+        wallPostsTotalCount[userId] = 0
+    }
+
+    private fun isWallItemsOver(userId: Long): Boolean {
+        val wallItems = getWallItemsById(userId)
+        return wallItems.isNotEmpty() && wallItems.size >= getWallItemsTotalCountById(userId)
+    }
+
+    private fun updateWallCacheById(
+        userId: Long,
+        response: NewsFeedResponseDto
+    ): List<NewsModel> {
+        wallPage[userId] = getWallPageById(userId) + 1
+        wallPostsTotalCount[userId] = response.response?.count ?: 0
+        val wallItems = response.mapToModel()
+        addWallItemsToCacheById(userId, wallItems)
+        return getWallItemsById(userId)
+    }
+
+    private fun addWallItemsToCacheById(userId: Long, items: List<NewsModel>) {
+        if (wallItemsCache[userId] == null) wallItemsCache[userId] = mutableListOf()
+        wallItemsCache[userId]?.addAll(items)
+    }
+
+    private fun getWallItemsById(userId: Long): List<NewsModel> {
+        return wallItemsCache[userId] ?: emptyList()
+    }
+
+    private fun getWallItemsTotalCountById(userId: Long): Int {
+        return wallPostsTotalCount[userId] ?: 0
+    }
+
+    private fun getWallPageById(userId: Long): Int {
+        return wallPage[userId] ?: 0
+    }
+
+    private fun getCorrectUserId(userId: Long): String {
+        return if (userId == ProfileViewModel.DEFAULT_USER_ID) token?.userId.toString()
+        else userId.toString()
+    }
 
 }

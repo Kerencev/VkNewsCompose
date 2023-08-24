@@ -21,9 +21,9 @@ class GetAllProfileDataFeatureImpl @Inject constructor(
         state: ProfileViewState
     ): Flow<VkCommand> {
         return combine(
-            profileRepository.getProfile(isRefresh = true),
-            profileRepository.getProfilePhotos(isRefresh = true),
-            profileRepository.getWallData(isRefresh = true)
+            profileRepository.getProfile(userId = action.userId, isRefresh = true),
+            profileRepository.getProfilePhotos(userId = action.userId, isRefresh = true),
+            profileRepository.getWallData(userId = action.userId, isRefresh = true)
         ) { profile, photos, wallModel ->
             ProfileOutputAction.SetAllProfileData(
                 profile = profile,

@@ -6,7 +6,7 @@ data class FriendsModel(
 )
 
 data class FriendModel(
-    val id: Int,
+    val id: Long,
     val firstName: String,
     val lastName: String,
     val isOnline: Boolean,

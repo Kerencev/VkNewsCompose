@@ -2,26 +2,46 @@ package com.kerencev.vknewscompose.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import androidx.navigation.navigation
 
 fun NavGraphBuilder.profileScreenNavGraph(
-    profileScreenContent: @Composable () -> Unit,
+    profileScreenContent: @Composable (userId: Long) -> Unit,
     profilePhotosScreenContent: @Composable () -> Unit,
-    friendsScreenContent: @Composable () -> Unit,
+    friendsScreenContent: @Composable (userId: Long) -> Unit,
 ) {
     navigation(
-        startDestination = Screen.ProfileStart.route,
-        route = Screen.Profile.route
+        startDestination = Screen.Profile.route,
+        route = Screen.ProfileStart.route
     ) {
-        composable(Screen.ProfileStart.route) {
-            profileScreenContent()
+        composable(
+            route = Screen.Profile.route,
+            arguments = listOf(
+                navArgument(name = Screen.KEY_USER_ID) {
+                    type = NavType.LongType
+                }
+            )
+        ) {
+            val userId = it.arguments?.getLong(Screen.KEY_USER_ID)
+                ?: error("Args for profile screen is null")
+            profileScreenContent(userId)
         }
         composable(Screen.ProfilePhotos.route) {
             profilePhotosScreenContent()
         }
-        composable(Screen.Friends.route) {
-            friendsScreenContent()
+        composable(
+            route = Screen.Friends.route,
+            arguments = listOf(
+                navArgument(name = Screen.KEY_FRIENDS) {
+                    type = NavType.LongType
+                }
+            )
+        ) {
+            val userId = it.arguments?.getLong(Screen.KEY_FRIENDS)
+                ?: error("Args for profile screen is null")
+            friendsScreenContent(userId)
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.kerencev.vknewscompose.presentation.common.views
 
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -21,11 +22,13 @@ fun IconWithText(
     modifier: Modifier = Modifier,
     @DrawableRes iconRes: Int,
     text: String,
-    tint: Color = MaterialTheme.colors.onSecondary
+    tint: Color = MaterialTheme.colors.onSecondary,
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
 ) {
     Row(
         modifier = modifier.padding(4.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = horizontalArrangement
     ) {
         Icon(
             modifier = Modifier.size(20.dp),

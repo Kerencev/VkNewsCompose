@@ -12,9 +12,9 @@ fun BottomNavGraph(
     newsScreenContent: @Composable () -> Unit,
     commentsScreenContent: @Composable (NewsModelUi) -> Unit,
     favouriteScreenContent: @Composable () -> Unit,
-    profileScreenContent: @Composable () -> Unit,
+    profileScreenContent: @Composable (userId: Long) -> Unit,
     profilePhotosScreenContent: @Composable () -> Unit,
-    friendsScreenContent: @Composable () -> Unit,
+    friendsScreenContent: @Composable (userId: Long) -> Unit,
 ) {
     NavHost(
         navController = navHostController,

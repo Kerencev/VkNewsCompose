@@ -7,10 +7,12 @@ sealed class FriendsInputAction : VkAction {
 
     /**
      * Get list of users's friends
+     * @param userId - Id of the user for whom the friends list will be uploaded
      * @param searchText - The text by which the list of friends will be received
      * @param isRefresh - The list of friends is updated or added
      */
-    class GetFriends(val searchText: String, val isRefresh: Boolean) : FriendsInputAction()
+    class GetFriends(val userId: Long, val searchText: String, val isRefresh: Boolean) :
+        FriendsInputAction()
 }
 
 sealed class FriendsOutputAction : VkAction {
@@ -19,7 +21,11 @@ sealed class FriendsOutputAction : VkAction {
      * Set friends list on success
      * @param isFriendsOver - Is the list of friends over
      */
-    class SetFriends(val friends: List<FriendModel>, val isFriendsOver: Boolean) : FriendsOutputAction()
+    class SetFriends(
+        val searchText: String,
+        val friends: List<FriendModel>,
+        val isFriendsOver: Boolean
+    ) : FriendsOutputAction()
 
     /**
      * Set loading state
