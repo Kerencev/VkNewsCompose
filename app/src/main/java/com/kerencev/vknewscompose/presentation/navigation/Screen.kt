@@ -36,7 +36,13 @@ sealed class Screen(
         }
     }
 
-    object ProfilePhotos : Screen(ROUTE_PROFILE_PHOTOS)
+    object ProfilePhotos : Screen(ROUTE_PROFILE_PHOTOS) {
+        private const val ROUTE_FOR_ARGS = "profile_photos"
+
+        fun getRouteWithArgs(userId: Long): String {
+            return "$ROUTE_FOR_ARGS/$userId"
+        }
+    }
 
     object Comments : Screen(ROUTE_COMMENTS) {
         private const val ROUTE_FOR_ARGS = "comments"
@@ -72,7 +78,7 @@ sealed class Screen(
         private const val ROUTE_FAVOURITE = "favourite"
         private const val ROUTE_PROFILE_START = "profile_start"
         private const val ROUTE_PROFILE = "profile/{$KEY_USER_ID}"
-        private const val ROUTE_PROFILE_PHOTOS = "profile_photos"
+        private const val ROUTE_PROFILE_PHOTOS = "profile_photos/{$KEY_USER_ID}"
         private const val ROUTE_COMMENTS = "comments/{$KEY_NEWS_POST}"
         private const val ROUTE_FRIENDS = "friends/{$KEY_FRIENDS}"
     }

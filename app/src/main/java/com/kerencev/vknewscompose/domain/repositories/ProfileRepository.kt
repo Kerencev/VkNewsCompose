@@ -1,6 +1,7 @@
 package com.kerencev.vknewscompose.domain.repositories
 
 import com.kerencev.vknewscompose.domain.entities.PhotoModel
+import com.kerencev.vknewscompose.domain.entities.PhotosModel
 import com.kerencev.vknewscompose.domain.entities.ProfileModel
 import com.kerencev.vknewscompose.domain.entities.WallModel
 import kotlinx.coroutines.flow.Flow
@@ -15,11 +16,11 @@ interface ProfileRepository {
     fun getProfile(userId: Long, isRefresh: Boolean = false): Flow<ProfileModel>
 
     /**
-     * Get all profile photos
+     * Get profile photos
      * @param userId - Id of the user for whom the data will be received
      * @param isRefresh - Updating data or getting it from the cache
      */
-    fun getProfilePhotos(userId: Long, isRefresh: Boolean = false): Flow<List<PhotoModel>>
+    fun getProfilePhotos(userId: Long, isRefresh: Boolean = false): Flow<PhotosModel>
 
     /**
      * Get wall posts

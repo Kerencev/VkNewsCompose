@@ -123,16 +123,16 @@ fun MainScreen(
                     onWallItemClick = { index, itemId ->
                         onPhotoClick(PhotoType.WALL, index, itemId)
                     },
-                    onShowAllPhotosClick = { navigationState.navigateToProfilePhotos() },
+                    onShowAllPhotosClick = { navigationState.navigateToProfilePhotos(userId) },
                     onProfileRefreshError = { sendEvent(MainEvent.ShowErrorMessage(it)) },
                     onLogoutClick = { sendEvent(MainEvent.Logout) },
-                    onFriendsClick = { navigationState.navigateToFriends(it) },
+                    onFriendsClick = { navigationState.navigateToFriends(userId) },
                     onBackPressed = { navigationState.navHostController.popBackStack() },
                 )
             },
-            profilePhotosScreenContent = {
+            profilePhotosScreenContent = { userId ->
                 ProfilePhotosScreen(
-                    viewModelFactory = viewModelFactory,
+                    userId = userId,
                     paddingValues = paddingValues,
                     onPhotoClick = { index ->
                         onPhotoClick(PhotoType.PROFILE, index, 0)

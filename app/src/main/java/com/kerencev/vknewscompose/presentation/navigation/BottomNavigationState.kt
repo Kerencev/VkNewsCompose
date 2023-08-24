@@ -30,8 +30,8 @@ class BottomNavigationState(
         navHostController.navigate(Screen.Profile.getRouteWithArgs(userId = userId))
     }
 
-    fun navigateToProfilePhotos() {
-        navHostController.navigate(Screen.ProfilePhotos.route)
+    fun navigateToProfilePhotos(userId: Long) {
+        navHostController.navigate(Screen.ProfilePhotos.getRouteWithArgs(userId = userId))
     }
 
     fun navigateToFriends(userId: Long) {

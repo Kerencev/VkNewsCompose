@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class ProfilePhotosViewModel @Inject constructor(
+    private val userId: Long,
     private val getProfilePhotosFeature: GetProfilePhotosFeature
 ) : BaseViewModel<ProfilePhotosEvent, ProfilePhotosViewState, VkShot>() {
 
@@ -25,7 +26,7 @@ class ProfilePhotosViewModel @Inject constructor(
 
     override fun produceCommand(event: ProfilePhotosEvent): VkCommand {
         return when (event) {
-            is ProfilePhotosEvent.GetProfilePhotos -> ProfileInputAction.GetProfilePhotos(0)
+            is ProfilePhotosEvent.GetProfilePhotos -> ProfileInputAction.GetProfilePhotos(userId = userId)
         }
     }
 
@@ -40,7 +41,7 @@ class ProfilePhotosViewModel @Inject constructor(
 
     override suspend fun produceState(action: VkAction) {
         when (action) {
-            is ProfileOutputAction.SetProfilePhotos -> setState { setPhotos(action.result) }
+            is ProfileOutputAction.SetProfilePhotos -> setState { setPhotos(emptyList()) }
         }
     }
 }

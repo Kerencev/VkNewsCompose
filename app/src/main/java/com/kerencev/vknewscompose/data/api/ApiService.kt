@@ -52,7 +52,9 @@ interface ApiService {
     @GET("photos.getAll?v=5.131&extended=true")
     suspend fun getProfilePhotos(
         @Query("access_token") token: String,
-        @Query("owner_id") ownerId: String
+        @Query("owner_id") ownerId: String,
+        @Query("offset") offset: Int,
+        @Query("count") count: Int
     ): ProfilePhotosResponseDto
 
     @GET("wall.get?v=5.131&extended=true")

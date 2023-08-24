@@ -80,7 +80,7 @@ class ProfileViewModel @Inject constructor(
             is ProfileOutputAction.SetProfile -> setState { setProfile(action.result) }
             is ProfileOutputAction.ProfileLoading -> setState { profileLoading() }
             is ProfileOutputAction.ProfileError -> setState { profileError(action.message) }
-            is ProfileOutputAction.SetProfilePhotos -> setState { setProfilePhotos(action.result) }
+            is ProfileOutputAction.SetProfilePhotos -> setState { setProfilePhotos(action.photos) }
             is ProfileOutputAction.ProfilePhotosLoading -> setState { profilePhotosLoading() }
             is ProfileOutputAction.ProfilePhotosError -> setState { profilePhotosError(action.message) }
             is ProfileOutputAction.SetWall -> setState {
@@ -110,7 +110,7 @@ class ProfileViewModel @Inject constructor(
             is ProfileOutputAction.SetAllProfileData -> setState {
                 setAllData(
                     profile = action.profile,
-                    photos = action.photos,
+                    photosModel = action.photos,
                     wallItems = action.wallItems.map { it.mapToUiModel() },
                     isWallItemsOver = action.isWallItemsOver
                 )

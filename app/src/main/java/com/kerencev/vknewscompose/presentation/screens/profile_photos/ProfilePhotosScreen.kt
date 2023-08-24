@@ -22,7 +22,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kerencev.vknewscompose.R
-import com.kerencev.vknewscompose.di.ViewModelFactory
+import com.kerencev.vknewscompose.di.getApplicationComponent
 import com.kerencev.vknewscompose.presentation.common.views.AsyncShimmerImage
 import com.kerencev.vknewscompose.presentation.common.views.IconBack
 import com.kerencev.vknewscompose.presentation.common.views.ScaffoldWithCollapsingToolbar
@@ -30,12 +30,15 @@ import com.kerencev.vknewscompose.presentation.screens.profile_photos.flow.Profi
 
 @Composable
 fun ProfilePhotosScreen(
-    viewModelFactory: ViewModelFactory,
+    userId: Long,
     paddingValues: PaddingValues,
     onPhotoClick: (index: Int) -> Unit,
     onBackPressed: () -> Unit,
 ) {
-    val viewModel: ProfilePhotosViewModel = viewModel(factory = viewModelFactory)
+    val component = getApplicationComponent()
+        .getProfilePhotosComponentFactory()
+        .create(userId)
+    val viewModel: ProfilePhotosViewModel = viewModel(factory = component.getViewModelFactory())
     val state = viewModel.observedState.collectAsState()
 
     ProfilePhotosScreenContent(

@@ -13,7 +13,7 @@ fun BottomNavGraph(
     commentsScreenContent: @Composable (NewsModelUi) -> Unit,
     favouriteScreenContent: @Composable () -> Unit,
     profileScreenContent: @Composable (userId: Long) -> Unit,
-    profilePhotosScreenContent: @Composable () -> Unit,
+    profilePhotosScreenContent: @Composable (userId: Long) -> Unit,
     friendsScreenContent: @Composable (userId: Long) -> Unit,
 ) {
     NavHost(

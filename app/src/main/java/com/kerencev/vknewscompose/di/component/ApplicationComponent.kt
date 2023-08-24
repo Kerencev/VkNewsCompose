@@ -27,6 +27,8 @@ interface ApplicationComponent {
 
     fun getProfileScreenComponentFactory(): ProfileScreenComponent.Factory
 
+    fun getProfilePhotosComponentFactory(): ProfilePhotosScreenComponent.Factory
+
     fun getFriendsScreenComponentFactory(): FriendsScreenComponent.Factory
 
     @Component.Factory

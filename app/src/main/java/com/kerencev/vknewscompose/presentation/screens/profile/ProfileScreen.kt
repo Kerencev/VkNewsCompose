@@ -54,7 +54,7 @@ fun ProfileScreen(
     onShowAllPhotosClick: () -> Unit,
     onProfileRefreshError: (message: String) -> Unit,
     onLogoutClick: () -> Unit,
-    onFriendsClick: (userId: Long) -> Unit,
+    onFriendsClick: () -> Unit,
     onBackPressed: () -> Unit,
 ) {
     val component = getApplicationComponent()
@@ -82,7 +82,7 @@ fun ProfileScreen(
         onShowAllPhotosClick = onShowAllPhotosClick,
         onProfileRefreshError = onProfileRefreshError,
         onLogoutClick = onLogoutClick,
-        onFriendsClick = { onFriendsClick(userId) },
+        onFriendsClick = onFriendsClick,
         onBackPressed = onBackPressed,
     )
 }
@@ -172,10 +172,13 @@ fun ProfileScreenContent(
                 item {
                     ProfilePhotos(
                         modifier = Modifier.padding(top = 8.dp),
-                        photosState = state.profilePhotosState,
+                        photos = state.photos,
+                        photosTotalCount = state.photosTotalCount,
+                        isPhotosLoading = state.isPhotosLoading,
+                        photosErrorMessage = state.photosErrorMessage,
                         onPhotoClick = onPhotoClick,
                         onShowAllClick = onShowAllPhotosClick,
-                        onRetryClick = { sendEvent(ProfileEvent.GetProfilePhotos) }
+                        loadPhotos = { sendEvent(ProfileEvent.GetProfilePhotos) },
                     )
                 }
 

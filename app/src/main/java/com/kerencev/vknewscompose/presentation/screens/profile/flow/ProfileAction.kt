@@ -1,7 +1,7 @@
 package com.kerencev.vknewscompose.presentation.screens.profile.flow
 
 import com.kerencev.vknewscompose.domain.entities.NewsModel
-import com.kerencev.vknewscompose.domain.entities.PhotoModel
+import com.kerencev.vknewscompose.domain.entities.PhotosModel
 import com.kerencev.vknewscompose.domain.entities.ProfileModel
 import com.kerencev.vknewscompose.presentation.common.mvi.VkAction
 import com.kerencev.vknewscompose.presentation.common.mvi.VkEffect
@@ -48,7 +48,7 @@ sealed class ProfileOutputAction : VkAction {
     /**
      * Set profile photos to viewState
      */
-    class SetProfilePhotos(val result: List<PhotoModel>) : ProfileOutputAction()
+    class SetProfilePhotos(val photos: PhotosModel) : ProfileOutputAction()
 
     /**
      * Add wall posts to viewState
@@ -111,7 +111,7 @@ sealed class ProfileOutputAction : VkAction {
      */
     class SetAllProfileData(
         val profile: ProfileModel,
-        val photos: List<PhotoModel>,
+        val photos: PhotosModel,
         val wallItems: List<NewsModel>,
         val isWallItemsOver: Boolean,
     ) : ProfileOutputAction()

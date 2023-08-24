@@ -2,6 +2,7 @@ package com.kerencev.vknewscompose.presentation.screens.profile.flow
 
 import androidx.compose.runtime.Stable
 import com.kerencev.vknewscompose.domain.entities.PhotoModel
+import com.kerencev.vknewscompose.domain.entities.PhotosModel
 import com.kerencev.vknewscompose.domain.entities.ProfileModel
 import com.kerencev.vknewscompose.presentation.common.ContentState
 import com.kerencev.vknewscompose.presentation.common.mvi.VkState
@@ -12,7 +13,10 @@ import com.kerencev.vknewscompose.presentation.model.NewsModelUi
  *
  * @param profileState - content with profile data or Loading or Error
  * @param friendsCount - number of friends of this profile
- * @param profilePhotosState - content with list of photos or Loading or Error
+ * @param photos - content with list of photos
+ * @param isPhotosLoading - is user's photos loading
+ * @param photosErrorMessage - message when an error occurs during loading user's photos
+ * @param photosTotalCount - total count og user's photos
  * @param wallItems - list of wall posts
  * @param isWallLoading - is wall posts loading
  * @param wallErrorMessage - message when an error occurs during loading wall posts
@@ -27,7 +31,10 @@ import com.kerencev.vknewscompose.presentation.model.NewsModelUi
 data class ProfileViewState(
     val profileState: ContentState<ProfileModel> = ContentState.Loading,
     val friendsCount: Int = 0,
-    val profilePhotosState: ContentState<List<PhotoModel>> = ContentState.Loading,
+    val photos: List<PhotoModel> = emptyList(),
+    val isPhotosLoading: Boolean = true,
+    val photosErrorMessage: String? = null,
+    val photosTotalCount: Int = 0,
     val wallItems: List<NewsModelUi> = emptyList(),
     val isWallLoading: Boolean = true,
     val wallErrorMessage: String? = null,
@@ -52,16 +59,21 @@ data class ProfileViewState(
         profileState = ContentState.Error(message)
     )
 
-    fun setProfilePhotos(photos: List<PhotoModel>) = copy(
-        profilePhotosState = ContentState.Content(photos),
+    fun setProfilePhotos(photosModel: PhotosModel) = copy(
+        photos = photosModel.photos,
+        photosTotalCount = photosModel.totalCount,
+        isPhotosLoading = false,
+        photosErrorMessage = null
     )
 
     fun profilePhotosLoading() = copy(
-        profilePhotosState = ContentState.Loading
+        isPhotosLoading = true,
+        photosErrorMessage = null
     )
 
     fun profilePhotosError(message: String) = copy(
-        profilePhotosState = ContentState.Error(message)
+        isPhotosLoading = false,
+        photosErrorMessage = message
     )
 
     fun setWall(items: List<NewsModelUi>, isItemsOver: Boolean) = copy(
@@ -99,13 +111,16 @@ data class ProfileViewState(
 
     fun setAllData(
         profile: ProfileModel,
-        photos: List<PhotoModel>,
+        photosModel: PhotosModel,
         wallItems: List<NewsModelUi>,
         isWallItemsOver: Boolean
     ) = copy(
         profileState = ContentState.Content(profile),
         friendsCount = profile.friendsCount,
-        profilePhotosState = ContentState.Content(photos),
+        photos = photosModel.photos,
+        photosTotalCount = photosModel.totalCount,
+        isPhotosLoading = false,
+        photosErrorMessage = null,
         wallItems = wallItems,
         isWallLoading = false,
         wallErrorMessage = null,

@@ -51,7 +51,7 @@ class PhotosPagerViewModel @Inject constructor(
 
     override suspend fun produceState(action: VkAction) {
         when (action) {
-            is ProfileOutputAction.SetProfilePhotos -> setState { setPhotos(action.result) }
+            is ProfileOutputAction.SetProfilePhotos -> setState { setPhotos(emptyList()) }
             is ProfileOutputAction.ProfilePhotosLoading -> setState { loading() }
             is ProfileOutputAction.ProfilePhotosError -> setState { error(action.message) }
             is PhotosPagerOutputAction.SetPostPhotos -> setState { setPhotos(action.result) }
