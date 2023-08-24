@@ -31,8 +31,9 @@ interface ProfileRepository {
 
     /**
      * Get a list of photos for the wall post
+     * @param userId - Id of the user for whom the data will be received
      * @param itemId - Id of the wall post
      */
-    fun getWallItemPhotos(itemId: Long): Flow<List<PhotoModel>>
+    fun getWallItemPhotos(userId: Long, itemId: Long): Flow<List<PhotoModel>>
 
 }

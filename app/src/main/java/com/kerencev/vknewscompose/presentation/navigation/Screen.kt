@@ -14,8 +14,13 @@ sealed class Screen(
     object PhotosPager : Screen(ROUTE_PHOTOS_PAGER) {
         private const val ROUTE_FOR_ARGS = "photos_pager"
 
-        fun getRouteWithArgs(type: PhotoType, initialNumber: Int, newsModelId: Long): String {
-            return "$ROUTE_FOR_ARGS/$initialNumber/${type.name}/$newsModelId"
+        fun getRouteWithArgs(
+            userId: Long,
+            type: PhotoType,
+            initialNumber: Int,
+            newsModelId: Long
+        ): String {
+            return "$ROUTE_FOR_ARGS/$initialNumber/${type.name}/$newsModelId/$userId"
         }
     }
 
@@ -25,7 +30,6 @@ sealed class Screen(
 
     object Favourite : Screen(ROUTE_FAVOURITE)
 
-    //TODO: Может убрать?
     object ProfileStart : Screen(ROUTE_PROFILE_START)
 
     object Profile : Screen(ROUTE_PROFILE) {
@@ -72,7 +76,7 @@ sealed class Screen(
 
         private const val ROUTE_MAIN = "main"
         private const val ROUTE_PHOTOS_PAGER =
-            "photos_pager/{$KEY_SELECTED_PHOTO}/{$KEY_PHOTO_TYPE}/{$KEY_NEWS_MODEL_ID}"
+            "photos_pager/{$KEY_SELECTED_PHOTO}/{$KEY_PHOTO_TYPE}/{$KEY_NEWS_MODEL_ID}/{$KEY_USER_ID}"
         private const val ROUTE_HOME = "home"
         private const val ROUTE_NEWS = "news"
         private const val ROUTE_FAVOURITE = "favourite"

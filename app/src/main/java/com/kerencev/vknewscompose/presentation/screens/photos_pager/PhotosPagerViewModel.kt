@@ -5,6 +5,7 @@ import com.kerencev.vknewscompose.presentation.common.mvi.VkAction
 import com.kerencev.vknewscompose.presentation.common.mvi.VkCommand
 import com.kerencev.vknewscompose.presentation.common.mvi.VkEffect
 import com.kerencev.vknewscompose.presentation.common.mvi.VkShot
+import com.kerencev.vknewscompose.presentation.model.PhotoType
 import com.kerencev.vknewscompose.presentation.screens.photos_pager.flow.PhotosPagerEvent
 import com.kerencev.vknewscompose.presentation.screens.photos_pager.flow.PhotosPagerInputAction
 import com.kerencev.vknewscompose.presentation.screens.photos_pager.flow.PhotosPagerOutputAction
@@ -18,22 +19,35 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class PhotosPagerViewModel @Inject constructor(
+    private val params: PhotosPagerParams,
     private val getProfilePhotosFeature: GetProfilePhotosFeature,
     private val getPostPhotosFeature: GetPostPhotosFeature,
     private val getWallPostPhotosFeature: GetWallPostPhotosFeature
 ) : BaseViewModel<PhotosPagerEvent, PhotosPagerViewState, VkShot>() {
 
+    init {
+        when (params.photoType) {
+            PhotoType.PROFILE -> send(PhotosPagerEvent.GetProfilePhotos)
+            PhotoType.NEWS -> send(PhotosPagerEvent.GetNewsPostPhotos)
+            PhotoType.WALL -> send(PhotosPagerEvent.GetWallPostPhotos)
+        }
+    }
+
     override fun initState() = PhotosPagerViewState()
 
     override fun produceCommand(event: PhotosPagerEvent): VkCommand {
         return when (event) {
-            is PhotosPagerEvent.GetProfilePhotos -> ProfileInputAction.GetProfilePhotos(0)
+            is PhotosPagerEvent.GetProfilePhotos -> ProfileInputAction.GetProfilePhotos(
+                userId = params.userId
+            )
+
             is PhotosPagerEvent.GetNewsPostPhotos -> PhotosPagerInputAction.GetNewsPostPhotos(
-                event.newsModelId
+                newsModelId = params.newsModelId
             )
 
             is PhotosPagerEvent.GetWallPostPhotos -> PhotosPagerInputAction.GetWallPostPhotos(
-                event.newsModelId
+                userId = params.userId,
+                newsModelId = params.newsModelId
             )
         }
     }
@@ -51,7 +65,7 @@ class PhotosPagerViewModel @Inject constructor(
 
     override suspend fun produceState(action: VkAction) {
         when (action) {
-            is ProfileOutputAction.SetProfilePhotos -> setState { setPhotos(emptyList()) }
+            is ProfileOutputAction.SetProfilePhotos -> setState { setPhotos(action.photos.photos) }
             is ProfileOutputAction.ProfilePhotosLoading -> setState { loading() }
             is ProfileOutputAction.ProfilePhotosError -> setState { error(action.message) }
             is PhotosPagerOutputAction.SetPostPhotos -> setState { setPhotos(action.result) }

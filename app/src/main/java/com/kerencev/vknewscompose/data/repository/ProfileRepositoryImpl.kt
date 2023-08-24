@@ -100,8 +100,8 @@ class ProfileRepositoryImpl @Inject constructor(
         )
     }
 
-    override fun getWallItemPhotos(itemId: Long): Flow<List<PhotoModel>> = flow {
-        val post = wallItemsCache[0]?.firstOrNull { it.id == itemId }
+    override fun getWallItemPhotos(userId: Long, itemId: Long): Flow<List<PhotoModel>> = flow {
+        val post = wallItemsCache[userId]?.firstOrNull { it.id == itemId }
         if (post == null) emit(emptyList())
         else {
             emit(

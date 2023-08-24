@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -18,24 +17,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.kerencev.vknewscompose.di.ViewModelFactory
+import com.kerencev.vknewscompose.di.getApplicationComponent
 import com.kerencev.vknewscompose.presentation.common.ContentState
 import com.kerencev.vknewscompose.presentation.common.compose.SetupSystemBar
-import com.kerencev.vknewscompose.presentation.common.compose.rememberUnitParams
 import com.kerencev.vknewscompose.presentation.common.views.HorizontalPagerIndicator
 import com.kerencev.vknewscompose.presentation.common.views.PhotosPagerItem
 import com.kerencev.vknewscompose.presentation.common.views.PhotosPagerToolbar
-import com.kerencev.vknewscompose.presentation.model.PhotoType
-import com.kerencev.vknewscompose.presentation.screens.photos_pager.flow.PhotosPagerEvent
 import com.kerencev.vknewscompose.presentation.screens.photos_pager.flow.PhotosPagerViewState
 import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun PhotosPagerScreen(
-    viewModelFactory: ViewModelFactory,
-    photoType: PhotoType,
-    selectedPhotoNumber: Int,
-    newsModelId: Long,
+    params: PhotosPagerParams,
     onDismiss: () -> Unit,
 ) {
     SetupSystemBar(
@@ -44,21 +37,15 @@ fun PhotosPagerScreen(
     )
 
     val scope = rememberCoroutineScope()
-    val viewModel: PhotosPagerViewModel = viewModel(factory = viewModelFactory)
-    val sendEvent: (PhotosPagerEvent) -> Unit = rememberUnitParams { viewModel.send(it) }
+    val component = getApplicationComponent()
+        .getPhotosPagerScreenComponentFactory()
+        .create(params = params)
+    val viewModel: PhotosPagerViewModel = viewModel(factory = component.getViewModelFactory())
     val state = viewModel.observedState.collectAsState()
-
-    LaunchedEffect(key1 = Unit) {
-        when (photoType) {
-            PhotoType.PROFILE -> sendEvent(PhotosPagerEvent.GetProfilePhotos)
-            PhotoType.NEWS -> sendEvent(PhotosPagerEvent.GetNewsPostPhotos(newsModelId = newsModelId))
-            PhotoType.WALL -> sendEvent(PhotosPagerEvent.GetWallPostPhotos(newsModelId = newsModelId))
-        }
-    }
 
     ProfilePhotosPagerScreenContent(
         state = state,
-        selectedPhotoNumber = selectedPhotoNumber,
+        selectedPhotoNumber = params.selectedPhotoNumber,
         onDismiss = onDismiss,
         scope = scope,
     )

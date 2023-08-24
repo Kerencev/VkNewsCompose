@@ -45,7 +45,12 @@ import kotlinx.coroutines.launch
 fun MainScreen(
     mainViewModel: MainViewModel,
     viewModelFactory: ViewModelFactory,
-    onPhotoClick: (type: PhotoType, index: Int, newsModelId: Long) -> Unit
+    onPhotoClick: (
+        userId: Long,
+        type: PhotoType,
+        index: Int,
+        newsModelId: Long
+    ) -> Unit
 ) {
     SetupSystemBar()
 
@@ -102,7 +107,7 @@ fun MainScreen(
                     onCommentsClick = { navigationState.navigateToComments(it) },
                     onError = { sendEvent(MainEvent.ShowErrorMessage(it)) },
                     onImageClick = { index, newsModelId ->
-                        onPhotoClick(PhotoType.NEWS, index, newsModelId)
+                        onPhotoClick(0, PhotoType.NEWS, index, newsModelId)
                     }
                 )
             },
@@ -118,10 +123,10 @@ fun MainScreen(
                     userId = userId,
                     paddingValues = paddingValues,
                     onPhotoClick = { index ->
-                        onPhotoClick(PhotoType.PROFILE, index, 0)
+                        onPhotoClick(userId, PhotoType.PROFILE, index, 0)
                     },
                     onWallItemClick = { index, itemId ->
-                        onPhotoClick(PhotoType.WALL, index, itemId)
+                        onPhotoClick(userId, PhotoType.WALL, index, itemId)
                     },
                     onShowAllPhotosClick = { navigationState.navigateToProfilePhotos(userId) },
                     onProfileRefreshError = { sendEvent(MainEvent.ShowErrorMessage(it)) },
@@ -135,7 +140,7 @@ fun MainScreen(
                     userId = userId,
                     paddingValues = paddingValues,
                     onPhotoClick = { index ->
-                        onPhotoClick(PhotoType.PROFILE, index, 0)
+                        onPhotoClick(userId, PhotoType.PROFILE, index, 0)
                     },
                     onBackPressed = { navigationState.navHostController.popBackStack() }
                 )

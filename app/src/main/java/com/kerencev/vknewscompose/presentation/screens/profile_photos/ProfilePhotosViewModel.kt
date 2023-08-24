@@ -41,7 +41,9 @@ class ProfilePhotosViewModel @Inject constructor(
 
     override suspend fun produceState(action: VkAction) {
         when (action) {
-            is ProfileOutputAction.SetProfilePhotos -> setState { setPhotos(emptyList()) }
+            is ProfileOutputAction.SetProfilePhotos -> setState { setPhotos(action.photos) }
+            is ProfileOutputAction.ProfilePhotosLoading -> setState { loading() }
+            is ProfileOutputAction.ProfilePhotosError -> setState { error(action.message) }
         }
     }
 }

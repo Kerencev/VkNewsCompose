@@ -20,7 +20,10 @@ class GetWallPostPhotosFeatureImpl @Inject constructor(
         action: PhotosPagerInputAction.GetWallPostPhotos,
         state: PhotosPagerViewState
     ): Flow<VkCommand> {
-        return profileRepository.getWallItemPhotos(action.newsModelId)
+        return profileRepository.getWallItemPhotos(
+            userId = action.userId,
+            itemId = action.newsModelId
+        )
             .flatMapConcat { photos ->
                 flowOf(PhotosPagerOutputAction.SetPostPhotos(photos))
             }

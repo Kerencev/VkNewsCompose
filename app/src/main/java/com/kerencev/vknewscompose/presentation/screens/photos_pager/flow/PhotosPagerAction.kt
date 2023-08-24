@@ -7,7 +7,7 @@ sealed class PhotosPagerInputAction : VkAction {
 
     class GetNewsPostPhotos(val newsModelId: Long) : PhotosPagerInputAction()
 
-    class GetWallPostPhotos(val newsModelId: Long) : PhotosPagerInputAction()
+    class GetWallPostPhotos(val userId: Long, val newsModelId: Long) : PhotosPagerInputAction()
 
 }
 

@@ -53,9 +53,10 @@ class MainActivity : ComponentActivity() {
                                 MainScreen(
                                     mainViewModel = viewModel,
                                     viewModelFactory = viewModelFactory,
-                                    onPhotoClick = { type, index, newsModelId ->
+                                    onPhotoClick = { userId, type, index, newsModelId ->
                                         navController.navigate(
                                             Screen.PhotosPager.getRouteWithArgs(
+                                                userId = userId,
                                                 type = type,
                                                 initialNumber = index,
                                                 newsModelId = newsModelId
@@ -64,12 +65,9 @@ class MainActivity : ComponentActivity() {
                                     }
                                 )
                             },
-                            photosPagerScreenContent = { type, number, newsModelId ->
+                            photosPagerScreenContent = { params ->
                                 PhotosPagerScreen(
-                                    viewModelFactory = viewModelFactory,
-                                    photoType = type,
-                                    selectedPhotoNumber = number,
-                                    newsModelId = newsModelId,
+                                    params = params,
                                     onDismiss = { navController.popBackStack() },
                                 )
                             }

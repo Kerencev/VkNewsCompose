@@ -6,8 +6,8 @@ sealed class PhotosPagerEvent : VkEvent {
 
     object GetProfilePhotos : PhotosPagerEvent()
 
-    class GetNewsPostPhotos(val newsModelId: Long) : PhotosPagerEvent()
+    object GetNewsPostPhotos : PhotosPagerEvent()
 
-    class GetWallPostPhotos(val newsModelId: Long) : PhotosPagerEvent()
+    object GetWallPostPhotos : PhotosPagerEvent()
 
 }

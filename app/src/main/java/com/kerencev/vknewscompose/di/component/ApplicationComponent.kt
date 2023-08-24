@@ -31,6 +31,8 @@ interface ApplicationComponent {
 
     fun getFriendsScreenComponentFactory(): FriendsScreenComponent.Factory
 
+    fun getPhotosPagerScreenComponentFactory(): PhotosPagerScreenComponent.Factory
+
     @Component.Factory
     interface Factory {
 
