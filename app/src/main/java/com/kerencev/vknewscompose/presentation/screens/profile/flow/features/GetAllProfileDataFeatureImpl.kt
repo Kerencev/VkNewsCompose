@@ -32,7 +32,10 @@ class GetAllProfileDataFeatureImpl @Inject constructor(
                 isWallItemsOver = wallModel.isItemsOver
             ) as VkCommand
         }
-            .onStart { emit(ProfileOutputAction.AllProfileDataRefreshing) }
-            .catch { emit(ProfileEffect.AllProfileDataError(message = it.message.orEmpty())) }
+            .onStart { emit(ProfileOutputAction.AllProfileDataRefreshing(isRefreshing = true)) }
+            .catch {
+                emit(ProfileOutputAction.AllProfileDataRefreshing(isRefreshing = false))
+                emit(ProfileEffect.AllProfileDataError(message = it.message.orEmpty()))
+            }
     }
 }

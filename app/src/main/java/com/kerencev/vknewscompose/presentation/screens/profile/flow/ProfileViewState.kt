@@ -1,9 +1,12 @@
 package com.kerencev.vknewscompose.presentation.screens.profile.flow
 
 import androidx.compose.runtime.Stable
+import com.kerencev.vknewscompose.data.repository.ProfileRepositoryImpl
+import com.kerencev.vknewscompose.domain.entities.Photo
 import com.kerencev.vknewscompose.domain.entities.PhotoModel
 import com.kerencev.vknewscompose.domain.entities.PhotosModel
 import com.kerencev.vknewscompose.domain.entities.ProfileModel
+import com.kerencev.vknewscompose.domain.entities.getDummyPhotos
 import com.kerencev.vknewscompose.presentation.common.ContentState
 import com.kerencev.vknewscompose.presentation.common.mvi.VkState
 import com.kerencev.vknewscompose.presentation.model.NewsModelUi
@@ -31,7 +34,7 @@ import com.kerencev.vknewscompose.presentation.model.NewsModelUi
 data class ProfileViewState(
     val profileState: ContentState<ProfileModel> = ContentState.Loading,
     val friendsCount: Int = 0,
-    val photos: List<PhotoModel> = emptyList(),
+    val photos: List<Photo> = emptyList(),
     val isPhotosLoading: Boolean = true,
     val photosErrorMessage: String? = null,
     val photosTotalCount: Int = 0,
@@ -67,11 +70,13 @@ data class ProfileViewState(
     )
 
     fun profilePhotosLoading() = copy(
+        photos = photos + getDummyPhotos(ProfileRepositoryImpl.PHOTOS_PAGE_SIZE),
         isPhotosLoading = true,
         photosErrorMessage = null
     )
 
     fun profilePhotosError(message: String) = copy(
+        photos = photos.filterIsInstance<PhotoModel>(),
         isPhotosLoading = false,
         photosErrorMessage = message
     )

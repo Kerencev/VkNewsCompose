@@ -1,5 +1,6 @@
 package com.kerencev.vknewscompose.presentation.screens.photos_pager
 
+import com.kerencev.vknewscompose.domain.entities.PhotosModel
 import com.kerencev.vknewscompose.presentation.common.mvi.BaseViewModel
 import com.kerencev.vknewscompose.presentation.common.mvi.VkAction
 import com.kerencev.vknewscompose.presentation.common.mvi.VkCommand
@@ -65,12 +66,16 @@ class PhotosPagerViewModel @Inject constructor(
 
     override suspend fun produceState(action: VkAction) {
         when (action) {
-            is ProfileOutputAction.SetProfilePhotos -> setState { setPhotos(action.photos.photos) }
+            is ProfileOutputAction.SetProfilePhotos -> setState { setPhotos(action.photos) }
             is ProfileOutputAction.ProfilePhotosLoading -> setState { loading() }
             is ProfileOutputAction.ProfilePhotosError -> setState { error(action.message) }
-            is PhotosPagerOutputAction.SetPostPhotos -> setState { setPhotos(action.result) }
-            is PhotosPagerOutputAction.SetToolBarVisibility -> setState {
-                setToolbarVisibility(action.isVisible)
+            is PhotosPagerOutputAction.SetPostPhotos -> setState {
+                setPhotos(
+                    PhotosModel(
+                        totalCount = action.result.size,
+                        photos = action.result
+                    )
+                )
             }
         }
     }

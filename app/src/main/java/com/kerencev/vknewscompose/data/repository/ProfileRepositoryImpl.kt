@@ -13,6 +13,7 @@ import com.kerencev.vknewscompose.domain.repositories.ProfileRepository
 import com.kerencev.vknewscompose.presentation.screens.profile.ProfileViewModel
 import com.vk.api.sdk.VKKeyValueStorage
 import com.vk.api.sdk.auth.VKAccessToken
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -27,7 +28,7 @@ class ProfileRepositoryImpl @Inject constructor(
         private const val PROFILE_NOT_FOUND = "Profile not found"
         private const val TOKEN_IS_NULL = "Token is null"
         private const val WALL_PAGE_SIZE = 5
-        private const val PHOTOS_PAGE_SIZE = 20
+        const val PHOTOS_PAGE_SIZE = 20
     }
 
     private val token
@@ -49,13 +50,17 @@ class ProfileRepositoryImpl @Inject constructor(
             ).response?.firstOrNull() ?: throw IllegalStateException(PROFILE_NOT_FOUND)
             profileCache[userId] = profileResponse
             emit(profileResponse)
-        } else profileCache[userId]?.let { emit(it) }
+        } else {
+            delay(100)
+            profileCache[userId]?.let { emit(it) }
+        }
     }
         .map { it.mapToModel() }
 
     override fun getProfilePhotos(userId: Long, isRefresh: Boolean) = flow {
         if (isRefresh) clearPhotosCacheById(userId)
         if (isPhotosOver(userId)) {
+            delay(100)
             emit(
                 PhotosModel(
                     totalCount = getPhotosTotalCountById(userId),
@@ -82,6 +87,7 @@ class ProfileRepositoryImpl @Inject constructor(
     override fun getWallData(userId: Long, isRefresh: Boolean) = flow {
         if (isRefresh) clearWallCacheById(userId)
         if (isWallItemsOver(userId)) {
+            delay(100)
             emit(WallModel(items = getWallItemsById(userId), isItemsOver = true))
             return@flow
         }

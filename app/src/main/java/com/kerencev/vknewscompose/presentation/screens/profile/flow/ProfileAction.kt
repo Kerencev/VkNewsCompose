@@ -104,7 +104,7 @@ sealed class ProfileOutputAction : VkAction {
     /**
      * When the swipe-refresh is used
      */
-    object AllProfileDataRefreshing : ProfileOutputAction()
+    class AllProfileDataRefreshing(val isRefreshing: Boolean) : ProfileOutputAction()
 
     /**
      * Used after swipe-refresh

@@ -32,6 +32,12 @@ class ProfileViewModel @Inject constructor(
         const val DEFAULT_USER_ID: Long = 0L
     }
 
+    init {
+        send(ProfileEvent.GetProfile)
+        send(ProfileEvent.GetProfilePhotos)
+        send(ProfileEvent.GetWall)
+    }
+
     override fun initState() = ProfileViewState()
 
     override fun produceCommand(event: ProfileEvent): VkCommand {
@@ -67,7 +73,6 @@ class ProfileViewModel @Inject constructor(
     override suspend fun produceShot(effect: VkEffect) {
         when (effect) {
             is ProfileEffect.AllProfileDataError -> {
-                setState { allDataRefreshing(false) }
                 setShot { ProfileShot.ShowErrorMessage(effect.message) }
             }
 
@@ -92,19 +97,17 @@ class ProfileViewModel @Inject constructor(
 
             is ProfileOutputAction.WallLoading -> setState { wallLoading() }
             is ProfileOutputAction.WallError -> setState { wallError(action.message) }
-            is ProfileOutputAction.SetUiParams -> {
-                setState {
-                    setSizes(
-                        topBarAlpha = action.topBarAlpha,
-                        blurBackgroundAlpha = action.blurBackgroundAlpha,
-                        avatarAlpha = action.avatarAlpha,
-                        avatarSize = action.avatarSize
-                    )
-                }
+            is ProfileOutputAction.SetUiParams -> setState {
+                setSizes(
+                    topBarAlpha = action.topBarAlpha,
+                    blurBackgroundAlpha = action.blurBackgroundAlpha,
+                    avatarAlpha = action.avatarAlpha,
+                    avatarSize = action.avatarSize
+                )
             }
 
             is ProfileOutputAction.AllProfileDataRefreshing -> setState {
-                allDataRefreshing(true)
+                allDataRefreshing(action.isRefreshing)
             }
 
             is ProfileOutputAction.SetAllProfileData -> setState {

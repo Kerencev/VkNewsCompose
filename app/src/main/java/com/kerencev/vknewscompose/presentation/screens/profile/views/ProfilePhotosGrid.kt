@@ -12,15 +12,18 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun ProfilePhotosGrid(
+    modifier: Modifier = Modifier,
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(2.dp),
+    verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(2.dp),
     content: LazyGridScope.() -> Unit
 ) {
     LazyHorizontalGrid(
-        modifier = Modifier
+        modifier = modifier
             .height(200.dp)
             .padding(8.dp),
         rows = GridCells.Fixed(2),
-        horizontalArrangement = Arrangement.spacedBy(2.dp),
-        verticalArrangement = Arrangement.spacedBy(2.dp)
+        horizontalArrangement = horizontalArrangement,
+        verticalArrangement = verticalArrangement
     ) {
         content()
     }

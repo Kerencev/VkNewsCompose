@@ -15,6 +15,4 @@ sealed class PhotosPagerOutputAction : VkAction {
 
     class SetPostPhotos(val result: List<PhotoModel>) : PhotosPagerOutputAction()
 
-    class SetToolBarVisibility(val isVisible: Boolean) : PhotosPagerOutputAction()
-
 }

@@ -1,7 +1,11 @@
 package com.kerencev.vknewscompose.domain.entities
 
+import kotlin.random.Random
+
+open class Photo(open val id: Long)
+
 data class PhotoModel(
-    val id: Long,
+    override val id: Long,
     val date: Long?,
     val lat: Double?,
     val long: Double?,
@@ -11,4 +15,16 @@ data class PhotoModel(
     val text: String,
     val likes: Int,
     val reposts: Int
-)
+) : Photo(id)
+
+class LoadingPhotoModel(
+    override val id: Long = Random.nextLong(Long.MAX_VALUE)
+) : Photo(id)
+
+fun getDummyPhotos(size: Int): List<Photo> {
+    return buildList {
+        repeat(size) {
+            add(LoadingPhotoModel())
+        }
+    }
+}

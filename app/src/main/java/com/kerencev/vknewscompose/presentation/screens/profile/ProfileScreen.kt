@@ -65,12 +65,6 @@ fun ProfileScreen(
     val shot = viewModel.observedShot.collectAsState(ProfileShot.None)
     val sendEvent: (ProfileEvent) -> Unit = rememberUnitParams { viewModel.send(it) }
 
-    LaunchedEffect(key1 = Unit) {
-        sendEvent(ProfileEvent.GetProfile)
-        sendEvent(ProfileEvent.GetProfilePhotos)
-        sendEvent(ProfileEvent.GetWall)
-    }
-
     ProfileScreenContent(
         isCurrentUser = userId == ProfileViewModel.DEFAULT_USER_ID,
         currentState = state,
@@ -118,7 +112,6 @@ fun ProfileScreenContent(
     }
 
     val state = currentState.value
-
     SwipeRefresh(
         state = SwipeRefreshState(isRefreshing = state.isSwipeRefreshing),
         onRefresh = { sendEvent(ProfileEvent.RefreshProfileData) },
