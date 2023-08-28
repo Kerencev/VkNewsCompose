@@ -7,7 +7,7 @@ data class ProfileResponseDto(
 )
 
 data class ProfileDto(
-    val id: Int?,
+    val id: Long?,
     @SerializedName("first_name") val firstName: String?,
     @SerializedName("last_name") val lastName: String?,
     val city: City?,

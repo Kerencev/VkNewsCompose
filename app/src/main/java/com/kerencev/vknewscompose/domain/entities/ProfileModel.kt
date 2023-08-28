@@ -1,7 +1,7 @@
 package com.kerencev.vknewscompose.domain.entities
 
 data class ProfileModel(
-    val id: String,
+    val id: Long,
     val name: String,
     val lastName: String,
     val city: String?,

@@ -1,6 +1,5 @@
 package com.kerencev.vknewscompose.presentation.activity
 
-import com.kerencev.vknewscompose.domain.entities.AuthState
 import com.kerencev.vknewscompose.presentation.common.mvi.BaseViewModel
 import com.kerencev.vknewscompose.presentation.common.mvi.VkAction
 import com.kerencev.vknewscompose.presentation.common.mvi.VkCommand

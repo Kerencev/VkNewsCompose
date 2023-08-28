@@ -5,7 +5,7 @@ import com.kerencev.vknewscompose.domain.entities.ProfileModel
 
 fun ProfileDto.mapToModel(): ProfileModel {
     return ProfileModel(
-        id = id.toString(),
+        id = id ?: 0L,
         name = firstName.orEmpty(),
         lastName = lastName.orEmpty(),
         city = city?.title,

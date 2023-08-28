@@ -66,7 +66,6 @@ fun ProfileScreen(
     val sendEvent: (ProfileEvent) -> Unit = rememberUnitParams { viewModel.send(it) }
 
     ProfileScreenContent(
-        isCurrentUser = userId == ProfileViewModel.DEFAULT_USER_ID,
         currentState = state,
         currentShot = shot,
         paddingValues = paddingValues,
@@ -83,7 +82,6 @@ fun ProfileScreen(
 
 @Composable
 fun ProfileScreenContent(
-    isCurrentUser: Boolean,
     currentState: State<ProfileViewState>,
     currentShot: State<ProfileShot>,
     paddingValues: PaddingValues,
@@ -129,7 +127,6 @@ fun ProfileScreenContent(
             )
 
             ProfileToolbar(
-                isCurrentUser = isCurrentUser,
                 state = state,
                 boxScope = this,
                 onRefreshClick = { sendEvent(ProfileEvent.RefreshProfileData) },

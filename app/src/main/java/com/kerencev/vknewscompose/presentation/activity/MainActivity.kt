@@ -52,7 +52,6 @@ class MainActivity : ComponentActivity() {
                             mainScreenContent = {
                                 MainScreen(
                                     mainViewModel = viewModel,
-                                    viewModelFactory = viewModelFactory,
                                     onPhotoClick = { userId, type, index, newsModelId ->
                                         navController.navigate(
                                             Screen.PhotosPager.getRouteWithArgs(

@@ -5,19 +5,13 @@ import com.kerencev.vknewscompose.data.mapper.mapToModel
 import com.kerencev.vknewscompose.domain.entities.NewsModel
 import com.kerencev.vknewscompose.domain.entities.PhotoModel
 import com.kerencev.vknewscompose.domain.repositories.NewsFeedRepository
-import com.vk.api.sdk.VKKeyValueStorage
-import com.vk.api.sdk.auth.VKAccessToken
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class NewsFeedRepositoryImpl @Inject constructor(
     private val apiService: ApiService,
-    private val storage: VKKeyValueStorage,
 ) : NewsFeedRepository {
-
-    private val token
-        get() = VKAccessToken.restore(storage)
 
     private var startFromByDate: String? = null
     private val newsCacheByDate = mutableListOf<NewsModel>()
@@ -30,8 +24,8 @@ class NewsFeedRepositoryImpl @Inject constructor(
             startFromByDate = null
             newsCacheByDate.clear()
         }
-        val response = if (startFromByDate == null) apiService.loadNewsFeed(getAccessToken())
-        else apiService.loadNewsFeed(getAccessToken(), startFromByDate.orEmpty())
+        val response = if (startFromByDate == null) apiService.loadNewsFeed()
+        else apiService.loadNewsFeed(startFrom = startFromByDate.orEmpty())
         startFromByDate = response.response?.nextFrom
         val news = response.mapToModel()
         newsCacheByDate.addAll(news)
@@ -44,8 +38,8 @@ class NewsFeedRepositoryImpl @Inject constructor(
             newsCacheRecommended.clear()
         }
         val response =
-            if (startFromRecommended == null) apiService.loadRecommended(getAccessToken())
-            else apiService.loadRecommended(getAccessToken(), startFromRecommended.orEmpty())
+            if (startFromRecommended == null) apiService.loadRecommended()
+            else apiService.loadRecommended(startFrom = startFromRecommended.orEmpty())
         startFromRecommended = response.response?.nextFrom
         val news = response.mapToModel()
         newsCacheRecommended.addAll(news)
@@ -54,14 +48,10 @@ class NewsFeedRepositoryImpl @Inject constructor(
 
     override fun changeLikeStatus(newsModel: NewsModel) = flow {
         if (newsModel.isLiked) {
-            apiService.deleteLike(
-                token = getAccessToken(), ownerId = newsModel.communityId, postId = newsModel.id
-            )
+            apiService.deleteLike(ownerId = newsModel.communityId, postId = newsModel.id)
             emit(newsModel.copy(likesCount = newsModel.likesCount - 1, isLiked = false))
         } else {
-            apiService.addLike(
-                token = getAccessToken(), ownerId = newsModel.communityId, postId = newsModel.id
-            )
+            apiService.addLike(ownerId = newsModel.communityId, postId = newsModel.id)
             emit(newsModel.copy(likesCount = newsModel.likesCount + 1, isLiked = true))
         }
     }
@@ -88,11 +78,6 @@ class NewsFeedRepositoryImpl @Inject constructor(
                 }
             )
         }
-    }
-
-    @Throws(IllegalStateException::class)
-    private fun getAccessToken(): String {
-        return token?.accessToken ?: error("Token is null")
     }
 
 }

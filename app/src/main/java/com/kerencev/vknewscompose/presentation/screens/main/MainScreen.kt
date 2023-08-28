@@ -48,7 +48,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun MainScreen(
     mainViewModel: MainViewModel,
-    viewModelFactory: ViewModelFactory,
     onPhotoClick: (
         userId: Long,
         type: PhotoType,

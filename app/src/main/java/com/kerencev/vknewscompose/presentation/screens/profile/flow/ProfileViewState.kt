@@ -1,6 +1,7 @@
 package com.kerencev.vknewscompose.presentation.screens.profile.flow
 
 import androidx.compose.runtime.Stable
+import com.kerencev.vknewscompose.data.repository.AuthRepositoryImpl
 import com.kerencev.vknewscompose.data.repository.ProfileRepositoryImpl
 import com.kerencev.vknewscompose.domain.entities.Photo
 import com.kerencev.vknewscompose.domain.entities.PhotoModel
@@ -14,6 +15,7 @@ import com.kerencev.vknewscompose.presentation.model.NewsModelUi
 /**
  * State for the ProfileScreen
  *
+ * @param isCurrentUser - Helps in drawing a profile for the current user or not
  * @param profileState - content with profile data or Loading or Error
  * @param friendsCount - number of friends of this profile
  * @param photos - content with list of photos
@@ -32,6 +34,7 @@ import com.kerencev.vknewscompose.presentation.model.NewsModelUi
  */
 @Stable
 data class ProfileViewState(
+    val isCurrentUser: Boolean? = null,
     val profileState: ContentState<ProfileModel> = ContentState.Loading,
     val friendsCount: Int = 0,
     val photos: List<Photo> = emptyList(),
@@ -50,6 +53,7 @@ data class ProfileViewState(
 ) : VkState {
 
     fun setProfile(profileModel: ProfileModel) = copy(
+        isCurrentUser = profileModel.id == AuthRepositoryImpl.currentUserId,
         profileState = ContentState.Content(profileModel),
         friendsCount = profileModel.friendsCount
     )

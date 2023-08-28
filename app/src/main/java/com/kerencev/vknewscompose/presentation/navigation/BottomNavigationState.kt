@@ -5,8 +5,8 @@ import androidx.compose.runtime.remember
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.kerencev.vknewscompose.data.repository.AuthRepositoryImpl
 import com.kerencev.vknewscompose.presentation.model.NewsModelUi
-import com.kerencev.vknewscompose.presentation.screens.profile.ProfileViewModel
 
 class BottomNavigationState(
     val navHostController: NavHostController
@@ -44,7 +44,7 @@ class BottomNavigationState(
 
     private fun getCorrectBottomTabRoute(route: String): String {
         return if (route == Screen.ProfileGraph.route)
-            Screen.Profile.getRouteWithArgs(ProfileViewModel.DEFAULT_USER_ID) else route
+            Screen.Profile.getRouteWithArgs(AuthRepositoryImpl.currentUserId) else route
     }
 
 }

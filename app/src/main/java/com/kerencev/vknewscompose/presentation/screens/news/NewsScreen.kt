@@ -32,6 +32,7 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.kerencev.vknewscompose.R
 import com.kerencev.vknewscompose.di.getApplicationComponent
+import com.kerencev.vknewscompose.domain.entities.NewsType
 import com.kerencev.vknewscompose.presentation.common.compose.rememberUnitParams
 import com.kerencev.vknewscompose.presentation.common.views.ProgressBarDefault
 import com.kerencev.vknewscompose.presentation.common.views.ScaffoldWithCollapsingToolbar
@@ -67,6 +68,7 @@ fun NewsScreen(
     val sendEvent: (NewsEvent) -> Unit = rememberUnitParams { viewModel.send(it) }
 
     NewsScreenContent(
+        toolbarTitle = getToolbarTitleByType(newsType = params.type),
         state = state,
         shot = shot,
         coroutineScope = coroutineScope,
@@ -81,6 +83,7 @@ fun NewsScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewsScreenContent(
+    toolbarTitle: String,
     state: State<NewsViewState>,
     shot: State<NewsShot>,
     coroutineScope: CoroutineScope,
@@ -94,7 +97,7 @@ fun NewsScreenContent(
         paddingValues = paddingValues,
         toolBarTitle = {
             Text(
-                text = stringResource(id = R.string.news),
+                text = toolbarTitle,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -193,6 +196,16 @@ fun NewsScreenContent(
 
                 is NewsShot.None -> Unit
             }
+        }
+    )
+}
+
+@Composable
+private fun getToolbarTitleByType(newsType: NewsType): String {
+    return stringResource(
+        id = when (newsType) {
+            NewsType.BY_DATE -> R.string.news
+            NewsType.RECOMMENDATION -> R.string.recommendation
         }
     )
 }

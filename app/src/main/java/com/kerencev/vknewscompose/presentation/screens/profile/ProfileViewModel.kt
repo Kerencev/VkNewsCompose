@@ -28,10 +28,6 @@ class ProfileViewModel @Inject constructor(
     private val getAllProfileDataFeature: GetAllProfileDataFeature,
 ) : BaseViewModel<ProfileEvent, ProfileViewState, ProfileShot>() {
 
-    companion object {
-        const val DEFAULT_USER_ID: Long = 0L
-    }
-
     init {
         send(ProfileEvent.GetProfile)
         send(ProfileEvent.GetProfilePhotos)

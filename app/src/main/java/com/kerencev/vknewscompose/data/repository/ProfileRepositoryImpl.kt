@@ -10,9 +10,6 @@ import com.kerencev.vknewscompose.domain.entities.PhotoModel
 import com.kerencev.vknewscompose.domain.entities.PhotosModel
 import com.kerencev.vknewscompose.domain.entities.WallModel
 import com.kerencev.vknewscompose.domain.repositories.ProfileRepository
-import com.kerencev.vknewscompose.presentation.screens.profile.ProfileViewModel
-import com.vk.api.sdk.VKKeyValueStorage
-import com.vk.api.sdk.auth.VKAccessToken
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -21,18 +18,13 @@ import javax.inject.Inject
 
 class ProfileRepositoryImpl @Inject constructor(
     private val apiService: ApiService,
-    private val storage: VKKeyValueStorage,
 ) : ProfileRepository {
 
     companion object {
         private const val PROFILE_NOT_FOUND = "Profile not found"
-        private const val TOKEN_IS_NULL = "Token is null"
         private const val WALL_PAGE_SIZE = 5
         const val PHOTOS_PAGE_SIZE = 20
     }
-
-    private val token
-        get() = VKAccessToken.restore(storage)
 
     private val profileCache = mutableMapOf<Long, ProfileDto?>()
     private val photosCache = mutableMapOf<Long, MutableList<PhotoModel>>()
@@ -44,10 +36,8 @@ class ProfileRepositoryImpl @Inject constructor(
 
     override fun getProfile(userId: Long, isRefresh: Boolean) = flow {
         if (profileCache[userId] == null || isRefresh) {
-            val profileResponse = apiService.getProfile(
-                token = getAccessToken(),
-                usersIds = getCorrectUserId(userId)
-            ).response?.firstOrNull() ?: throw IllegalStateException(PROFILE_NOT_FOUND)
+            val profileResponse = apiService.getProfile(usersIds = userId.toString())
+                .response?.firstOrNull() ?: throw IllegalStateException(PROFILE_NOT_FOUND)
             profileCache[userId] = profileResponse
             emit(profileResponse)
         } else {
@@ -70,8 +60,7 @@ class ProfileRepositoryImpl @Inject constructor(
             return@flow
         }
         val response = apiService.getProfilePhotos(
-            token = getAccessToken(),
-            ownerId = getCorrectUserId(userId),
+            ownerId = userId.toString(),
             offset = getPhotosPageById(userId) * PHOTOS_PAGE_SIZE,
             count = PHOTOS_PAGE_SIZE
         )
@@ -92,8 +81,7 @@ class ProfileRepositoryImpl @Inject constructor(
             return@flow
         }
         val response = apiService.getWall(
-            token = getAccessToken(),
-            userId = getCorrectUserId(userId),
+            userId = userId.toString(),
             offset = getWallPageById(userId) * WALL_PAGE_SIZE,
             count = WALL_PAGE_SIZE
         )
@@ -128,9 +116,6 @@ class ProfileRepositoryImpl @Inject constructor(
             )
         }
     }
-
-    @Throws(IllegalStateException::class)
-    private fun getAccessToken() = token?.accessToken ?: error(TOKEN_IS_NULL)
 
     private fun clearWallCacheById(userId: Long) {
         wallItemsCache[userId]?.clear()
@@ -173,11 +158,6 @@ class ProfileRepositoryImpl @Inject constructor(
 
     private fun getWallPageById(userId: Long): Int {
         return wallPage[userId] ?: 0
-    }
-
-    private fun getCorrectUserId(userId: Long): String {
-        return if (userId == ProfileViewModel.DEFAULT_USER_ID) token?.userId.toString()
-        else userId.toString()
     }
 
     private fun clearPhotosCacheById(userId: Long) {

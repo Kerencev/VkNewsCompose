@@ -6,7 +6,7 @@ import com.kerencev.vknewscompose.presentation.common.mvi.VkCommand
 import com.kerencev.vknewscompose.presentation.screens.main.flow.MainInputAction
 import com.kerencev.vknewscompose.presentation.screens.main.flow.MainOutputAction
 import com.kerencev.vknewscompose.presentation.screens.main.flow.MainState
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flatMapConcat
@@ -17,7 +17,7 @@ class CheckAuthStateFeatureImpl @Inject constructor(
     private val repository: AuthRepository
 ) : CheckAuthStateFeature {
 
-    @OptIn(FlowPreview::class)
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun invoke(
         action: MainInputAction.CheckAuthState,
         state: MainState

@@ -35,7 +35,6 @@ import com.kerencev.vknewscompose.presentation.screens.profile.flow.ProfileViewS
 
 @Composable
 fun ProfileToolbar(
-    isCurrentUser: Boolean,
     state: ProfileViewState,
     boxScope: BoxScope,
     onRefreshClick: () -> Unit,
@@ -66,7 +65,7 @@ fun ProfileToolbar(
             ) {
                 AsyncImage(
                     modifier = Modifier
-                        .padding(start = if (isCurrentUser) 8.dp else 52.dp)
+                        .padding(start = if (state.isCurrentUser == true) 8.dp else 52.dp)
                         .size(40.dp)
                         .clip(CircleShape)
                         .border(2.dp, MaterialTheme.colors.surface, CircleShape),
@@ -86,7 +85,7 @@ fun ProfileToolbar(
             }
         }
 
-        if (isCurrentUser) {
+        if (state.isCurrentUser == true) {
             Box(
                 modifier = Modifier
                     .padding(

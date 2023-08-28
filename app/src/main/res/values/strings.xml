@@ -28,6 +28,7 @@
     <string name="set_error_cause">Что-то пошло не так: %s</string>
     <string name="new_posts">Свежие записи</string>
     <string name="news">Новости</string>
+    <string name="recommendation">Рекомендации</string>
     <string name="set_count">Всего: %d</string>
     <string name="empty_data">Данных нет</string>
     <string name="set_photos_count">Фотографии: %d</string>

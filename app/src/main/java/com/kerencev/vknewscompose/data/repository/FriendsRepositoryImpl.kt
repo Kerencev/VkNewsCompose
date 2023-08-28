@@ -6,24 +6,17 @@ import com.kerencev.vknewscompose.data.mapper.mapToModel
 import com.kerencev.vknewscompose.domain.entities.FriendModel
 import com.kerencev.vknewscompose.domain.entities.FriendsModel
 import com.kerencev.vknewscompose.domain.repositories.FriendsRepository
-import com.kerencev.vknewscompose.presentation.screens.profile.ProfileViewModel
-import com.vk.api.sdk.VKKeyValueStorage
-import com.vk.api.sdk.auth.VKAccessToken
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class FriendsRepositoryImpl @Inject constructor(
     private val apiService: ApiService,
-    private val storage: VKKeyValueStorage,
 ) : FriendsRepository {
 
     companion object {
         private const val PAGE_SIZE = 30
     }
-
-    private val token
-        get() = VKAccessToken.restore(storage)
 
     private val friendsCache = mutableMapOf<Long, MutableList<FriendModel>>()
     private var page = mutableMapOf<Long, Int>()
@@ -40,8 +33,7 @@ class FriendsRepositoryImpl @Inject constructor(
             return@flow
         }
         val response = apiService.getFriends(
-            token = getAccessToken(),
-            userId = getCorrectUserId(userId),
+            userId = userId.toString(),
             searchText = searchText,
             offset = getFriendsPageById(userId) * PAGE_SIZE,
             count = PAGE_SIZE,
@@ -53,11 +45,6 @@ class FriendsRepositoryImpl @Inject constructor(
                 isFriendsOver = friends.size >= getFriendsTotalCountById(userId)
             )
         )
-    }
-
-    @Throws(IllegalStateException::class)
-    private fun getAccessToken(): String {
-        return token?.accessToken ?: error("Token is null")
     }
 
     private fun clearFriendsCacheById(userId: Long) {
@@ -80,11 +67,6 @@ class FriendsRepositoryImpl @Inject constructor(
         val friends = response.response?.items?.map { it.mapToModel() } ?: emptyList()
         addFriendsToCacheById(userId, friends)
         return getFriendsById(userId)
-    }
-
-    private fun getCorrectUserId(userId: Long): String {
-        return if (userId == ProfileViewModel.DEFAULT_USER_ID) token?.userId.toString()
-        else userId.toString()
     }
 
     private fun getFriendsById(userId: Long): List<FriendModel> {
