@@ -22,8 +22,12 @@ class BottomNavigationState(
         }
     }
 
-    fun navigateToComments(newsModel: NewsModelUi) {
-        navHostController.navigate(Screen.Comments.getRouteWithArgs(newsModel = newsModel))
+    fun navigateToCommentsFromNews(newsModel: NewsModelUi) {
+        navHostController.navigate(Screen.CommentsNews.getRouteWithArgs(newsModel = newsModel))
+    }
+
+    fun navigateToCommentsFromRecommendation(newsModel: NewsModelUi) {
+        navHostController.navigate(Screen.CommentsRecommendation.getRouteWithArgs(newsModel = newsModel))
     }
 
     fun navigateToProfile(userId: Long) {
@@ -39,7 +43,7 @@ class BottomNavigationState(
     }
 
     private fun getCorrectBottomTabRoute(route: String): String {
-        return if (route == Screen.Profile.route)
+        return if (route == Screen.ProfileGraph.route)
             Screen.Profile.getRouteWithArgs(ProfileViewModel.DEFAULT_USER_ID) else route
     }
 

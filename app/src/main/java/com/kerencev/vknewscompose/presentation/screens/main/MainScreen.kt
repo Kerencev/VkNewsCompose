@@ -2,6 +2,7 @@ package com.kerencev.vknewscompose.presentation.screens.main
 
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -20,10 +21,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.kerencev.vknewscompose.R
 import com.kerencev.vknewscompose.di.ViewModelFactory
+import com.kerencev.vknewscompose.domain.entities.NewsType
 import com.kerencev.vknewscompose.presentation.activity.MainViewModel
 import com.kerencev.vknewscompose.presentation.common.compose.SetupSystemBar
 import com.kerencev.vknewscompose.presentation.common.compose.rememberUnitParams
@@ -33,9 +36,10 @@ import com.kerencev.vknewscompose.presentation.navigation.NavigationItem
 import com.kerencev.vknewscompose.presentation.navigation.rememberNavigationState
 import com.kerencev.vknewscompose.presentation.screens.comments.CommentsScreen
 import com.kerencev.vknewscompose.presentation.screens.friends.FriendsScreen
-import com.kerencev.vknewscompose.presentation.screens.home.HomeScreen
 import com.kerencev.vknewscompose.presentation.screens.main.flow.MainEvent
 import com.kerencev.vknewscompose.presentation.screens.main.flow.MainShot
+import com.kerencev.vknewscompose.presentation.screens.news.NewsParams
+import com.kerencev.vknewscompose.presentation.screens.news.NewsScreen
 import com.kerencev.vknewscompose.presentation.screens.profile.ProfileScreen
 import com.kerencev.vknewscompose.presentation.screens.profile_photos.ProfilePhotosScreen
 import com.kerencev.vknewscompose.ui.theme.LightBlue
@@ -65,16 +69,18 @@ fun MainScreen(
         scaffoldState = scaffoldState,
         bottomBar = {
             BottomNavigation(
-                modifier = Modifier.windowInsetsPadding(
-                    WindowInsets.systemBars
-                        .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom)
-                )
+                modifier = Modifier
+                    .height(56.dp)
+                    .windowInsetsPadding(
+                        WindowInsets.systemBars
+                            .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom)
+                    )
             ) {
                 val navBackStackEntry by navigationState.navHostController.currentBackStackEntryAsState()
 
                 val items = listOf(
                     NavigationItem.Home,
-                    NavigationItem.Favourite,
+                    NavigationItem.Recommendation,
                     NavigationItem.Profile
                 )
                 items.forEach { item ->
@@ -101,23 +107,39 @@ fun MainScreen(
         BottomNavGraph(
             navHostController = navigationState.navHostController,
             newsScreenContent = {
-                HomeScreen(
-                    viewModelFactory = viewModelFactory,
+                NewsScreen(
+                    params = NewsParams(type = NewsType.BY_DATE),
                     paddingValues = paddingValues,
-                    onCommentsClick = { navigationState.navigateToComments(it) },
+                    onCommentsClick = { navigationState.navigateToCommentsFromNews(it) },
                     onError = { sendEvent(MainEvent.ShowErrorMessage(it)) },
                     onImageClick = { index, newsModelId ->
                         onPhotoClick(0, PhotoType.NEWS, index, newsModelId)
                     }
                 )
             },
-            commentsScreenContent = { newsModel ->
+            commentsScreenNewsContent = { newsModel ->
                 CommentsScreen(
                     newsModel = newsModel,
                     onBackPressed = { navigationState.navHostController.popBackStack() }
                 )
             },
-            favouriteScreenContent = { Text(text = "favourite Screen") },
+            commentsScreenRecommendationContent = { newsModel ->
+                CommentsScreen(
+                    newsModel = newsModel,
+                    onBackPressed = { navigationState.navHostController.popBackStack() }
+                )
+            },
+            recommendationScreenContent = {
+                NewsScreen(
+                    params = NewsParams(type = NewsType.RECOMMENDATION),
+                    paddingValues = paddingValues,
+                    onCommentsClick = { navigationState.navigateToCommentsFromRecommendation(it) },
+                    onError = { sendEvent(MainEvent.ShowErrorMessage(it)) },
+                    onImageClick = { index, newsModelId ->
+                        onPhotoClick(0, PhotoType.NEWS, index, newsModelId)
+                    }
+                )
+            },
             profileScreenContent = { userId ->
                 ProfileScreen(
                     userId = userId,

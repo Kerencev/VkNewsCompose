@@ -1,4 +1,4 @@
-package com.kerencev.vknewscompose.presentation.screens.home
+package com.kerencev.vknewscompose.presentation.screens.news
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
@@ -31,17 +31,17 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.kerencev.vknewscompose.R
-import com.kerencev.vknewscompose.di.ViewModelFactory
+import com.kerencev.vknewscompose.di.getApplicationComponent
 import com.kerencev.vknewscompose.presentation.common.compose.rememberUnitParams
 import com.kerencev.vknewscompose.presentation.common.views.ProgressBarDefault
 import com.kerencev.vknewscompose.presentation.common.views.ScaffoldWithCollapsingToolbar
 import com.kerencev.vknewscompose.presentation.common.views.TextWithButton
 import com.kerencev.vknewscompose.presentation.common.views.TopPopupCard
 import com.kerencev.vknewscompose.presentation.model.NewsModelUi
-import com.kerencev.vknewscompose.presentation.screens.home.flow.HomeEvent
-import com.kerencev.vknewscompose.presentation.screens.home.flow.HomeShot
-import com.kerencev.vknewscompose.presentation.screens.home.flow.HomeViewState
-import com.kerencev.vknewscompose.presentation.screens.home.views.NewsCard
+import com.kerencev.vknewscompose.presentation.screens.news.flow.NewsEvent
+import com.kerencev.vknewscompose.presentation.screens.news.flow.NewsShot
+import com.kerencev.vknewscompose.presentation.screens.news.flow.NewsViewState
+import com.kerencev.vknewscompose.presentation.screens.news.views.NewsCard
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -50,20 +50,23 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 @Composable
-fun HomeScreen(
-    viewModelFactory: ViewModelFactory,
+fun NewsScreen(
+    params: NewsParams,
     paddingValues: PaddingValues,
     onCommentsClick: (newsModel: NewsModelUi) -> Unit,
     onError: (message: String) -> Unit,
     onImageClick: (index: Int, newsModelId: Long) -> Unit,
 ) {
-    val viewModel: HomeViewModel = viewModel(factory = viewModelFactory)
+    val component = getApplicationComponent()
+        .getNewsScreenComponentFactory()
+        .create(params = params)
+    val viewModel: NewsViewModel = viewModel(factory = component.getViewModelFactory())
     val coroutineScope = rememberCoroutineScope()
     val state = viewModel.observedState.collectAsState()
-    val shot = viewModel.observedShot.collectAsState(HomeShot.None)
-    val sendEvent: (HomeEvent) -> Unit = rememberUnitParams { viewModel.send(it) }
+    val shot = viewModel.observedShot.collectAsState(NewsShot.None)
+    val sendEvent: (NewsEvent) -> Unit = rememberUnitParams { viewModel.send(it) }
 
-    HomeScreenContent(
+    NewsScreenContent(
         state = state,
         shot = shot,
         coroutineScope = coroutineScope,
@@ -77,13 +80,13 @@ fun HomeScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreenContent(
-    state: State<HomeViewState>,
-    shot: State<HomeShot>,
+fun NewsScreenContent(
+    state: State<NewsViewState>,
+    shot: State<NewsShot>,
     coroutineScope: CoroutineScope,
     paddingValues: PaddingValues,
     onCommentsClick: (newsModel: NewsModelUi) -> Unit,
-    sendEvent: (HomeEvent) -> Unit,
+    sendEvent: (NewsEvent) -> Unit,
     onError: (message: String) -> Unit,
     onImageClick: (index: Int, newsModelId: Long) -> Unit,
 ) {
@@ -107,7 +110,7 @@ fun HomeScreenContent(
 
                 SwipeRefresh(
                     state = SwipeRefreshState(isRefreshing = currentState.isSwipeRefreshing),
-                    onRefresh = { sendEvent(HomeEvent.GetNews(isRefresh = true)) },
+                    onRefresh = { sendEvent(NewsEvent.GetNews(isRefresh = true)) },
                     indicatorPadding = PaddingValues(top = innerPadding.calculateTopPadding()),
                 ) {
                     val listState = rememberLazyListState()
@@ -122,7 +125,7 @@ fun HomeScreenContent(
                             NewsCard(
                                 newsModel = newsItem,
                                 onCommentsClick = onCommentsClick,
-                                onLikesClick = { sendEvent(HomeEvent.ChangeLikeStatus(newsItem)) },
+                                onLikesClick = { sendEvent(NewsEvent.ChangeLikeStatus(newsItem)) },
                                 onImageClick = { index ->
                                     onImageClick(index, newsItem.id)
                                 }
@@ -137,10 +140,10 @@ fun HomeScreenContent(
                                 currentState.isError -> TextWithButton(
                                     modifier = Modifier.padding(16.dp),
                                     title = stringResource(id = R.string.load_data_error),
-                                    onClick = { sendEvent(HomeEvent.GetNews()) }
+                                    onClick = { sendEvent(NewsEvent.GetNews()) }
                                 )
 
-                                else -> SideEffect { sendEvent(HomeEvent.GetNews()) }
+                                else -> SideEffect { sendEvent(NewsEvent.GetNews()) }
                             }
                         }
                     }
@@ -148,7 +151,7 @@ fun HomeScreenContent(
                     LaunchedEffect(listState) {
                         snapshotFlow { listState.firstVisibleItemIndex }
                             .distinctUntilChanged()
-                            .onEach { sendEvent(HomeEvent.OnUserScroll(it)) }
+                            .onEach { sendEvent(NewsEvent.OnUserScroll(it)) }
                             .flowOn(Dispatchers.IO)
                             .launchIn(coroutineScope)
                     }
@@ -156,7 +159,7 @@ fun HomeScreenContent(
                     LaunchedEffect(key1 = currentState.scrollToTop) {
                         if (currentState.scrollToTop) {
                             listState.scrollToItem(0)
-                            sendEvent(HomeEvent.OnScrollToTop)
+                            sendEvent(NewsEvent.OnScrollToTop)
                         }
                     }
                 }
@@ -176,19 +179,19 @@ fun HomeScreenContent(
                         iconRes = R.drawable.ic_arrow_up,
                         onClick = {
                             if (currentState.isScrollToTopVisible)
-                                sendEvent(HomeEvent.GetNews(isRefresh = true))
+                                sendEvent(NewsEvent.GetNews(isRefresh = true))
                         }
                     )
                 }
             }
 
             when (val currentShot = shot.value) {
-                is HomeShot.ShowErrorMessage -> {
+                is NewsShot.ShowErrorMessage -> {
                     onError(currentShot.message)
-                    sendEvent(HomeEvent.OnErrorInvoked)
+                    sendEvent(NewsEvent.OnErrorInvoked)
                 }
 
-                is HomeShot.None -> Unit
+                is NewsShot.None -> Unit
             }
         }
     )

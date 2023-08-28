@@ -10,7 +10,7 @@ import dagger.Subcomponent
 @Subcomponent(
     modules = [
         CommentsViewModelModule::class,
-        CommentsFeatureModule::class
+        CommentsFeatureModule::class,
     ]
 )
 interface CommentsScreenComponent {

@@ -24,13 +24,15 @@ sealed class Screen(
         }
     }
 
-    object Home : Screen(ROUTE_HOME)
+    object HomeGraph : Screen(ROUTE_HOME)
 
     object News : Screen(ROUTE_NEWS)
 
-    object Favourite : Screen(ROUTE_FAVOURITE)
+    object RecommendationGraph : Screen(ROUTE_RECOMMENDATION_GRAPH)
 
-    object ProfileStart : Screen(ROUTE_PROFILE_START)
+    object Recommendation : Screen(ROUTE_RECOMMENDATION)
+
+    object ProfileGraph : Screen(ROUTE_PROFILE_GRAPH)
 
     object Profile : Screen(ROUTE_PROFILE) {
         private const val ROUTE_FOR_ARGS = "profile"
@@ -48,8 +50,18 @@ sealed class Screen(
         }
     }
 
-    object Comments : Screen(ROUTE_COMMENTS) {
+    object CommentsNews : Screen(ROUTE_COMMENTS) {
         private const val ROUTE_FOR_ARGS = "comments"
+
+        fun getRouteWithArgs(newsModel: NewsModelUi): String {
+            val newsPostJson = Gson().toJson(newsModel)
+            return "$ROUTE_FOR_ARGS/${newsPostJson.encode()}"
+        }
+
+    }
+
+    object CommentsRecommendation : Screen(ROUTE_COMMENTS_RECOMMENDATION) {
+        private const val ROUTE_FOR_ARGS = "comments_recommendation"
 
         fun getRouteWithArgs(newsModel: NewsModelUi): String {
             val newsPostJson = Gson().toJson(newsModel)
@@ -79,11 +91,13 @@ sealed class Screen(
             "photos_pager/{$KEY_SELECTED_PHOTO}/{$KEY_PHOTO_TYPE}/{$KEY_NEWS_MODEL_ID}/{$KEY_USER_ID}"
         private const val ROUTE_HOME = "home"
         private const val ROUTE_NEWS = "news"
-        private const val ROUTE_FAVOURITE = "favourite"
-        private const val ROUTE_PROFILE_START = "profile_start"
+        private const val ROUTE_RECOMMENDATION_GRAPH = "recommendation_graph"
+        private const val ROUTE_RECOMMENDATION = "recommendation"
+        private const val ROUTE_PROFILE_GRAPH = "profile_graph"
         private const val ROUTE_PROFILE = "profile/{$KEY_USER_ID}"
         private const val ROUTE_PROFILE_PHOTOS = "profile_photos/{$KEY_USER_ID}"
         private const val ROUTE_COMMENTS = "comments/{$KEY_NEWS_POST}"
+        private const val ROUTE_COMMENTS_RECOMMENDATION = "comments_recommendation/{$KEY_NEWS_POST}"
         private const val ROUTE_FRIENDS = "friends/{$KEY_FRIENDS}"
     }
 }

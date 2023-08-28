@@ -14,4 +14,5 @@ interface ProfilePhotosViewModelModule {
     @ViewModelKey(ProfilePhotosViewModel::class)
     @Binds
     fun bindProfilePhotosViewModel(viewModel: ProfilePhotosViewModel): ViewModel
+
 }

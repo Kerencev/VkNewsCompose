@@ -14,4 +14,5 @@ interface CommentsViewModelModule {
     @ViewModelKey(CommentsViewModel::class)
     @Binds
     fun bindCommentsViewModel(viewModel: CommentsViewModel): ViewModel
+
 }

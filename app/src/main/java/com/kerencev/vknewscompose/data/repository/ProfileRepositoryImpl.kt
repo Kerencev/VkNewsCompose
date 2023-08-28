@@ -156,7 +156,11 @@ class ProfileRepositoryImpl @Inject constructor(
 
     private fun addWallItemsToCacheById(userId: Long, items: List<NewsModel>) {
         if (wallItemsCache[userId] == null) wallItemsCache[userId] = mutableListOf()
-        wallItemsCache[userId]?.addAll(items)
+        items.forEach { item ->
+            if (wallItemsCache[userId]?.contains(item) == false) {
+                wallItemsCache[userId]?.add(item)
+            }
+        }
     }
 
     private fun getWallItemsById(userId: Long): List<NewsModel> {
@@ -212,7 +216,11 @@ class ProfileRepositoryImpl @Inject constructor(
 
     private fun addPhotosToCacheById(userId: Long, photos: List<PhotoModel>) {
         if (photosCache[userId] == null) photosCache[userId] = mutableListOf()
-        photosCache[userId]?.addAll(photos)
+        photos.forEach { photo ->
+            if (photosCache[userId]?.contains(photo) == false) {
+                photosCache[userId]?.add(photo)
+            }
+        }
     }
 
 }

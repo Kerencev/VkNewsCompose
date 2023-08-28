@@ -3,30 +3,31 @@ package com.kerencev.vknewscompose.presentation.navigation
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import com.kerencev.vknewscompose.presentation.model.NewsModelUi
 
 @Composable
 fun BottomNavGraph(
     navHostController: NavHostController,
     newsScreenContent: @Composable () -> Unit,
-    commentsScreenContent: @Composable (NewsModelUi) -> Unit,
-    favouriteScreenContent: @Composable () -> Unit,
+    commentsScreenNewsContent: @Composable (NewsModelUi) -> Unit,
+    commentsScreenRecommendationContent: @Composable (NewsModelUi) -> Unit,
+    recommendationScreenContent: @Composable () -> Unit,
     profileScreenContent: @Composable (userId: Long) -> Unit,
     profilePhotosScreenContent: @Composable (userId: Long) -> Unit,
     friendsScreenContent: @Composable (userId: Long) -> Unit,
 ) {
     NavHost(
         navController = navHostController,
-        startDestination = Screen.Home.route
+        startDestination = Screen.HomeGraph.route
     ) {
         homeScreenNavGraph(
             newsScreenContent = newsScreenContent,
-            commentsScreenContent = commentsScreenContent
+            commentsScreenContent = commentsScreenNewsContent
         )
-        composable(Screen.Favourite.route) {
-            favouriteScreenContent()
-        }
+        recommendationScreenNavGraph(
+            recommendationScreenContent = recommendationScreenContent,
+            commentsScreenContent = commentsScreenRecommendationContent
+        )
         profileScreenNavGraph(
             profileScreenContent = profileScreenContent,
             profilePhotosScreenContent = profilePhotosScreenContent,

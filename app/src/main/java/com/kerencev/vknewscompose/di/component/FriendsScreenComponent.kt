@@ -9,7 +9,7 @@ import dagger.Subcomponent
 @Subcomponent(
     modules = [
         FriendsViewModelModule::class,
-        FriendsFeatureModule::class
+        FriendsFeatureModule::class,
     ]
 )
 interface FriendsScreenComponent {

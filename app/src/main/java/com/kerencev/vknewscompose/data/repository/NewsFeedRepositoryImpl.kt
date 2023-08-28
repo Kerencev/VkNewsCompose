@@ -19,20 +19,37 @@ class NewsFeedRepositoryImpl @Inject constructor(
     private val token
         get() = VKAccessToken.restore(storage)
 
-    private var startFrom: String? = null
-    private val newsCache = mutableListOf<NewsModel>()
+    private var startFromByDate: String? = null
+    private val newsCacheByDate = mutableListOf<NewsModel>()
+
+    private var startFromRecommended: String? = null
+    private val newsCacheRecommended = mutableListOf<NewsModel>()
 
     override fun getNewsFeed(isRefresh: Boolean) = flow {
         if (isRefresh) {
-            startFrom = null
-            newsCache.clear()
+            startFromByDate = null
+            newsCacheByDate.clear()
         }
-        val response = if (startFrom == null) apiService.loadNewsFeed(getAccessToken())
-        else apiService.loadNewsFeed(getAccessToken(), startFrom.orEmpty())
-        startFrom = response.response?.nextFrom
+        val response = if (startFromByDate == null) apiService.loadNewsFeed(getAccessToken())
+        else apiService.loadNewsFeed(getAccessToken(), startFromByDate.orEmpty())
+        startFromByDate = response.response?.nextFrom
         val news = response.mapToModel()
-        newsCache.addAll(news)
-        emit(newsCache)
+        newsCacheByDate.addAll(news)
+        emit(newsCacheByDate)
+    }
+
+    override fun getRecommended(isRefresh: Boolean) = flow {
+        if (isRefresh) {
+            startFromRecommended = null
+            newsCacheRecommended.clear()
+        }
+        val response =
+            if (startFromRecommended == null) apiService.loadRecommended(getAccessToken())
+            else apiService.loadRecommended(getAccessToken(), startFromRecommended.orEmpty())
+        startFromRecommended = response.response?.nextFrom
+        val news = response.mapToModel()
+        newsCacheRecommended.addAll(news)
+        emit(newsCacheRecommended)
     }
 
     override fun changeLikeStatus(newsModel: NewsModel) = flow {
@@ -50,7 +67,8 @@ class NewsFeedRepositoryImpl @Inject constructor(
     }
 
     override fun getPostPhotosById(newsModelId: Long): Flow<List<PhotoModel>> = flow {
-        val post = newsCache.firstOrNull { it.id == newsModelId }
+        val post = newsCacheByDate.firstOrNull { it.id == newsModelId }
+            ?: newsCacheRecommended.firstOrNull { it.id == newsModelId }
         if (post == null) emit(emptyList())
         else {
             emit(

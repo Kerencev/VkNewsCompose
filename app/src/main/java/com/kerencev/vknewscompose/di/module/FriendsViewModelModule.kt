@@ -13,5 +13,5 @@ interface FriendsViewModelModule {
     @IntoMap
     @ViewModelKey(FriendsViewModel::class)
     @Binds
-    fun bindCommentsViewModel(viewModel: FriendsViewModel): ViewModel
+    fun bindFriendsViewModel(viewModel: FriendsViewModel): ViewModel
 }

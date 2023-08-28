@@ -24,6 +24,8 @@ import com.vk.api.sdk.auth.VKScope
 
 class MainActivity : ComponentActivity() {
 
+    private val vkAccessRights = listOf(VKScope.WALL, VKScope.FRIENDS, VKScope.PHOTOS)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -35,9 +37,7 @@ class MainActivity : ComponentActivity() {
             val viewModel: MainViewModel = viewModel(factory = viewModelFactory)
             val state = viewModel.observedState.collectAsState(MainState())
 
-            val launcher = rememberLauncherForActivityResult(
-                contract = VK.getVKAuthActivityResultContract()
-            ) {
+            val launcher = rememberLauncherForActivityResult(VK.getVKAuthActivityResultContract()) {
                 viewModel.send(MainEvent.CheckAuthState)
             }
 
@@ -75,16 +75,12 @@ class MainActivity : ComponentActivity() {
                     }
 
                     AuthState.NOT_AUTHORIZED -> {
-                        LoginScreen {
-                            launcher.launch(listOf(VKScope.WALL, VKScope.FRIENDS, VKScope.PHOTOS))
-                        }
+                        LoginScreen { launcher.launch(vkAccessRights) }
                     }
 
                     AuthState.LOG_OUT -> {
                         navController.graph.clear()
-                        LoginScreen {
-                            launcher.launch(listOf(VKScope.WALL, VKScope.FRIENDS, VKScope.PHOTOS))
-                        }
+                        LoginScreen { launcher.launch(vkAccessRights) }
                     }
                 }
             }

@@ -14,4 +14,5 @@ interface PhotosPagerViewModelModule {
     @ViewModelKey(PhotosPagerViewModel::class)
     @Binds
     fun bindPhotosPagerViewModel(viewModel: PhotosPagerViewModel): ViewModel
+
 }

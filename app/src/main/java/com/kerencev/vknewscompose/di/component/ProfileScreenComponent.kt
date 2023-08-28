@@ -9,7 +9,7 @@ import dagger.Subcomponent
 @Subcomponent(
     modules = [
         ProfileViewModelModule::class,
-        ProfileFeatureModule::class
+        ProfileFeatureModule::class,
     ]
 )
 interface ProfileScreenComponent {

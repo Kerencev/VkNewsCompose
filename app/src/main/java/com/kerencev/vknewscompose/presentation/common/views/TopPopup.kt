@@ -12,6 +12,7 @@ import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -40,7 +41,10 @@ fun TopPopupCard(
         modifier = onClick?.let { cardModifier.clickable(onClick = onClick) } ?: cardModifier,
         backgroundColor = backgroundColor
     ) {
-        Row(modifier = Modifier.padding(8.dp)) {
+        Row(
+            modifier = Modifier.padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             iconRes?.let {
                 Icon(
                     modifier = Modifier.size(20.dp),
@@ -51,7 +55,7 @@ fun TopPopupCard(
             }
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                modifier = Modifier.padding(end = 2.dp),
+                modifier = Modifier.padding(end = 8.dp),
                 text = text,
                 color = textColor,
                 fontSize = 14.sp

@@ -1,4 +1,4 @@
-package com.kerencev.vknewscompose.presentation.screens.home.views
+package com.kerencev.vknewscompose.presentation.screens.news.views
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row

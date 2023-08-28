@@ -1,4 +1,4 @@
-package com.kerencev.vknewscompose.presentation.screens.home.views
+package com.kerencev.vknewscompose.presentation.screens.news.views
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

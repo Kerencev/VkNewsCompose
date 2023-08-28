@@ -14,7 +14,7 @@ fun NavGraphBuilder.profileScreenNavGraph(
 ) {
     navigation(
         startDestination = Screen.Profile.route,
-        route = Screen.ProfileStart.route
+        route = Screen.ProfileGraph.route
     ) {
         composable(
             route = Screen.Profile.route,

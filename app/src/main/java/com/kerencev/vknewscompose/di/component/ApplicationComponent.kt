@@ -3,10 +3,10 @@ package com.kerencev.vknewscompose.di.component
 import android.content.Context
 import com.kerencev.vknewscompose.di.ViewModelFactory
 import com.kerencev.vknewscompose.di.annotation.ApplicationScope
+import com.kerencev.vknewscompose.di.module.CommonFeatureModule
 import com.kerencev.vknewscompose.di.module.DataModule
-import com.kerencev.vknewscompose.di.module.HomeFeatureModule
 import com.kerencev.vknewscompose.di.module.MainFeatureModule
-import com.kerencev.vknewscompose.di.module.ViewModelModule
+import com.kerencev.vknewscompose.di.module.MainViewModelModule
 import dagger.BindsInstance
 import dagger.Component
 
@@ -14,14 +14,16 @@ import dagger.Component
 @Component(
     modules = [
         DataModule::class,
-        ViewModelModule::class,
+        MainViewModelModule::class,
         MainFeatureModule::class,
-        HomeFeatureModule::class,
+        CommonFeatureModule::class,
     ]
 )
 interface ApplicationComponent {
 
     fun getViewModelFactory(): ViewModelFactory
+
+    fun getNewsScreenComponentFactory(): NewsScreenComponent.Factory
 
     fun getCommentsScreenComponentFactory(): CommentsScreenComponent.Factory
 

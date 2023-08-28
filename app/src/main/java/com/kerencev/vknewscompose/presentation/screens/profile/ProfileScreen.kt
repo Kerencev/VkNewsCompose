@@ -28,7 +28,7 @@ import com.kerencev.vknewscompose.di.getApplicationComponent
 import com.kerencev.vknewscompose.presentation.common.ContentState
 import com.kerencev.vknewscompose.presentation.common.compose.StatusBarHeight
 import com.kerencev.vknewscompose.presentation.common.compose.rememberUnitParams
-import com.kerencev.vknewscompose.presentation.screens.home.views.NewsCard
+import com.kerencev.vknewscompose.presentation.screens.news.views.NewsCard
 import com.kerencev.vknewscompose.presentation.screens.profile.flow.ProfileEvent
 import com.kerencev.vknewscompose.presentation.screens.profile.flow.ProfileShot
 import com.kerencev.vknewscompose.presentation.screens.profile.flow.ProfileViewState

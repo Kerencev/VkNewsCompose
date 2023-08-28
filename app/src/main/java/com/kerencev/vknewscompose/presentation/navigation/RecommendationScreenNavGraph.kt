@@ -8,19 +8,19 @@ import androidx.navigation.navigation
 import com.kerencev.vknewscompose.presentation.extensions.getParcelableNew
 import com.kerencev.vknewscompose.presentation.model.NewsModelUi
 
-fun NavGraphBuilder.homeScreenNavGraph(
-    newsScreenContent: @Composable () -> Unit,
+fun NavGraphBuilder.recommendationScreenNavGraph(
+    recommendationScreenContent: @Composable () -> Unit,
     commentsScreenContent: @Composable (NewsModelUi) -> Unit,
 ) {
     navigation(
-        startDestination = Screen.News.route,
-        route = Screen.HomeGraph.route
+        startDestination = Screen.Recommendation.route,
+        route = Screen.RecommendationGraph.route
     ) {
-        composable(Screen.News.route) {
-            newsScreenContent()
+        composable(Screen.Recommendation.route) {
+            recommendationScreenContent()
         }
         composable(
-            route = Screen.CommentsNews.route,
+            route = Screen.CommentsRecommendation.route,
             arguments = listOf(
                 navArgument(name = Screen.KEY_NEWS_POST) {
                     type = NewsModelUi.NavigationType
@@ -32,6 +32,5 @@ fun NavGraphBuilder.homeScreenNavGraph(
                     ?: throw RuntimeException("Args for comments screen is null")
             commentsScreenContent(newsPost)
         }
-
     }
 }

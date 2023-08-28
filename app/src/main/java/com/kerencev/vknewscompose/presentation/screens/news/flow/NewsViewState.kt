@@ -1,4 +1,4 @@
-package com.kerencev.vknewscompose.presentation.screens.home.flow
+package com.kerencev.vknewscompose.presentation.screens.news.flow
 
 import androidx.compose.runtime.Stable
 import com.kerencev.vknewscompose.presentation.common.mvi.VkState
@@ -14,7 +14,7 @@ import com.kerencev.vknewscompose.presentation.model.NewsModelUi
  * @param isScrollToTopVisible - visibility of a popup about the fresh posts
  */
 @Stable
-data class HomeViewState(
+data class NewsViewState(
     val newsList: List<NewsModelUi> = emptyList(),
     val isLoading: Boolean = false,
     val isError: Boolean = false,
@@ -60,16 +60,12 @@ data class HomeViewState(
         isScrollToTopVisible = isScrollToTopVisible
     )
 
-    fun updateItem(updatedItem: NewsModelUi): HomeViewState {
+    fun updateItem(updatedItem: NewsModelUi): NewsViewState {
         val data = newsList.toMutableList()
         val index = data.indexOfFirst { it.id == updatedItem.id }
         if (index == -1) return this
         data[index] = updatedItem
         return copy(newsList = data.toList())
-    }
-
-    fun deleteItem(newsModelUi: NewsModelUi): HomeViewState {
-        return copy(newsList = this.newsList.toMutableList().apply { remove(newsModelUi) }.toList())
     }
 
 }
