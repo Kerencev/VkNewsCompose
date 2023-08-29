@@ -37,4 +37,6 @@
     <string name="set_page">%d из %d</string>
     <string name="friends">Друзья</string>
     <string name="search_friends_label">"Введите имя и фамилию"</string>
+    <string name="tab_title_news">Лента</string>
+    <string name="tab_title_recommended">Для вас</string>
 </resources>

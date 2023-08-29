@@ -1,9 +1,9 @@
 package com.kerencev.vknewscompose.presentation.screens.news.flow.features
 
-import com.kerencev.vknewscompose.domain.entities.NewsType
 import com.kerencev.vknewscompose.domain.repositories.NewsFeedRepository
 import com.kerencev.vknewscompose.extensions.retryDefault
 import com.kerencev.vknewscompose.presentation.common.mvi.VkCommand
+import com.kerencev.vknewscompose.presentation.screens.news.NewsType
 import com.kerencev.vknewscompose.presentation.screens.news.flow.NewsEffect
 import com.kerencev.vknewscompose.presentation.screens.news.flow.NewsInputAction
 import com.kerencev.vknewscompose.presentation.screens.news.flow.NewsOutputAction
@@ -23,8 +23,8 @@ class GetNewsFeatureImpl @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun invoke(action: NewsInputAction.GetNews, state: NewsViewState): Flow<VkCommand> {
         return when (action.newsType) {
-            NewsType.BY_DATE -> repository.getNewsFeed(isRefresh = action.isRefresh)
-            else -> repository.getRecommended(isRefresh = action.isRefresh)
+            NewsType.NEWS -> repository.getNewsFeed(isRefresh = action.isRefresh)
+            NewsType.RECOMMENDATION -> repository.getRecommended(isRefresh = action.isRefresh)
         }
             .flatMapConcat {
                 flowOf(

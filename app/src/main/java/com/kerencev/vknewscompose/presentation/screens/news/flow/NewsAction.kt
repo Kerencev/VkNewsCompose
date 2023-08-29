@@ -1,9 +1,9 @@
 package com.kerencev.vknewscompose.presentation.screens.news.flow
 
 import com.kerencev.vknewscompose.domain.entities.NewsModel
-import com.kerencev.vknewscompose.domain.entities.NewsType
 import com.kerencev.vknewscompose.presentation.common.mvi.VkAction
 import com.kerencev.vknewscompose.presentation.common.mvi.VkEffect
+import com.kerencev.vknewscompose.presentation.screens.news.NewsType
 
 sealed class NewsInputAction : VkAction {
 

@@ -25,8 +25,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.kerencev.vknewscompose.R
-import com.kerencev.vknewscompose.di.ViewModelFactory
-import com.kerencev.vknewscompose.domain.entities.NewsType
 import com.kerencev.vknewscompose.presentation.activity.MainViewModel
 import com.kerencev.vknewscompose.presentation.common.compose.SetupSystemBar
 import com.kerencev.vknewscompose.presentation.common.compose.rememberUnitParams
@@ -38,8 +36,7 @@ import com.kerencev.vknewscompose.presentation.screens.comments.CommentsScreen
 import com.kerencev.vknewscompose.presentation.screens.friends.FriendsScreen
 import com.kerencev.vknewscompose.presentation.screens.main.flow.MainEvent
 import com.kerencev.vknewscompose.presentation.screens.main.flow.MainShot
-import com.kerencev.vknewscompose.presentation.screens.news.NewsParams
-import com.kerencev.vknewscompose.presentation.screens.news.NewsScreen
+import com.kerencev.vknewscompose.presentation.screens.home.HomeScreen
 import com.kerencev.vknewscompose.presentation.screens.profile.ProfileScreen
 import com.kerencev.vknewscompose.presentation.screens.profile_photos.ProfilePhotosScreen
 import com.kerencev.vknewscompose.ui.theme.LightBlue
@@ -106,8 +103,7 @@ fun MainScreen(
         BottomNavGraph(
             navHostController = navigationState.navHostController,
             newsScreenContent = {
-                NewsScreen(
-                    params = NewsParams(type = NewsType.BY_DATE),
+                HomeScreen(
                     paddingValues = paddingValues,
                     onCommentsClick = { navigationState.navigateToCommentsFromNews(it) },
                     onError = { sendEvent(MainEvent.ShowErrorMessage(it)) },
@@ -129,8 +125,7 @@ fun MainScreen(
                 )
             },
             recommendationScreenContent = {
-                NewsScreen(
-                    params = NewsParams(type = NewsType.RECOMMENDATION),
+                HomeScreen(
                     paddingValues = paddingValues,
                     onCommentsClick = { navigationState.navigateToCommentsFromRecommendation(it) },
                     onError = { sendEvent(MainEvent.ShowErrorMessage(it)) },

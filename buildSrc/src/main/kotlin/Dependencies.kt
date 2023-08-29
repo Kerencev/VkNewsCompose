@@ -47,6 +47,8 @@ object Dependencies {
     private const val ACCOMPANIST_VERSION = "0.33.0-alpha"
     const val SWIPEREFRESH = "com.google.accompanist:accompanist-swiperefresh:$ACCOMPANIST_VERSION"
     const val SYSTEM_UI_CONTROLLER = "com.google.accompanist:accompanist-systemuicontroller:$ACCOMPANIST_VERSION"
+    const val PAGER = "com.google.accompanist:accompanist-pager:$ACCOMPANIST_VERSION"
+    const val PAGER_INDICATOR = "com.google.accompanist:accompanist-pager-indicators:$ACCOMPANIST_VERSION"
 
     //Test
     private const val JUNIT_VERSION = "4.13.2"

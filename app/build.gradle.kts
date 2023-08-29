@@ -91,6 +91,10 @@ dependencies {
     //System UI
     implementation(Dependencies.SYSTEM_UI_CONTROLLER)
 
+    //Pager
+    implementation(Dependencies.PAGER)
+    implementation(Dependencies.PAGER_INDICATOR)
+
     //Test
     testImplementation(Dependencies.JUNIT)
     androidTestImplementation(Dependencies.JUNIT_ANDROID)

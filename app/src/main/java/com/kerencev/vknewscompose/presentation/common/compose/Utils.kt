@@ -150,8 +150,15 @@ fun Modifier.clearFocusOnKeyboardDismiss(): Modifier = composed {
 }
 
 @Composable
-fun StatusBarHeight(): Dp {
+fun statusBarHeight(): Dp {
     return WindowInsets.systemBars
         .asPaddingValues()
         .calculateTopPadding()
+}
+
+@Composable
+fun navigationBarHeight(): Dp {
+    return WindowInsets.systemBars
+        .asPaddingValues()
+        .calculateBottomPadding()
 }

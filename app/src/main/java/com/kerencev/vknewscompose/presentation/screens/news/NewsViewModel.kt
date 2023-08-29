@@ -17,7 +17,7 @@ import com.kerencev.vknewscompose.presentation.screens.news.flow.features.GetNew
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class NewsViewModel @Inject constructor(
+open class NewsViewModel @Inject constructor(
     private val params: NewsParams,
     private val getNewsFeature: GetNewsFeature,
     private val changeLikeStatusFeature: ChangeLikeStatusFeature,

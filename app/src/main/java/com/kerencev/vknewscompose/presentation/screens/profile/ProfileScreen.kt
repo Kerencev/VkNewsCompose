@@ -26,8 +26,8 @@ import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.kerencev.vknewscompose.R
 import com.kerencev.vknewscompose.di.getApplicationComponent
 import com.kerencev.vknewscompose.presentation.common.ContentState
-import com.kerencev.vknewscompose.presentation.common.compose.StatusBarHeight
 import com.kerencev.vknewscompose.presentation.common.compose.rememberUnitParams
+import com.kerencev.vknewscompose.presentation.common.compose.statusBarHeight
 import com.kerencev.vknewscompose.presentation.screens.news.views.NewsCard
 import com.kerencev.vknewscompose.presentation.screens.profile.flow.ProfileEvent
 import com.kerencev.vknewscompose.presentation.screens.profile.flow.ProfileShot
@@ -136,7 +136,7 @@ fun ProfileScreenContent(
 
             LazyColumn(
                 modifier = Modifier
-                    .padding(top = 54.dp + StatusBarHeight())
+                    .padding(top = 54.dp + statusBarHeight())
                     .fillMaxSize(),
                 state = listState,
                 horizontalAlignment = Alignment.CenterHorizontally
