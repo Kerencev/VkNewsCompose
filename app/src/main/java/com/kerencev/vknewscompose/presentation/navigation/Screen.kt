@@ -4,6 +4,7 @@ import com.google.gson.Gson
 import com.kerencev.vknewscompose.presentation.extensions.encode
 import com.kerencev.vknewscompose.presentation.model.NewsModelUi
 import com.kerencev.vknewscompose.presentation.model.PhotoType
+import com.kerencev.vknewscompose.presentation.model.ProfileType
 
 sealed class Screen(
     val route: String
@@ -15,7 +16,7 @@ sealed class Screen(
         private const val ROUTE_FOR_ARGS = "photos_pager"
 
         fun getRouteWithArgs(
-            userId: Long,
+            userId: Long?,
             type: PhotoType,
             initialNumber: Int,
             newsModelId: Long
@@ -34,11 +35,19 @@ sealed class Screen(
 
     object ProfileGraph : Screen(ROUTE_PROFILE_GRAPH)
 
-    object Profile : Screen(ROUTE_PROFILE) {
-        private const val ROUTE_FOR_ARGS = "profile"
+    object UserProfile : Screen(ROUTE_USER_PROFILE) {
+        private const val ROUTE_FOR_ARGS = "user_profile"
 
-        fun getRouteWithArgs(userId: Long): String {
-            return "$ROUTE_FOR_ARGS/$userId"
+        fun getRouteWithArgs(profileId: Long, profileType: ProfileType): String {
+            return "$ROUTE_FOR_ARGS/$profileId/${profileType.name}"
+        }
+    }
+
+    object GroupProfile : Screen(ROUTE_GROUP_PROFILE) {
+        private const val ROUTE_FOR_ARGS = "group_profile"
+
+        fun getRouteWithArgs(profileId: Long, profileType: ProfileType): String {
+            return "${ROUTE_FOR_ARGS}/$profileId/${profileType.name}"
         }
     }
 
@@ -50,18 +59,16 @@ sealed class Screen(
         }
     }
 
-    object CommentsNews : Screen(ROUTE_COMMENTS) {
-        private const val ROUTE_FOR_ARGS = "comments"
+    object GroupPhotos : Screen(ROUTE_GROUP_PHOTOS) {
+        private const val ROUTE_FOR_ARGS = "group_photos"
 
-        fun getRouteWithArgs(newsModel: NewsModelUi): String {
-            val newsPostJson = Gson().toJson(newsModel)
-            return "$ROUTE_FOR_ARGS/${newsPostJson.encode()}"
+        fun getRouteWithArgs(groupId: Long): String {
+            return "$ROUTE_FOR_ARGS/$groupId"
         }
-
     }
 
-    object CommentsRecommendation : Screen(ROUTE_COMMENTS_RECOMMENDATION) {
-        private const val ROUTE_FOR_ARGS = "comments_recommendation"
+    object Comments : Screen(ROUTE_COMMENTS) {
+        private const val ROUTE_FOR_ARGS = "comments"
 
         fun getRouteWithArgs(newsModel: NewsModelUi): String {
             val newsPostJson = Gson().toJson(newsModel)
@@ -84,6 +91,8 @@ sealed class Screen(
         const val KEY_PHOTO_TYPE = "photo_type"
         const val KEY_NEWS_MODEL_ID = "news_model_id"
         const val KEY_USER_ID = "user_id"
+        const val KEY_PROFILE_ID = "profile_id"
+        const val KEY_PROFILE_TYPE = "profile_type"
         const val KEY_FRIENDS = "key_friends"
 
         private const val ROUTE_MAIN = "main"
@@ -94,10 +103,11 @@ sealed class Screen(
         private const val ROUTE_RECOMMENDATION_GRAPH = "recommendation_graph"
         private const val ROUTE_RECOMMENDATION = "recommendation"
         private const val ROUTE_PROFILE_GRAPH = "profile_graph"
-        private const val ROUTE_PROFILE = "profile/{$KEY_USER_ID}"
+        private const val ROUTE_USER_PROFILE = "user_profile/{$KEY_PROFILE_ID}/{$KEY_PROFILE_TYPE}"
+        private const val ROUTE_GROUP_PROFILE = "group_profile/{$KEY_PROFILE_ID}/{$KEY_PROFILE_TYPE}"
         private const val ROUTE_PROFILE_PHOTOS = "profile_photos/{$KEY_USER_ID}"
+        private const val ROUTE_GROUP_PHOTOS = "group_photos/{$KEY_PROFILE_ID}"
         private const val ROUTE_COMMENTS = "comments/{$KEY_NEWS_POST}"
-        private const val ROUTE_COMMENTS_RECOMMENDATION = "comments_recommendation/{$KEY_NEWS_POST}"
         private const val ROUTE_FRIENDS = "friends/{$KEY_FRIENDS}"
     }
 }

@@ -25,18 +25,18 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.kerencev.vknewscompose.R
 import com.kerencev.vknewscompose.di.getApplicationComponent
-import com.kerencev.vknewscompose.presentation.common.ContentState
 import com.kerencev.vknewscompose.presentation.common.compose.rememberUnitParams
 import com.kerencev.vknewscompose.presentation.common.compose.statusBarHeight
+import com.kerencev.vknewscompose.presentation.model.ProfileType
 import com.kerencev.vknewscompose.presentation.screens.news.views.NewsCard
 import com.kerencev.vknewscompose.presentation.screens.profile.flow.ProfileEvent
 import com.kerencev.vknewscompose.presentation.screens.profile.flow.ProfileShot
 import com.kerencev.vknewscompose.presentation.screens.profile.flow.ProfileViewState
-import com.kerencev.vknewscompose.presentation.screens.profile.views.ProfileAvatarBackground
+import com.kerencev.vknewscompose.presentation.screens.profile.views.cover.ProfileCover
 import com.kerencev.vknewscompose.presentation.screens.profile.views.ProfileFriends
-import com.kerencev.vknewscompose.presentation.screens.profile.views.ProfileHeader
+import com.kerencev.vknewscompose.presentation.screens.profile.views.header.ProfileHeader
 import com.kerencev.vknewscompose.presentation.screens.profile.views.ProfilePhotos
-import com.kerencev.vknewscompose.presentation.screens.profile.views.ProfileToolbar
+import com.kerencev.vknewscompose.presentation.screens.profile.views.toolbar.ProfileToolbar
 import com.kerencev.vknewscompose.presentation.screens.profile.views.ProfileWallFooter
 import com.kerencev.vknewscompose.presentation.screens.profile.views.ProfileWallHeader
 import com.kerencev.vknewscompose.ui.theme.Shapes
@@ -47,25 +47,26 @@ import kotlinx.coroutines.flow.onEach
 
 @Composable
 fun ProfileScreen(
-    userId: Long,
+    profileParams: ProfileParams,
     paddingValues: PaddingValues,
     onPhotoClick: (index: Int) -> Unit,
     onWallItemClick: (index: Int, itemId: Long) -> Unit,
     onShowAllPhotosClick: () -> Unit,
     onProfileRefreshError: (message: String) -> Unit,
-    onLogoutClick: () -> Unit,
-    onFriendsClick: () -> Unit,
     onBackPressed: () -> Unit,
+    onLogoutClick: () -> Unit = {},
+    onFriendsClick: () -> Unit = {},
 ) {
     val component = getApplicationComponent()
         .getProfileScreenComponentFactory()
-        .create(userId)
+        .create(profileParams)
     val viewModel: ProfileViewModel = viewModel(factory = component.getViewModelFactory())
     val state = viewModel.observedState.collectAsState()
     val shot = viewModel.observedShot.collectAsState(ProfileShot.None)
     val sendEvent: (ProfileEvent) -> Unit = rememberUnitParams { viewModel.send(it) }
 
     ProfileScreenContent(
+        profileType = profileParams.type,
         currentState = state,
         currentShot = shot,
         paddingValues = paddingValues,
@@ -82,6 +83,7 @@ fun ProfileScreen(
 
 @Composable
 fun ProfileScreenContent(
+    profileType: ProfileType,
     currentState: State<ProfileViewState>,
     currentShot: State<ProfileShot>,
     paddingValues: PaddingValues,
@@ -119,11 +121,11 @@ fun ProfileScreenContent(
                 .background(color = colorResource(id = R.color.background_news))
                 .padding(paddingValues)
         ) {
-            ProfileAvatarBackground(
+            ProfileCover(
                 boxScope = this,
                 alpha = state.blurBackgroundAlpha,
-                backgroundModel = if (state.profileState is ContentState.Content)
-                    state.profileState.data.avatarUrl else R.color.background_news
+                profileState = state.profileState,
+                profileType = profileType
             )
 
             ProfileToolbar(
@@ -143,6 +145,7 @@ fun ProfileScreenContent(
             ) {
                 item {
                     ProfileHeader(
+                        profileType = profileType,
                         profileState = state.profileState,
                         avatarAlpha = state.avatarAlpha,
                         avatarSize = state.avatarSize.dp,
@@ -150,7 +153,7 @@ fun ProfileScreenContent(
                     )
                 }
 
-                item {
+                if (profileType == ProfileType.USER) item {
                     ProfileFriends(
                         modifier = Modifier
                             .padding(top = 8.dp)
@@ -163,9 +166,9 @@ fun ProfileScreenContent(
                     ProfilePhotos(
                         modifier = Modifier.padding(top = 8.dp),
                         photos = state.photos,
-                        photosTotalCount = state.photosTotalCount,
-                        isPhotosLoading = state.isPhotosLoading,
-                        photosErrorMessage = state.photosErrorMessage,
+                        totalCount = state.photosTotalCount,
+                        isLoading = state.isPhotosLoading,
+                        errorMessage = state.photosErrorMessage,
                         onPhotoClick = onPhotoClick,
                         onShowAllClick = onShowAllPhotosClick,
                         loadPhotos = { sendEvent(ProfileEvent.GetProfilePhotos) },

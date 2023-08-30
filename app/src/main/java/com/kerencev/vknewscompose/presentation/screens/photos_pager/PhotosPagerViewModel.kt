@@ -39,7 +39,7 @@ class PhotosPagerViewModel @Inject constructor(
     override fun produceCommand(event: PhotosPagerEvent): VkCommand {
         return when (event) {
             is PhotosPagerEvent.GetProfilePhotos -> ProfileInputAction.GetProfilePhotos(
-                userId = params.userId
+                id = params.userId
             )
 
             is PhotosPagerEvent.GetNewsPostPhotos -> PhotosPagerInputAction.GetNewsPostPhotos(
@@ -55,9 +55,9 @@ class PhotosPagerViewModel @Inject constructor(
 
     override fun features(action: VkAction): Flow<VkCommand>? {
         return when (action) {
-            is ProfileInputAction.GetProfilePhotos -> getProfilePhotosFeature(action, state())
-            is PhotosPagerInputAction.GetNewsPostPhotos -> getPostPhotosFeature(action, state())
-            is PhotosPagerInputAction.GetWallPostPhotos -> getWallPostPhotosFeature(action, state())
+            is ProfileInputAction.GetProfilePhotos -> getProfilePhotosFeature(action)
+            is PhotosPagerInputAction.GetNewsPostPhotos -> getPostPhotosFeature(action)
+            is PhotosPagerInputAction.GetWallPostPhotos -> getWallPostPhotosFeature(action)
             else -> null
         }
     }

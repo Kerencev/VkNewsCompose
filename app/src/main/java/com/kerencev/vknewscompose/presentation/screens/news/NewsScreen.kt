@@ -48,6 +48,7 @@ fun NewsScreen(
     onCommentsClick: (newsModel: NewsModelUi) -> Unit,
     onError: (message: String) -> Unit,
     onImageClick: (index: Int, newsModelId: Long) -> Unit,
+    onHeaderClick: (profileId: Long) -> Unit,
     paddingValues: PaddingValues = PaddingValues()
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -82,13 +83,14 @@ fun NewsScreen(
                 ) { newsItem ->
                     NewsCard(
                         newsModel = newsItem,
-                        onCommentsClick = onCommentsClick,
+                        onCommentsClick = { onCommentsClick(newsItem) },
                         onLikesClick = {
                             sendEvent(NewsEvent.ChangeLikeStatus(newsModelUi = newsItem))
                         },
                         onImageClick = { index ->
                             onImageClick(index, newsItem.id)
-                        }
+                        },
+                        onHeaderClick = { onHeaderClick(newsItem.communityId) }
                     )
                 }
                 item {

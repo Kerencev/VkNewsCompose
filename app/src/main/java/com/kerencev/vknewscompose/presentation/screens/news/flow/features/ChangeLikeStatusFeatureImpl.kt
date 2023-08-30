@@ -6,7 +6,6 @@ import com.kerencev.vknewscompose.presentation.common.mvi.VkCommand
 import com.kerencev.vknewscompose.presentation.screens.news.flow.NewsEffect
 import com.kerencev.vknewscompose.presentation.screens.news.flow.NewsInputAction
 import com.kerencev.vknewscompose.presentation.screens.news.flow.NewsOutputAction
-import com.kerencev.vknewscompose.presentation.screens.news.flow.NewsViewState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -19,10 +18,7 @@ class ChangeLikeStatusFeatureImpl @Inject constructor(
 ) : ChangeLikeStatusFeature {
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    override fun invoke(
-        action: NewsInputAction.ChangeLikeStatus,
-        state: NewsViewState
-    ): Flow<VkCommand> {
+    override fun invoke(action: NewsInputAction.ChangeLikeStatus): Flow<VkCommand> {
         return repository.changeLikeStatus(action.newsModel)
             .flatMapConcat { updatedModel ->
                 flowOf(NewsOutputAction.ChangeLikeStatus(newsModel = updatedModel) as VkCommand)

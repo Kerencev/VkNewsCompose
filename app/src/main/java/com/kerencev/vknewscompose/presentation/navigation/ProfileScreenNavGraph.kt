@@ -6,27 +6,33 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
+import com.kerencev.vknewscompose.presentation.model.ProfileType
+import com.kerencev.vknewscompose.presentation.screens.profile.ProfileParams
 
 fun NavGraphBuilder.profileScreenNavGraph(
-    profileScreenContent: @Composable (userId: Long) -> Unit,
+    profileScreenContent: @Composable (params: ProfileParams) -> Unit,
     profilePhotosScreenContent: @Composable (userId: Long) -> Unit,
     friendsScreenContent: @Composable (userId: Long) -> Unit,
 ) {
     navigation(
-        startDestination = Screen.Profile.route,
+        startDestination = Screen.UserProfile.route,
         route = Screen.ProfileGraph.route
     ) {
         composable(
-            route = Screen.Profile.route,
+            route = Screen.UserProfile.route,
             arguments = listOf(
-                navArgument(name = Screen.KEY_USER_ID) {
-                    type = NavType.LongType
-                }
+                navArgument(name = Screen.KEY_PROFILE_ID) { type = NavType.LongType },
+                navArgument(name = Screen.KEY_PROFILE_TYPE) { type = NavType.StringType },
             )
         ) {
-            val userId = it.arguments?.getLong(Screen.KEY_USER_ID)
-                ?: error("Args for profile screen is null")
-            profileScreenContent(userId)
+            val profileId = it.arguments?.getLong(Screen.KEY_PROFILE_ID) ?: 0
+            val profileType = it.arguments?.getString(Screen.KEY_PROFILE_TYPE).orEmpty()
+            profileScreenContent(
+                params = ProfileParams(
+                    id = profileId,
+                    type = ProfileType.valueOf(profileType)
+                )
+            )
         }
         composable(
             route = Screen.ProfilePhotos.route,

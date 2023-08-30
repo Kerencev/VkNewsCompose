@@ -2,40 +2,43 @@ package com.kerencev.vknewscompose.presentation.screens.profile.flow
 
 import com.kerencev.vknewscompose.domain.entities.NewsModel
 import com.kerencev.vknewscompose.domain.entities.PhotosModel
-import com.kerencev.vknewscompose.domain.entities.ProfileModel
+import com.kerencev.vknewscompose.domain.entities.Profile
 import com.kerencev.vknewscompose.presentation.common.mvi.VkAction
 import com.kerencev.vknewscompose.presentation.common.mvi.VkEffect
+import com.kerencev.vknewscompose.presentation.model.ProfileType
+import com.kerencev.vknewscompose.presentation.screens.profile.ProfileParams
 
 sealed class ProfileInputAction : VkAction {
 
     /**
-     * Get profile data by user id
+     * Get profile data by profile id
      */
-    class GetProfile(val userId: Long) : ProfileInputAction()
+    class GetProfile(val profileParams: ProfileParams) : ProfileInputAction()
 
     /**
-     * Get all profile photos by user id
+     * Get all profile photos by profile id
      */
-    class GetProfilePhotos(val userId: Long) : ProfileInputAction()
+    class GetProfilePhotos(val id: Long) : ProfileInputAction()
 
     /**
-     * Get wall posts by user id
+     * Get wall posts by profile id
      */
-    class GetWall(val userId: Long) : ProfileInputAction()
+    class GetWall(val id: Long) : ProfileInputAction()
 
     /**
      * Calculate the necessary UI parameters
      */
     class CalculateUiParams(
+        val profileType: ProfileType,
         val firstVisibleItem: Int? = null,
         val firstVisibleItemScrollOffset: Int? = null
     ) : ProfileInputAction()
 
     /**
-     * Get all profile data by user id
+     * Get all profile data by profile id
      * profile, photos, wall posts
      */
-    class RefreshProfileData(val userId: Long) : ProfileInputAction()
+    class RefreshProfileData(val profileParams: ProfileParams) : ProfileInputAction()
 }
 
 sealed class ProfileOutputAction : VkAction {
@@ -43,7 +46,7 @@ sealed class ProfileOutputAction : VkAction {
     /**
      * Set profile data to viewState
      */
-    class SetProfile(val result: ProfileModel) : ProfileOutputAction()
+    class SetProfile(val result: Profile) : ProfileOutputAction()
 
     /**
      * Set profile photos to viewState
@@ -110,7 +113,7 @@ sealed class ProfileOutputAction : VkAction {
      * Used after swipe-refresh
      */
     class SetAllProfileData(
-        val profile: ProfileModel,
+        val profile: Profile,
         val photos: PhotosModel,
         val wallItems: List<NewsModel>,
         val isWallItemsOver: Boolean,

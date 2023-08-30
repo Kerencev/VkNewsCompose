@@ -2,18 +2,25 @@ package com.kerencev.vknewscompose.domain.repositories
 
 import com.kerencev.vknewscompose.domain.entities.PhotoModel
 import com.kerencev.vknewscompose.domain.entities.PhotosModel
-import com.kerencev.vknewscompose.domain.entities.ProfileModel
+import com.kerencev.vknewscompose.domain.entities.Profile
 import com.kerencev.vknewscompose.domain.entities.WallModel
 import kotlinx.coroutines.flow.Flow
 
 interface ProfileRepository {
 
     /**
-     * Get profile data
+     * Get user profile data
      * @param userId - Id of the user for whom the data will be received
      * @param isRefresh - Updating data or getting it from the cache
      */
-    fun getProfile(userId: Long, isRefresh: Boolean = false): Flow<ProfileModel>
+    fun getUserProfile(userId: Long, isRefresh: Boolean = false): Flow<Profile>
+
+    /**
+     * Get group profile data
+     * @param groupId - Id of the group for which the data will be received
+     * @param isRefresh - Updating data or getting it from the cache
+     */
+    fun getGroupProfile(groupId: Long, isRefresh: Boolean = false): Flow<Profile>
 
     /**
      * Get profile photos

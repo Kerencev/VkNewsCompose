@@ -4,7 +4,6 @@ import com.kerencev.vknewscompose.domain.repositories.NewsFeedRepository
 import com.kerencev.vknewscompose.presentation.common.mvi.VkCommand
 import com.kerencev.vknewscompose.presentation.screens.photos_pager.flow.PhotosPagerInputAction
 import com.kerencev.vknewscompose.presentation.screens.photos_pager.flow.PhotosPagerOutputAction
-import com.kerencev.vknewscompose.presentation.screens.photos_pager.flow.PhotosPagerViewState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapConcat
@@ -16,10 +15,7 @@ class GetPostPhotosFeatureImpl @Inject constructor(
 ) : GetPostPhotosFeature {
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    override fun invoke(
-        action: PhotosPagerInputAction.GetNewsPostPhotos,
-        state: PhotosPagerViewState
-    ): Flow<VkCommand> {
+    override fun invoke(action: PhotosPagerInputAction.GetNewsPostPhotos): Flow<VkCommand> {
         return repository.getPostPhotosById(action.newsModelId)
             .flatMapConcat { flowOf(PhotosPagerOutputAction.SetPostPhotos(it)) }
     }

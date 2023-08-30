@@ -27,6 +27,7 @@ fun HomeScreen(
     onCommentsClick: (newsModel: NewsModelUi) -> Unit,
     onError: (message: String) -> Unit,
     onImageClick: (index: Int, newsModelId: Long) -> Unit,
+    onHeaderClick: (userId: Long) -> Unit,
 ) {
     val component = getApplicationComponent()
         .getNewsScreenComponentFactory()
@@ -43,6 +44,7 @@ fun HomeScreen(
         onCommentsClick = onCommentsClick,
         onError = onError,
         onImageClick = onImageClick,
+        onHeaderClick = onHeaderClick
     )
 }
 
@@ -55,6 +57,7 @@ fun HomeScreenContent(
     onCommentsClick: (newsModel: NewsModelUi) -> Unit,
     onError: (message: String) -> Unit,
     onImageClick: (index: Int, newsModelId: Long) -> Unit,
+    onHeaderClick: (groupId: Long) -> Unit,
 ) {
     val pagerState = rememberPagerState(pageCount = { NewsType.values().size })
 
@@ -73,6 +76,7 @@ fun HomeScreenContent(
                         onCommentsClick = onCommentsClick,
                         onError = onError,
                         onImageClick = onImageClick,
+                        onHeaderClick = onHeaderClick,
                     )
                 }
 
@@ -82,6 +86,7 @@ fun HomeScreenContent(
                         onCommentsClick = onCommentsClick,
                         onError = onError,
                         onImageClick = onImageClick,
+                        onHeaderClick = onHeaderClick,
                     )
                 }
             }

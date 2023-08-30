@@ -46,12 +46,7 @@ fun AppNavGraph(
             photosPagerScreenContent(
                 params = PhotosPagerParams(
                     userId = userId,
-                    photoType = when (type) {
-                        PhotoType.PROFILE.name -> PhotoType.PROFILE
-                        PhotoType.WALL.name -> PhotoType.WALL
-                        PhotoType.NEWS.name -> PhotoType.NEWS
-                        else -> PhotoType.NEWS
-                    },
+                    photoType = PhotoType.valueOf(type),
                     selectedPhotoNumber = selectedPhotoNumber,
                     newsModelId = newsModelId
                 )

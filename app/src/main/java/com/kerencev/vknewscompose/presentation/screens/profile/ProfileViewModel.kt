@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class ProfileViewModel @Inject constructor(
-    private val userId: Long,
+    private val profileParams: ProfileParams,
     private val getWallFeature: GetWallFeature,
     private val getProfileFeature: GetProfileFeature,
     private val getProfilePhotosFeature: GetProfilePhotosFeature,
@@ -38,30 +38,27 @@ class ProfileViewModel @Inject constructor(
 
     override fun produceCommand(event: ProfileEvent): VkCommand {
         return when (event) {
-            is ProfileEvent.GetProfile -> ProfileInputAction.GetProfile(userId)
-            is ProfileEvent.GetProfilePhotos -> ProfileInputAction.GetProfilePhotos(userId)
-            is ProfileEvent.GetWall -> ProfileInputAction.GetWall(userId)
+            is ProfileEvent.GetProfile -> ProfileInputAction.GetProfile(profileParams)
+            is ProfileEvent.GetProfilePhotos -> ProfileInputAction.GetProfilePhotos(profileParams.id)
+            is ProfileEvent.GetWall -> ProfileInputAction.GetWall(profileParams.id)
             is ProfileEvent.OnUserScroll -> ProfileInputAction.CalculateUiParams(
+                profileType = profileParams.type,
                 firstVisibleItem = event.firstVisibleItem,
                 firstVisibleItemScrollOffset = event.firstVisibleItemScrollOffset
             )
 
-            is ProfileEvent.RefreshProfileData -> ProfileInputAction.RefreshProfileData(userId)
+            is ProfileEvent.RefreshProfileData -> ProfileInputAction.RefreshProfileData(profileParams)
             is ProfileEvent.OnProfileErrorInvoked -> ProfileEffect.None
         }
     }
 
     override fun features(action: VkAction): Flow<VkCommand>? {
         return when (action) {
-            is ProfileInputAction.GetProfile -> getProfileFeature(action, state())
-            is ProfileInputAction.GetProfilePhotos -> getProfilePhotosFeature(action, state())
-            is ProfileInputAction.GetWall -> getWallFeature(action, state())
-            is ProfileInputAction.CalculateUiParams -> calculateProfileParamsFeature(
-                action,
-                state()
-            )
-
-            is ProfileInputAction.RefreshProfileData -> getAllProfileDataFeature(action, state())
+            is ProfileInputAction.GetProfile -> getProfileFeature(action)
+            is ProfileInputAction.GetProfilePhotos -> getProfilePhotosFeature(action)
+            is ProfileInputAction.GetWall -> getWallFeature(action)
+            is ProfileInputAction.CalculateUiParams -> calculateProfileParamsFeature(action)
+            is ProfileInputAction.RefreshProfileData -> getAllProfileDataFeature(action)
             else -> null
         }
     }

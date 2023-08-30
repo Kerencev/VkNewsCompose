@@ -19,7 +19,7 @@ import com.kerencev.vknewscompose.ui.theme.DarkRed
 @Composable
 fun NewsFooter(
     newsModel: NewsModelUi,
-    onCommentsClick: (newsModel: NewsModelUi) -> Unit,
+    onCommentsClick: () -> Unit,
     onLikesClick: () -> Unit
 ) {
     Row(
@@ -39,7 +39,7 @@ fun NewsFooter(
             )
             Spacer(modifier = Modifier.width(12.dp))
             IconWithText(
-                modifier = Modifier.clickable { onCommentsClick(newsModel) },
+                modifier = Modifier.clickable { onCommentsClick() },
                 iconRes = R.drawable.ic_comment,
                 text = newsModel.commentsCount.formatStatisticCount(),
             )

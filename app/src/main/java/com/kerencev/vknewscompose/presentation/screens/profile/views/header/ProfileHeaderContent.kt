@@ -1,9 +1,10 @@
-package com.kerencev.vknewscompose.presentation.screens.profile.views
+package com.kerencev.vknewscompose.presentation.screens.profile.views.header
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -26,19 +27,25 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.kerencev.vknewscompose.R
-import com.kerencev.vknewscompose.domain.entities.ProfileModel
+import com.kerencev.vknewscompose.domain.entities.Profile
+import com.kerencev.vknewscompose.domain.entities.UserProfileModel
 import com.kerencev.vknewscompose.presentation.common.views.IconWithText
 import com.kerencev.vknewscompose.ui.theme.Shapes
 
 @Composable
 fun ProfileHeaderContent(
-    model: ProfileModel,
+    profile: Profile,
     avatarAlpha: Float,
-    avatarSize: Dp
+    avatarSize: Dp,
+    contentPadding: PaddingValues,
+    namePadding: PaddingValues,
+    contentAlignment: Alignment.Horizontal,
+    avatarPadding: PaddingValues,
+    avatarAlign: Alignment,
 ) {
     Box {
         Card(
-            modifier = Modifier.padding(top = avatarSize / 2),
+            modifier = Modifier.padding(contentPadding),
             shape = Shapes.large,
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colors.surface)
         ) {
@@ -46,33 +53,35 @@ fun ProfileHeaderContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 50.dp, start = 16.dp, end = 16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = contentAlignment
             ) {
                 Text(
-                    modifier = Modifier.padding(top = 8.dp),
-                    text = "${model.name} ${model.lastName}",
+                    modifier = Modifier.padding(namePadding),
+                    text = profile.name,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
                 )
-                Row(
-                    modifier = Modifier.padding(bottom = 8.dp)
-                ) {
-                    if (!model.city.isNullOrBlank()) {
-                        IconWithText(
-                            modifier = Modifier.weight(1f),
-                            text = model.city,
-                            iconRes = R.drawable.ic_location,
-                            horizontalArrangement = Arrangement.Center
-                        )
-                    }
-                    if (!model.universityName.isNullOrBlank()) {
-                        IconWithText(
-                            modifier = Modifier.weight(1f),
-                            text = model.universityName,
-                            iconRes = R.drawable.ic_hat_education,
-                            horizontalArrangement = Arrangement.Center
-                        )
+                if (profile is UserProfileModel) {
+                    Row(
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    ) {
+                        if (!profile.city.isNullOrBlank()) {
+                            IconWithText(
+                                modifier = Modifier.weight(1f),
+                                text = profile.city,
+                                iconRes = R.drawable.ic_location,
+                                horizontalArrangement = Arrangement.Center
+                            )
+                        }
+                        if (!profile.universityName.isNullOrBlank()) {
+                            IconWithText(
+                                modifier = Modifier.weight(1f),
+                                text = profile.universityName,
+                                iconRes = R.drawable.ic_hat_education,
+                                horizontalArrangement = Arrangement.Center
+                            )
+                        }
                     }
                 }
             }
@@ -80,12 +89,13 @@ fun ProfileHeaderContent(
 
         AsyncImage(
             modifier = Modifier
+                .padding(avatarPadding)
                 .alpha(avatarAlpha)
                 .size(avatarSize)
                 .border(4.dp, MaterialTheme.colors.surface, CircleShape)
                 .clip(CircleShape)
-                .align(Alignment.TopCenter),
-            model = model.avatarUrl,
+                .align(avatarAlign),
+            model = profile.avatarUrl,
             contentDescription = stringResource(id = R.string.user_avatar),
         )
 

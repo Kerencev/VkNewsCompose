@@ -23,9 +23,12 @@ import com.kerencev.vknewscompose.R
 import com.kerencev.vknewscompose.presentation.model.NewsModelUi
 
 @Composable
-fun NewsHeader(newsModel: NewsModelUi) {
+fun NewsHeader(
+    modifier: Modifier = Modifier,
+    newsModel: NewsModelUi
+) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .padding(horizontal = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {

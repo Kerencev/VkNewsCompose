@@ -5,10 +5,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -38,9 +41,9 @@ import com.kerencev.vknewscompose.ui.theme.Shapes
 fun ProfilePhotos(
     modifier: Modifier = Modifier,
     photos: List<Photo>,
-    photosTotalCount: Int,
-    isPhotosLoading: Boolean,
-    photosErrorMessage: String?,
+    totalCount: Int,
+    isLoading: Boolean,
+    errorMessage: String?,
     onPhotoClick: (index: Int) -> Unit,
     onShowAllClick: () -> Unit,
     loadPhotos: () -> Unit
@@ -69,10 +72,14 @@ fun ProfilePhotos(
                     tint = LightBlue
                 )
             }
-            ProfilePhotosGrid(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = if (photosErrorMessage != null && photos.isEmpty())
-                    Arrangement.Center else Arrangement.spacedBy(2.dp)
+            LazyHorizontalGrid(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
+                    .padding(8.dp),
+                rows = GridCells.Fixed(2),
+                horizontalArrangement = getHorizontalArrangement(photos, errorMessage),
+                verticalArrangement = Arrangement.spacedBy(2.dp)
             ) {
                 itemsIndexed(photos) { index, item ->
                     if (item is PhotoModel) AsyncImage(
@@ -86,10 +93,10 @@ fun ProfilePhotos(
                     else ShimmerItems()
                 }
                 when {
-                    photos.size == photosTotalCount -> return@ProfilePhotosGrid
-                    isPhotosLoading && photos.isEmpty() -> item { ShimmerItems() }
+                    photos.size == totalCount -> return@LazyHorizontalGrid
+                    isLoading && photos.isEmpty() -> item { ShimmerItems() }
 
-                    photosErrorMessage != null -> item(span = { GridItemSpan(maxLineSpan) }) {
+                    errorMessage != null -> item(span = { GridItemSpan(maxLineSpan) }) {
                         BoxIcon(
                             modifier = Modifier.width(100.dp),
                             imageVector = Icons.Default.Refresh,
@@ -97,7 +104,7 @@ fun ProfilePhotos(
                         )
                     }
 
-                    photos.isNotEmpty() && !isPhotosLoading -> item {
+                    photos.isNotEmpty() && !isLoading -> item {
                         SideEffect { loadPhotos() }
                     }
                 }
@@ -107,6 +114,10 @@ fun ProfilePhotos(
 }
 
 @Composable
-fun ShimmerItems() {
+private fun ShimmerItems() {
     repeat(10) { ShimmerDefault(modifier = Modifier.size(100.dp)) }
 }
+
+private fun getHorizontalArrangement(photos: List<Photo>, photosErrorMessage: String?) =
+    if (photosErrorMessage != null && photos.isEmpty())
+        Arrangement.Center else Arrangement.spacedBy(2.dp)

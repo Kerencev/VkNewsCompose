@@ -36,7 +36,7 @@ class FriendsViewModel @Inject constructor(
 
     override fun features(action: VkAction): Flow<VkCommand>? {
         return when (action) {
-            is FriendsInputAction.GetFriends -> getFriendsFeature(action, state())
+            is FriendsInputAction.GetFriends -> getFriendsFeature(action)
             else -> null
         }
     }

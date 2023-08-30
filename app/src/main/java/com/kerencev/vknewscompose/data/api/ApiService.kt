@@ -2,6 +2,7 @@ package com.kerencev.vknewscompose.data.api
 
 import com.kerencev.vknewscompose.data.dto.comments.CommentsResponseDto
 import com.kerencev.vknewscompose.data.dto.friends.FriendsResponseDto
+import com.kerencev.vknewscompose.data.dto.group.GroupProfileResponseDto
 import com.kerencev.vknewscompose.data.dto.likes.LikesCountResponseDto
 import com.kerencev.vknewscompose.data.dto.news_feed.NewsFeedResponseDto
 import com.kerencev.vknewscompose.data.dto.profile.ProfilePhotosResponseDto
@@ -49,6 +50,11 @@ interface ApiService {
     suspend fun getProfile(
         @Query("user_ids") usersIds: String
     ): ProfileResponseDto
+
+    @GET("groups.getById?v=5.131&fields=cover")
+    suspend fun getGroupProfile(
+        @Query("group_id") groupId: String
+    ): GroupProfileResponseDto
 
     @GET("photos.getAll?v=5.131&extended=true")
     suspend fun getProfilePhotos(

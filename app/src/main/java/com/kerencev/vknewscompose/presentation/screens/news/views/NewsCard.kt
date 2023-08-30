@@ -1,6 +1,7 @@
 package com.kerencev.vknewscompose.presentation.screens.news.views
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -24,9 +25,10 @@ fun NewsCard(
     modifier: Modifier = Modifier,
     shape: Shape = RoundedCornerShape(16.dp),
     newsModel: NewsModelUi,
-    onCommentsClick: (newsModel: NewsModelUi) -> Unit,
+    onCommentsClick: () -> Unit,
     onLikesClick: () -> Unit,
     onImageClick: (index: Int) -> Unit,
+    onHeaderClick: () -> Unit = {},
 ) {
     Box(modifier = modifier.background(color = colorResource(id = R.color.background_news))) {
         Card(
@@ -34,7 +36,10 @@ fun NewsCard(
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colors.surface)
         ) {
             Column(modifier = Modifier.padding(vertical = 8.dp)) {
-                NewsHeader(newsModel = newsModel)
+                NewsHeader(
+                    modifier = Modifier.clickable { onHeaderClick() },
+                    newsModel = newsModel
+                )
                 Spacer(modifier = Modifier.height(4.dp))
                 NewsText(text = newsModel.contentText)
                 Spacer(modifier = Modifier.height(4.dp))

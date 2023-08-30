@@ -6,7 +6,8 @@ import com.kerencev.vknewscompose.data.repository.ProfileRepositoryImpl
 import com.kerencev.vknewscompose.domain.entities.Photo
 import com.kerencev.vknewscompose.domain.entities.PhotoModel
 import com.kerencev.vknewscompose.domain.entities.PhotosModel
-import com.kerencev.vknewscompose.domain.entities.ProfileModel
+import com.kerencev.vknewscompose.domain.entities.Profile
+import com.kerencev.vknewscompose.domain.entities.UserProfileModel
 import com.kerencev.vknewscompose.domain.entities.getDummyPhotos
 import com.kerencev.vknewscompose.presentation.common.ContentState
 import com.kerencev.vknewscompose.presentation.common.mvi.VkState
@@ -35,7 +36,7 @@ import com.kerencev.vknewscompose.presentation.model.NewsModelUi
 @Stable
 data class ProfileViewState(
     val isCurrentUser: Boolean? = null,
-    val profileState: ContentState<ProfileModel> = ContentState.Loading,
+    val profileState: ContentState<Profile> = ContentState.Loading,
     val friendsCount: Int = 0,
     val photos: List<Photo> = emptyList(),
     val isPhotosLoading: Boolean = true,
@@ -52,10 +53,10 @@ data class ProfileViewState(
     val isSwipeRefreshing: Boolean = false,
 ) : VkState {
 
-    fun setProfile(profileModel: ProfileModel) = copy(
-        isCurrentUser = profileModel.id == AuthRepositoryImpl.currentUserId,
-        profileState = ContentState.Content(profileModel),
-        friendsCount = profileModel.friendsCount
+    fun setProfile(profile: Profile) = copy(
+        isCurrentUser = profile.id == AuthRepositoryImpl.currentUserId,
+        profileState = ContentState.Content(profile),
+        friendsCount = getFriendsCountByProfileType(profile)
     )
 
     fun profileLoading() = copy(
@@ -119,13 +120,13 @@ data class ProfileViewState(
     )
 
     fun setAllData(
-        profile: ProfileModel,
+        profile: Profile,
         photosModel: PhotosModel,
         wallItems: List<NewsModelUi>,
         isWallItemsOver: Boolean
     ) = copy(
         profileState = ContentState.Content(profile),
-        friendsCount = profile.friendsCount,
+        friendsCount = getFriendsCountByProfileType(profile),
         photos = photosModel.photos,
         photosTotalCount = photosModel.totalCount,
         isPhotosLoading = false,
@@ -136,5 +137,8 @@ data class ProfileViewState(
         isWallPostsOver = isWallItemsOver,
         isSwipeRefreshing = false
     )
+
+    private fun getFriendsCountByProfileType(profile: Profile) =
+        if (profile is UserProfileModel) profile.friendsCount else 0
 
 }

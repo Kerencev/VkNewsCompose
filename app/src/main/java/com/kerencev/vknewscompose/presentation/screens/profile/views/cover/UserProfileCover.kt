@@ -1,4 +1,4 @@
-package com.kerencev.vknewscompose.presentation.screens.profile.views
+package com.kerencev.vknewscompose.presentation.screens.profile.views.cover
 
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,29 +10,31 @@ import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
+import com.kerencev.vknewscompose.presentation.common.views.AsyncShimmerImage
 
 @Composable
-fun ProfileAvatarBackground(
+fun UserProfileCover(
     boxScope: BoxScope,
     alpha: Float,
-    backgroundModel: Any?
+    coverUrl: String?,
+    height: Dp,
 ) {
     boxScope.run {
-        AsyncImage(
+        AsyncShimmerImage(
             modifier = Modifier
                 .alpha(alpha)
                 .fillMaxWidth()
-                .height(160.dp)
+                .height(height)
                 .blur(
                     radius = 32.dp,
                     edgeTreatment = BlurredEdgeTreatment(null)
                 )
                 .scale(5.0f)
                 .align(Alignment.TopCenter),
-            model = backgroundModel,
-            contentDescription = null
+            imageUrl = coverUrl,
+            shimmerHeight = height,
         )
     }
 }

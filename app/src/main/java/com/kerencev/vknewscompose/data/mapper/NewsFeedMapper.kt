@@ -17,7 +17,7 @@ fun NewsFeedResponseDto.mapToModel(): List<NewsModel> {
 
     posts?.let {
         for (post in posts) {
-            val group = groups?.firstOrNull() { it.id == post.sourceId?.absoluteValue }
+            val group = groups?.firstOrNull() { it.id == post.ownerId?.absoluteValue }
             val imageContent = post.attachments
                 ?.filter { it.type == AttachmentType.photo }
                 ?.map {

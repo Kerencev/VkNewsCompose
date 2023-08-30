@@ -3,6 +3,7 @@ package com.kerencev.vknewscompose.di.component
 import com.kerencev.vknewscompose.di.ViewModelFactory
 import com.kerencev.vknewscompose.di.module.ProfileFeatureModule
 import com.kerencev.vknewscompose.di.module.ProfileViewModelModule
+import com.kerencev.vknewscompose.presentation.screens.profile.ProfileParams
 import dagger.BindsInstance
 import dagger.Subcomponent
 
@@ -19,6 +20,6 @@ interface ProfileScreenComponent {
     @Subcomponent.Factory
     interface Factory {
 
-        fun create(@BindsInstance userId: Long): ProfileScreenComponent
+        fun create(@BindsInstance profileParams: ProfileParams): ProfileScreenComponent
     }
 }

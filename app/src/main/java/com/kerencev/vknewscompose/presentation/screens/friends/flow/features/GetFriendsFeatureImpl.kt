@@ -5,7 +5,6 @@ import com.kerencev.vknewscompose.extensions.retryDefault
 import com.kerencev.vknewscompose.presentation.common.mvi.VkCommand
 import com.kerencev.vknewscompose.presentation.screens.friends.flow.FriendsInputAction
 import com.kerencev.vknewscompose.presentation.screens.friends.flow.FriendsOutputAction
-import com.kerencev.vknewscompose.presentation.screens.friends.flow.FriendsViewState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -19,10 +18,7 @@ class GetFriendsFeatureImpl @Inject constructor(
 ) : GetFriendsFeature {
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    override fun invoke(
-        action: FriendsInputAction.GetFriends,
-        state: FriendsViewState
-    ): Flow<VkCommand> {
+    override fun invoke(action: FriendsInputAction.GetFriends): Flow<VkCommand> {
         return friendsRepository.getFriends(
             userId = action.userId,
             searchText = action.searchText,

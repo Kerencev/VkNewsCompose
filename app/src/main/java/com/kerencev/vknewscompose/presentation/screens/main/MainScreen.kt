@@ -1,7 +1,9 @@
 package com.kerencev.vknewscompose.presentation.screens.main
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.systemBars
@@ -19,6 +21,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -34,9 +37,9 @@ import com.kerencev.vknewscompose.presentation.navigation.NavigationItem
 import com.kerencev.vknewscompose.presentation.navigation.rememberNavigationState
 import com.kerencev.vknewscompose.presentation.screens.comments.CommentsScreen
 import com.kerencev.vknewscompose.presentation.screens.friends.FriendsScreen
+import com.kerencev.vknewscompose.presentation.screens.home.HomeScreen
 import com.kerencev.vknewscompose.presentation.screens.main.flow.MainEvent
 import com.kerencev.vknewscompose.presentation.screens.main.flow.MainShot
-import com.kerencev.vknewscompose.presentation.screens.home.HomeScreen
 import com.kerencev.vknewscompose.presentation.screens.profile.ProfileScreen
 import com.kerencev.vknewscompose.presentation.screens.profile_photos.ProfilePhotosScreen
 import com.kerencev.vknewscompose.ui.theme.LightBlue
@@ -46,7 +49,7 @@ import kotlinx.coroutines.launch
 fun MainScreen(
     mainViewModel: MainViewModel,
     onPhotoClick: (
-        userId: Long,
+        userId: Long?,
         type: PhotoType,
         index: Int,
         newsModelId: Long
@@ -105,53 +108,63 @@ fun MainScreen(
             newsScreenContent = {
                 HomeScreen(
                     paddingValues = paddingValues,
-                    onCommentsClick = { navigationState.navigateToCommentsFromNews(it) },
+                    onCommentsClick = { navigationState.navigateToComments(it) },
                     onError = { sendEvent(MainEvent.ShowErrorMessage(it)) },
                     onImageClick = { index, newsModelId ->
-                        onPhotoClick(0, PhotoType.NEWS, index, newsModelId)
+                        onPhotoClick(null, PhotoType.NEWS, index, newsModelId)
+                    },
+                    onHeaderClick = { profileId ->
+                        navigationState.navigateToGroupProfile(profileId = profileId)
                     }
                 )
             },
-            commentsScreenNewsContent = { newsModel ->
-                CommentsScreen(
-                    newsModel = newsModel,
-                    onBackPressed = { navigationState.navHostController.popBackStack() }
-                )
-            },
-            commentsScreenRecommendationContent = { newsModel ->
+            commentsScreenContent = { newsModel ->
                 CommentsScreen(
                     newsModel = newsModel,
                     onBackPressed = { navigationState.navHostController.popBackStack() }
                 )
             },
             recommendationScreenContent = {
-                HomeScreen(
-                    paddingValues = paddingValues,
-                    onCommentsClick = { navigationState.navigateToCommentsFromRecommendation(it) },
-                    onError = { sendEvent(MainEvent.ShowErrorMessage(it)) },
-                    onImageClick = { index, newsModelId ->
-                        onPhotoClick(0, PhotoType.NEWS, index, newsModelId)
-                    }
-                )
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(text = "Здесь будут рекомендации")
+                }
             },
-            profileScreenContent = { userId ->
+            userProfileScreenContent = { params ->
                 ProfileScreen(
-                    userId = userId,
+                    profileParams = params,
                     paddingValues = paddingValues,
                     onPhotoClick = { index ->
-                        onPhotoClick(userId, PhotoType.PROFILE, index, 0)
+                        onPhotoClick(params.id, PhotoType.PROFILE, index, 0)
                     },
                     onWallItemClick = { index, itemId ->
-                        onPhotoClick(userId, PhotoType.WALL, index, itemId)
+                        onPhotoClick(params.id, PhotoType.WALL, index, itemId)
                     },
-                    onShowAllPhotosClick = { navigationState.navigateToProfilePhotos(userId) },
+                    onShowAllPhotosClick = { navigationState.navigateToProfilePhotos(params.id) },
                     onProfileRefreshError = { sendEvent(MainEvent.ShowErrorMessage(it)) },
                     onLogoutClick = { sendEvent(MainEvent.Logout) },
-                    onFriendsClick = { navigationState.navigateToFriends(userId) },
+                    onFriendsClick = { navigationState.navigateToFriends(params.id) },
                     onBackPressed = { navigationState.navHostController.popBackStack() },
                 )
             },
-            profilePhotosScreenContent = { userId ->
+            groupProfileScreenContent = { params ->
+                ProfileScreen(
+                    profileParams = params,
+                    paddingValues = paddingValues,
+                    onPhotoClick = { index ->
+                        onPhotoClick(params.id, PhotoType.PROFILE, index, 0)
+                    },
+                    onWallItemClick = { index, itemId ->
+                        onPhotoClick(params.id, PhotoType.WALL, index, itemId)
+                    },
+                    onShowAllPhotosClick = { navigationState.navigateToGroupPhotos(params.id) },
+                    onProfileRefreshError = { sendEvent(MainEvent.ShowErrorMessage(it)) },
+                    onBackPressed = { navigationState.navHostController.popBackStack() },
+                )
+            },
+            userPhotosScreenContent = { userId ->
                 ProfilePhotosScreen(
                     userId = userId,
                     paddingValues = paddingValues,
@@ -161,11 +174,23 @@ fun MainScreen(
                     onBackPressed = { navigationState.navHostController.popBackStack() }
                 )
             },
+            groupPhotosScreenContent = { groupId ->
+                ProfilePhotosScreen(
+                    userId = groupId,
+                    paddingValues = paddingValues,
+                    onPhotoClick = { index ->
+                        onPhotoClick(groupId, PhotoType.PROFILE, index, 0)
+                    },
+                    onBackPressed = { navigationState.navHostController.popBackStack() }
+                )
+            },
             friendsScreenContent = { userId ->
                 FriendsScreen(
                     paddingValues = paddingValues,
                     onBackPressed = { navigationState.navHostController.popBackStack() },
-                    onFriendClick = { navigationState.navigateToProfile(it) },
+                    onFriendClick = { profileId ->
+                        navigationState.navigateToUserProfile(profileId = profileId)
+                    },
                     userId = userId
                 )
             }

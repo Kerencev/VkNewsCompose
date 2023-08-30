@@ -4,16 +4,18 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.kerencev.vknewscompose.presentation.model.NewsModelUi
+import com.kerencev.vknewscompose.presentation.screens.profile.ProfileParams
 
 @Composable
 fun BottomNavGraph(
     navHostController: NavHostController,
     newsScreenContent: @Composable () -> Unit,
-    commentsScreenNewsContent: @Composable (NewsModelUi) -> Unit,
-    commentsScreenRecommendationContent: @Composable (NewsModelUi) -> Unit,
+    commentsScreenContent: @Composable (NewsModelUi) -> Unit,
     recommendationScreenContent: @Composable () -> Unit,
-    profileScreenContent: @Composable (userId: Long) -> Unit,
-    profilePhotosScreenContent: @Composable (userId: Long) -> Unit,
+    userProfileScreenContent: @Composable (profileParams: ProfileParams) -> Unit,
+    groupProfileScreenContent: @Composable (profileParams: ProfileParams) -> Unit,
+    userPhotosScreenContent: @Composable (userId: Long) -> Unit,
+    groupPhotosScreenContent: @Composable (groupId: Long) -> Unit,
     friendsScreenContent: @Composable (userId: Long) -> Unit,
 ) {
     NavHost(
@@ -22,15 +24,16 @@ fun BottomNavGraph(
     ) {
         homeScreenNavGraph(
             newsScreenContent = newsScreenContent,
-            commentsScreenContent = commentsScreenNewsContent
+            commentsScreenContent = commentsScreenContent,
+            groupProfileScreenContent = groupProfileScreenContent,
+            groupPhotosScreenContent = groupPhotosScreenContent,
         )
         recommendationScreenNavGraph(
             recommendationScreenContent = recommendationScreenContent,
-            commentsScreenContent = commentsScreenRecommendationContent
         )
         profileScreenNavGraph(
-            profileScreenContent = profileScreenContent,
-            profilePhotosScreenContent = profilePhotosScreenContent,
+            profileScreenContent = userProfileScreenContent,
+            profilePhotosScreenContent = userPhotosScreenContent,
             friendsScreenContent = friendsScreenContent
         )
     }

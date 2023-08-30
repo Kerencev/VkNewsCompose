@@ -1,4 +1,4 @@
-package com.kerencev.vknewscompose.presentation.screens.profile.views
+package com.kerencev.vknewscompose.presentation.screens.profile.views.toolbar
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -29,30 +29,26 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.kerencev.vknewscompose.R
+import com.kerencev.vknewscompose.domain.entities.Profile
 import com.kerencev.vknewscompose.presentation.common.ContentState
 import com.kerencev.vknewscompose.presentation.common.views.IconBack
 import com.kerencev.vknewscompose.presentation.screens.profile.flow.ProfileViewState
+import com.valentinilk.shimmer.shimmer
 
 @Composable
 fun ProfileToolbar(
     state: ProfileViewState,
     boxScope: BoxScope,
     onRefreshClick: () -> Unit,
-    onLogoutClick: () -> Unit,
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
+    onLogoutClick: () -> Unit = {}
 ) {
-    val toolbarTitle = if (state.profileState is ContentState.Content)
-        "${state.profileState.data.name} ${state.profileState.data.lastName}"
-    else stringResource(id = R.string.empty_data)
-    val userAvatarSrc = if (state.profileState is ContentState.Content)
-        state.profileState.data.avatarUrl else R.drawable.ic_people
+    val modifier = getDefaultModifier(state)
 
     boxScope.run {
         Column(
-            modifier = Modifier
-                .alpha(state.topBarAlpha)
-                .background(MaterialTheme.colors.surface)
-                .fillMaxWidth()
+            modifier = if (state.profileState is ContentState.Loading)
+                modifier.shimmer() else modifier
         ) {
             Spacer(
                 modifier = Modifier
@@ -69,19 +65,20 @@ fun ProfileToolbar(
                         .size(40.dp)
                         .clip(CircleShape)
                         .border(2.dp, MaterialTheme.colors.surface, CircleShape),
-                    model = userAvatarSrc,
+                    model = getAvatarByState(state.profileState),
                     contentDescription = stringResource(id = R.string.user_avatar),
                 )
 
                 Text(
                     modifier = Modifier.padding(start = 8.dp, end = 16.dp),
-                    text = toolbarTitle,
+                    text = getToolbarTitle(state = state.profileState),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colors.onPrimary
                 )
+
             }
         }
 
@@ -132,3 +129,19 @@ fun ProfileToolbar(
         }
     }
 }
+
+@Composable
+private fun getToolbarTitle(state: ContentState<Profile>) = when (state) {
+    is ContentState.Content -> state.data.name
+    is ContentState.Loading -> ""
+    is ContentState.Error -> stringResource(id = R.string.empty_data)
+}
+
+@Composable
+private fun getDefaultModifier(state: ProfileViewState) = Modifier
+    .alpha(state.topBarAlpha)
+    .background(MaterialTheme.colors.surface)
+    .fillMaxWidth()
+
+private fun getAvatarByState(state: ContentState<Profile>) =
+    if (state is ContentState.Content) state.data.avatarUrl else R.drawable.ic_people

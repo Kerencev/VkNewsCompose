@@ -37,8 +37,8 @@ class MainViewModel @Inject constructor(
 
     override fun features(action: VkAction): Flow<VkCommand>? {
         return when (action) {
-            is MainInputAction.CheckAuthState -> checkAuthStateFeature(action, state())
-            is MainInputAction.Logout -> logoutFeature(action, state())
+            is MainInputAction.CheckAuthState -> checkAuthStateFeature(action)
+            is MainInputAction.Logout -> logoutFeature(action)
             else -> null
         }
     }

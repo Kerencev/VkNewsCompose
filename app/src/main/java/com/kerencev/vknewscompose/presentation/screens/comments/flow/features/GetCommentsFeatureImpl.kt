@@ -5,7 +5,6 @@ import com.kerencev.vknewscompose.extensions.retryDefault
 import com.kerencev.vknewscompose.presentation.common.mvi.VkCommand
 import com.kerencev.vknewscompose.presentation.screens.comments.flow.CommentsInputAction
 import com.kerencev.vknewscompose.presentation.screens.comments.flow.CommentsOutputAction
-import com.kerencev.vknewscompose.presentation.screens.comments.flow.CommentsViewState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -19,10 +18,7 @@ class GetCommentsFeatureImpl @Inject constructor(
 ) : GetCommentsFeature {
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    override fun invoke(
-        action: CommentsInputAction.GetComments,
-        state: CommentsViewState
-    ): Flow<VkCommand> {
+    override fun invoke(action: CommentsInputAction.GetComments): Flow<VkCommand> {
         return repository.getComments(action.newsModel)
             .flatMapConcat {
                 flowOf(CommentsOutputAction.SetComments(it) as VkCommand)

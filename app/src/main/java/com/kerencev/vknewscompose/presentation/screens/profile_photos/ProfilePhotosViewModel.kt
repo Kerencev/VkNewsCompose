@@ -26,13 +26,13 @@ class ProfilePhotosViewModel @Inject constructor(
 
     override fun produceCommand(event: ProfilePhotosEvent): VkCommand {
         return when (event) {
-            is ProfilePhotosEvent.GetProfilePhotos -> ProfileInputAction.GetProfilePhotos(userId = userId)
+            is ProfilePhotosEvent.GetProfilePhotos -> ProfileInputAction.GetProfilePhotos(id = userId)
         }
     }
 
     override fun features(action: VkAction): Flow<VkCommand>? {
         return when (action) {
-            is ProfileInputAction.GetProfilePhotos -> getProfilePhotosFeature(action, state())
+            is ProfileInputAction.GetProfilePhotos -> getProfilePhotosFeature(action)
             else -> null
         }
     }

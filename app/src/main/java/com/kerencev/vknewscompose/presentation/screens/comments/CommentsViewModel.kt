@@ -36,7 +36,7 @@ class CommentsViewModel @Inject constructor(
 
     override fun features(action: VkAction): Flow<VkCommand>? {
         return when (action) {
-            is CommentsInputAction.GetComments -> getCommentsFeature(action, state())
+            is CommentsInputAction.GetComments -> getCommentsFeature(action)
             else -> null
         }
     }

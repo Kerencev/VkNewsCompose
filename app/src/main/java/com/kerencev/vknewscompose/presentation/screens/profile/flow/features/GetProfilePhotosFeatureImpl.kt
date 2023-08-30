@@ -3,7 +3,6 @@ package com.kerencev.vknewscompose.presentation.screens.profile.flow.features
 import com.kerencev.vknewscompose.domain.repositories.ProfileRepository
 import com.kerencev.vknewscompose.extensions.retryDefault
 import com.kerencev.vknewscompose.presentation.common.mvi.VkCommand
-import com.kerencev.vknewscompose.presentation.common.mvi.VkState
 import com.kerencev.vknewscompose.presentation.screens.profile.flow.ProfileInputAction
 import com.kerencev.vknewscompose.presentation.screens.profile.flow.ProfileOutputAction
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -19,11 +18,8 @@ class GetProfilePhotosFeatureImpl @Inject constructor(
 ) : GetProfilePhotosFeature {
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    override fun invoke(
-        action: ProfileInputAction.GetProfilePhotos,
-        state: VkState,
-    ): Flow<VkCommand> {
-        return repository.getProfilePhotos(userId = action.userId)
+    override fun invoke(action: ProfileInputAction.GetProfilePhotos): Flow<VkCommand> {
+        return repository.getProfilePhotos(userId = action.id)
             .flatMapConcat { flowOf(ProfileOutputAction.SetProfilePhotos(it) as VkCommand) }
             .onStart { emit(ProfileOutputAction.ProfilePhotosLoading) }
             .retryDefault()

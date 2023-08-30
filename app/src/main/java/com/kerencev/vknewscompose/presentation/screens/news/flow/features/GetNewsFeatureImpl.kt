@@ -7,7 +7,6 @@ import com.kerencev.vknewscompose.presentation.screens.news.NewsType
 import com.kerencev.vknewscompose.presentation.screens.news.flow.NewsEffect
 import com.kerencev.vknewscompose.presentation.screens.news.flow.NewsInputAction
 import com.kerencev.vknewscompose.presentation.screens.news.flow.NewsOutputAction
-import com.kerencev.vknewscompose.presentation.screens.news.flow.NewsViewState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -21,11 +20,8 @@ class GetNewsFeatureImpl @Inject constructor(
 ) : GetNewsFeature {
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    override fun invoke(action: NewsInputAction.GetNews, state: NewsViewState): Flow<VkCommand> {
-        return when (action.newsType) {
-            NewsType.NEWS -> repository.getNewsFeed(isRefresh = action.isRefresh)
-            NewsType.RECOMMENDATION -> repository.getRecommended(isRefresh = action.isRefresh)
-        }
+    override fun invoke(action: NewsInputAction.GetNews): Flow<VkCommand> {
+        return getNewsByType(action.newsType, action.isRefresh)
             .flatMapConcat {
                 flowOf(
                     NewsOutputAction.GetNewsSuccess(
@@ -43,5 +39,10 @@ class GetNewsFeatureImpl @Inject constructor(
                 emit(NewsOutputAction.GetNewsError(it))
                 if (action.isRefresh) emit(NewsEffect.RefreshNewsError(it.message.orEmpty()))
             }
+    }
+
+    private fun getNewsByType(newsType: NewsType, isRefresh: Boolean) = when (newsType) {
+        NewsType.NEWS -> repository.getNewsFeed(isRefresh = isRefresh)
+        NewsType.RECOMMENDATION -> repository.getRecommended(isRefresh = isRefresh)
     }
 }

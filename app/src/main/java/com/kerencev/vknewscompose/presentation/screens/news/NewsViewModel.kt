@@ -46,8 +46,8 @@ open class NewsViewModel @Inject constructor(
 
     override fun features(action: VkAction): Flow<VkCommand>? {
         return when (action) {
-            is NewsInputAction.GetNews -> getNewsFeature(action, state())
-            is NewsInputAction.ChangeLikeStatus -> changeLikeStatusFeature(action, state())
+            is NewsInputAction.GetNews -> getNewsFeature(action)
+            is NewsInputAction.ChangeLikeStatus -> changeLikeStatusFeature(action)
             else -> null
         }
     }

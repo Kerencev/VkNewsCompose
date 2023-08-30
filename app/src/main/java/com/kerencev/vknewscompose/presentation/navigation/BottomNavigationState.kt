@@ -7,6 +7,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.kerencev.vknewscompose.data.repository.AuthRepositoryImpl
 import com.kerencev.vknewscompose.presentation.model.NewsModelUi
+import com.kerencev.vknewscompose.presentation.model.ProfileType
 
 class BottomNavigationState(
     val navHostController: NavHostController
@@ -22,20 +23,34 @@ class BottomNavigationState(
         }
     }
 
-    fun navigateToCommentsFromNews(newsModel: NewsModelUi) {
-        navHostController.navigate(Screen.CommentsNews.getRouteWithArgs(newsModel = newsModel))
+    fun navigateToComments(newsModel: NewsModelUi) {
+        navHostController.navigate(Screen.Comments.getRouteWithArgs(newsModel = newsModel))
     }
 
-    fun navigateToCommentsFromRecommendation(newsModel: NewsModelUi) {
-        navHostController.navigate(Screen.CommentsRecommendation.getRouteWithArgs(newsModel = newsModel))
+    fun navigateToUserProfile(profileId: Long) {
+        navHostController.navigate(
+            Screen.UserProfile.getRouteWithArgs(
+                profileId = profileId,
+                profileType = ProfileType.USER
+            )
+        )
     }
 
-    fun navigateToProfile(userId: Long) {
-        navHostController.navigate(Screen.Profile.getRouteWithArgs(userId = userId))
+    fun navigateToGroupProfile(profileId: Long) {
+        navHostController.navigate(
+            Screen.GroupProfile.getRouteWithArgs(
+                profileId = profileId,
+                profileType = ProfileType.GROUP
+            )
+        )
     }
 
     fun navigateToProfilePhotos(userId: Long) {
         navHostController.navigate(Screen.ProfilePhotos.getRouteWithArgs(userId = userId))
+    }
+
+    fun navigateToGroupPhotos(groupId: Long) {
+        navHostController.navigate(Screen.GroupPhotos.getRouteWithArgs(groupId = groupId))
     }
 
     fun navigateToFriends(userId: Long) {
@@ -44,7 +59,10 @@ class BottomNavigationState(
 
     private fun getCorrectBottomTabRoute(route: String): String {
         return if (route == Screen.ProfileGraph.route)
-            Screen.Profile.getRouteWithArgs(AuthRepositoryImpl.currentUserId) else route
+            Screen.UserProfile.getRouteWithArgs(
+                profileId = AuthRepositoryImpl.currentUserId,
+                profileType = ProfileType.USER
+            ) else route
     }
 
 }

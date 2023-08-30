@@ -1,4 +1,4 @@
-package com.kerencev.vknewscompose.presentation.screens.profile.views
+package com.kerencev.vknewscompose.presentation.screens.profile.views.toolbar
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
