@@ -1,8 +1,6 @@
 package com.kerencev.vknewscompose.data.repository
 
 import com.kerencev.vknewscompose.data.api.ApiService
-import com.kerencev.vknewscompose.data.dto.news_feed.NewsFeedResponseDto
-import com.kerencev.vknewscompose.data.dto.profile.ProfilePhotosResponseDto
 import com.kerencev.vknewscompose.data.mapper.mapToModel
 import com.kerencev.vknewscompose.data.utils.PagingCache
 import com.kerencev.vknewscompose.domain.entities.GroupProfileModel
@@ -30,13 +28,8 @@ class ProfileRepositoryImpl @Inject constructor(
 
     private val userProfileCache = mutableMapOf<Long, UserProfileModel?>()
     private val groupProfileCache = mutableMapOf<Long, GroupProfileModel?>()
-    private val photosCacheQ = PagingCache<PhotoModel>()
-//    private val photosCache = mutableMapOf<Long, MutableList<PhotoModel>>()
-//    private var photosPage = mutableMapOf<Long, Int>()
-//    private var photosTotalCount = mutableMapOf<Long, Int>()
-    private val wallItemsCache = mutableMapOf<Long, MutableList<NewsModel>>()
-    private var wallPage = mutableMapOf<Long, Int>()
-    private var wallPostsTotalCount = mutableMapOf<Long, Int>()
+    private val photosCache = PagingCache<PhotoModel>()
+    private val wallItemsCache = PagingCache<NewsModel>()
 
     override fun getUserProfile(userId: Long, isRefresh: Boolean) = flow {
         if (userProfileCache[userId] == null || isRefresh) {
@@ -66,55 +59,66 @@ class ProfileRepositoryImpl @Inject constructor(
     }
 
     override fun getProfilePhotos(userId: Long, isRefresh: Boolean) = flow {
-//        if (isRefresh) clearPhotosCacheById(userId)
-        if (isRefresh) photosCacheQ.clearCacheById(userId)
-        if (photosCacheQ.isRemoteDataOver(userId)) {
+        if (isRefresh) photosCache.clearCacheById(userId)
+        if (photosCache.isRemoteDataOver(userId)) {
             delay(100)
             emit(
                 PhotosModel(
-                    totalCount = photosCacheQ.getRemoteTotalCountById(userId),
-                    photos = photosCacheQ.getById(userId)
+                    totalCount = photosCache.getRemoteTotalCountById(userId),
+                    photos = photosCache.getById(userId)
                 )
             )
             return@flow
         }
         val response = apiService.getProfilePhotos(
             ownerId = userId.toString(),
-            offset = photosCacheQ.getCurrentPageById(userId) * PHOTOS_PAGE_SIZE,
+            offset = photosCache.getCurrentPageById(userId) * PHOTOS_PAGE_SIZE,
             count = PHOTOS_PAGE_SIZE
         )
-        val photos = photosCacheQ.updateCacheById(userId, response)
+        val remoteTotalCount = response.response?.count ?: 0
+        val remotePhotos = response.response?.mapToModel() ?: emptyList()
+        val photos = photosCache.updateCacheById(
+            id = userId,
+            data = remotePhotos,
+            remoteTotalCount = remoteTotalCount
+        )
         emit(
             PhotosModel(
-                totalCount = photosCacheQ.getRemoteTotalCountById(userId),
+                totalCount = photosCache.getRemoteTotalCountById(userId),
                 photos = photos
             )
         )
     }
 
     override fun getWallData(userId: Long, isRefresh: Boolean) = flow {
-        if (isRefresh) clearWallCacheById(userId)
-        if (isWallItemsOver(userId)) {
+        if (isRefresh) wallItemsCache.clearCacheById(userId)
+        if (wallItemsCache.isRemoteDataOver(userId)) {
             delay(100)
-            emit(WallModel(items = getWallItemsById(userId), isItemsOver = true))
+            emit(WallModel(items = wallItemsCache.getById(userId), isItemsOver = true))
             return@flow
         }
         val response = apiService.getWall(
             userId = userId.toString(),
-            offset = getWallPageById(userId) * WALL_PAGE_SIZE,
+            offset = wallItemsCache.getCurrentPageById(userId) * WALL_PAGE_SIZE,
             count = WALL_PAGE_SIZE
         )
-        val wallItems = updateWallCacheById(userId, response)
+        val remoteTotalCount = response.response?.count ?: 0
+        val remoteItems = response.mapToModel()
+        val wallItems = wallItemsCache.updateCacheById(
+            id = userId,
+            data = remoteItems,
+            remoteTotalCount = remoteTotalCount
+        )
         emit(
             WallModel(
                 items = wallItems,
-                isItemsOver = wallItems.size >= getWallItemsTotalCountById(userId)
+                isItemsOver = wallItems.size >= remoteTotalCount
             )
         )
     }
 
     override fun getWallItemPhotos(userId: Long, itemId: Long): Flow<List<PhotoModel>> = flow {
-        val post = wallItemsCache[userId]?.firstOrNull { it.id == itemId }
+        val post = wallItemsCache.getById(userId).firstOrNull { it.id == itemId }
         if (post == null) emit(emptyList())
         else {
             emit(
@@ -135,91 +139,5 @@ class ProfileRepositoryImpl @Inject constructor(
             )
         }
     }
-
-    private fun clearWallCacheById(userId: Long) {
-        wallItemsCache[userId]?.clear()
-        wallPage[userId] = 0
-        wallPostsTotalCount[userId] = 0
-    }
-
-    private fun isWallItemsOver(userId: Long): Boolean {
-        val wallItems = getWallItemsById(userId)
-        return wallItems.isNotEmpty() && wallItems.size >= getWallItemsTotalCountById(userId)
-    }
-
-    private fun updateWallCacheById(
-        userId: Long,
-        response: NewsFeedResponseDto
-    ): List<NewsModel> {
-        wallPage[userId] = getWallPageById(userId) + 1
-        wallPostsTotalCount[userId] = response.response?.count ?: 0
-        val wallItems = response.mapToModel()
-        addWallItemsToCacheById(userId, wallItems)
-        return getWallItemsById(userId)
-    }
-
-    private fun addWallItemsToCacheById(userId: Long, items: List<NewsModel>) {
-        if (wallItemsCache[userId] == null) wallItemsCache[userId] = mutableListOf()
-        items.forEach { item ->
-            if (wallItemsCache[userId]?.contains(item) == false) {
-                wallItemsCache[userId]?.add(item)
-            }
-        }
-    }
-
-    private fun getWallItemsById(userId: Long): List<NewsModel> {
-        return wallItemsCache[userId] ?: emptyList()
-    }
-
-    private fun getWallItemsTotalCountById(userId: Long): Int {
-        return wallPostsTotalCount[userId] ?: 0
-    }
-
-    private fun getWallPageById(userId: Long): Int {
-        return wallPage[userId] ?: 0
-    }
-
-//    private fun clearPhotosCacheById(userId: Long) {
-//        photosCacheT[userId]?.clear()
-//        photosPage[userId] = 0
-//        photosTotalCount[userId] = 0
-//    }
-//
-//    private fun isPhotosOver(userId: Long): Boolean {
-//        val photos = photosCacheQ.getById(userId)
-//        return photos.isNotEmpty() && photos.size >= photosCacheQ.getRemoteTotalCountById(userId)
-//    }
-//
-//    private fun getPhotosById(userId: Long): List<PhotoModel> {
-//        return photosCacheT[userId] ?: emptyList()
-//    }
-//
-//    private fun getPhotosTotalCountById(userId: Long): Int {
-//        return photosTotalCount[userId] ?: 0
-//    }
-//
-//    private fun getPhotosPageById(userId: Long): Int {
-//        return photosPage[userId] ?: 0
-//    }
-//
-//    private fun updatePhotosCacheById(
-//        userId: Long,
-//        response: ProfilePhotosResponseDto
-//    ): List<PhotoModel> {
-//        photosPage[userId] = photosCacheQ.getCurrentPageById(userId) + 1
-//        photosTotalCount[userId] = response.response?.count ?: 0
-//        val photos = response.response?.mapToModel() ?: emptyList()
-//        addPhotosToCacheById(userId, photos)
-//        return photosCacheQ.getById(userId)
-//    }
-//
-//    private fun addPhotosToCacheById(userId: Long, photos: List<PhotoModel>) {
-//        if (photosCacheT[userId] == null) photosCacheT[userId] = mutableListOf()
-//        photos.forEach { photo ->
-//            if (photosCacheT[userId]?.contains(photo) == false) {
-//                photosCacheT[userId]?.add(photo)
-//            }
-//        }
-//    }
 
 }
