@@ -39,4 +39,12 @@
     <string name="search_friends_label">"Введите имя и фамилию"</string>
     <string name="tab_title_news">Лента</string>
     <string name="tab_title_recommended">Для вас</string>
+    <string name="now">только что</string>
+    <string name="set_minutes">%d мин.</string>
+    <string name="set_hours">%d ч.</string>
+    <string name="set_days">%d д.</string>
+    <string name="last_seen_now">был(а) в сети только что</string>
+    <string name="set_last_seen_minutes">был(а) в сети %d мин. назад</string>
+    <string name="set_last_seen_hours">был(а) в сети %d ч. назад</string>
+    <string name="set_last_seen_days">был(а) в сети %d д. назад</string>
 </resources>

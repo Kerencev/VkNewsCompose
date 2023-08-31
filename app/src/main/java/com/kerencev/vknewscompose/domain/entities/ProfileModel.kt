@@ -16,6 +16,9 @@ data class UserProfileModel(
     val city: String?,
     val universityName: String?,
     val friendsCount: Int,
+    val onlineType: OnlineType,
+    val lastSeen: LastSeen,
+    val platform: Platform
 ) : Profile
 
 data class GroupProfileModel(
@@ -24,3 +27,17 @@ data class GroupProfileModel(
     override val avatarUrl: String?,
     override val coverUrl: String?,
 ) : Profile
+
+enum class OnlineType {
+    OFFLINE, ONLINE, ONLINE_MOBILE
+}
+
+data class LastSeen(
+    val days: Long? = null,
+    val hours: Long? = null,
+    val minutes: Long = 0
+)
+
+enum class Platform {
+    MOBILE, IPHONE, IPAD, ANDROID, WINDOWS_PHONE, WINDOWS_10, WEB
+}

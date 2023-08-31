@@ -33,7 +33,7 @@ class ProfileRepositoryImpl @Inject constructor(
 
     override fun getUserProfile(userId: Long, isRefresh: Boolean) = flow {
         if (userProfileCache[userId] == null || isRefresh) {
-            val profileResponse = apiService.getProfile(usersIds = userId.toString())
+            val profileResponse = apiService.getUserProfile(usersIds = userId.toString())
                 .response?.firstOrNull() ?: throw IllegalStateException(PROFILE_NOT_FOUND)
             val profileModel = profileResponse.mapToModel()
             userProfileCache[userId] = profileModel

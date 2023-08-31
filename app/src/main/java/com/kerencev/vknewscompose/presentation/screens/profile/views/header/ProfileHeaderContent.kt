@@ -22,15 +22,21 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.kerencev.vknewscompose.R
+import com.kerencev.vknewscompose.domain.entities.LastSeen
+import com.kerencev.vknewscompose.domain.entities.OnlineType
+import com.kerencev.vknewscompose.domain.entities.Platform
 import com.kerencev.vknewscompose.domain.entities.Profile
 import com.kerencev.vknewscompose.domain.entities.UserProfileModel
 import com.kerencev.vknewscompose.presentation.common.views.IconWithText
+import com.kerencev.vknewscompose.presentation.common.views.status.UserStatus
 import com.kerencev.vknewscompose.ui.theme.Shapes
+import com.kerencev.vknewscompose.ui.theme.VkNewsComposeTheme
 
 @Composable
 fun ProfileHeaderContent(
@@ -99,5 +105,55 @@ fun ProfileHeaderContent(
             contentDescription = stringResource(id = R.string.user_avatar),
         )
 
+        if (profile is UserProfileModel) {
+            UserStatus(
+                boxScope = this,
+                onlineType = profile.onlineType,
+                lastSeen = profile.lastSeen,
+                platform = profile.platform,
+                alignment = avatarAlign,
+                alpha = avatarAlpha,
+                paddingValues = getOnlinePadding(profile.onlineType, avatarSize)
+            )
+        }
+    }
+}
+
+private fun getOnlinePadding(onlineType: OnlineType, avatarSize: Dp): PaddingValues {
+    return if (onlineType == OnlineType.ONLINE)
+        PaddingValues(top = avatarSize - (avatarSize / 3), start = (avatarSize))
+    else
+        PaddingValues(
+            top = avatarSize - (avatarSize / 3),
+            start = (avatarSize - (avatarSize / 7))
+        )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ProfileHeaderPreview() {
+    VkNewsComposeTheme {
+        ProfileHeaderContent(
+            profile = UserProfileModel(
+                id = 0,
+                name = "Василий Пупкин",
+                avatarUrl = null,
+                coverUrl = null,
+                lastName = "Пупкин",
+                city = "Москва",
+                universityName = "МГУ",
+                friendsCount = 10,
+                onlineType = OnlineType.ONLINE,
+                lastSeen = LastSeen(days = 5),
+                platform = Platform.WINDOWS_10
+            ),
+            avatarAlpha = 1f,
+            avatarSize = 100.dp,
+            contentPadding = PaddingValues(top = 50.dp),
+            namePadding = PaddingValues(top = 8.dp),
+            contentAlignment = Alignment.CenterHorizontally,
+            avatarPadding = PaddingValues(),
+            avatarAlign = Alignment.TopCenter,
+        )
     }
 }

@@ -7,6 +7,7 @@ import com.kerencev.vknewscompose.data.dto.likes.LikesCountResponseDto
 import com.kerencev.vknewscompose.data.dto.news_feed.NewsFeedResponseDto
 import com.kerencev.vknewscompose.data.dto.profile.ProfilePhotosResponseDto
 import com.kerencev.vknewscompose.data.dto.profile.ProfileResponseDto
+import com.kerencev.vknewscompose.data.dto.suggested.SuggestedResponseDto
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -46,8 +47,8 @@ interface ApiService {
         @Query("post_id") postId: Long
     ): CommentsResponseDto
 
-    @GET("users.get?v=5.131&fields=city, education, counters, photo_max")
-    suspend fun getProfile(
+    @GET("users.get?v=5.131&fields=city, education, counters, photo_200, last_seen, online")
+    suspend fun getUserProfile(
         @Query("user_ids") usersIds: String
     ): ProfileResponseDto
 
@@ -70,12 +71,18 @@ interface ApiService {
         @Query("count") count: Int
     ): NewsFeedResponseDto
 
-    @GET("friends.search?v=5.131&fields=photo_200, online")
+    @GET("friends.search?v=5.131&fields=photo_200, online, last_seen")
     suspend fun getFriends(
         @Query("user_id") userId: String,
         @Query("q") searchText: String,
         @Query("offset") offset: Int,
         @Query("count") count: Int
     ): FriendsResponseDto
+
+    @GET("newsfeed.getSuggestedSources?v=5.131&fields=photo_200, online")
+    suspend fun getSuggested(
+        @Query("offset") offset: Int,
+        @Query("count") count: Int
+    ): SuggestedResponseDto
 
 }

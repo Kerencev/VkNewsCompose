@@ -13,7 +13,10 @@ data class ProfileDto(
     val city: City?,
     @SerializedName("university_name") val universityName: String?,
     val counters: Counters?,
-    @SerializedName("photo_max") val avatarUrl: String?
+    @SerializedName("photo_200") val avatarUrl: String?,
+    val online: Int?,
+    @SerializedName("online_mobile") val onlineMobile: Int?,
+    @SerializedName("last_seen") val lastSeen: LastSeen?,
 )
 
 data class City(
@@ -38,4 +41,9 @@ data class Counters(
     @SerializedName("user_photos") val userPhotos: Int?,
     @SerializedName("video_playlists") val videoPlaylists: Int?,
     val videos: Int?
+)
+
+data class LastSeen(
+    val platform: Int?,
+    val time: Long?
 )

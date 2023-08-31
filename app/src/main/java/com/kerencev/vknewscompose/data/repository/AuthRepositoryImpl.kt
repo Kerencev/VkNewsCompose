@@ -1,5 +1,6 @@
 package com.kerencev.vknewscompose.data.repository
 
+import android.util.Log
 import com.kerencev.vknewscompose.domain.entities.AuthState
 import com.kerencev.vknewscompose.domain.repositories.AuthRepository
 import com.vk.api.sdk.VKKeyValueStorage
@@ -12,6 +13,7 @@ class AuthRepositoryImpl @Inject constructor(
 ) : AuthRepository {
 
     companion object {
+        private const val TOKEN_TAG = "TOKEN_TAG"
         private var userId = 0L
         val currentUserId
             get() = userId
@@ -21,6 +23,7 @@ class AuthRepositoryImpl @Inject constructor(
         get() = VKAccessToken.restore(storage)
 
     override fun checkAuthState() = flow {
+        Log.d(TOKEN_TAG, token?.accessToken.toString())
         val currentToken = token
         val loggedIn = currentToken != null && currentToken.isValid
         userId = token?.userId?.value ?: 0

@@ -24,7 +24,7 @@ import com.vk.api.sdk.auth.VKScope
 
 class MainActivity : ComponentActivity() {
 
-    private val vkAccessRights = listOf(VKScope.WALL, VKScope.FRIENDS, VKScope.PHOTOS)
+    private val vkAccessRights = listOf(VKScope.WALL, VKScope.FRIENDS, VKScope.PHOTOS, VKScope.GROUPS)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -128,7 +128,7 @@ fun FriendsScreenContent(
                             .fillMaxWidth()
                             .padding(horizontal = 4.dp)
                             .clickable { onFriendClick(friendModel.id) },
-                        friendModel = friendModel
+                        user = friendModel
                     )
                 }
                 item {

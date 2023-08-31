@@ -1,6 +1,6 @@
 package com.kerencev.vknewscompose.presentation.screens.friends.flow
 
-import com.kerencev.vknewscompose.domain.entities.FriendModel
+import com.kerencev.vknewscompose.domain.entities.UserProfileModel
 import com.kerencev.vknewscompose.presentation.common.mvi.VkAction
 
 sealed class FriendsInputAction : VkAction {
@@ -23,7 +23,7 @@ sealed class FriendsOutputAction : VkAction {
      */
     class SetFriends(
         val searchText: String,
-        val friends: List<FriendModel>,
+        val friends: List<UserProfileModel>,
         val isFriendsOver: Boolean
     ) : FriendsOutputAction()
 
