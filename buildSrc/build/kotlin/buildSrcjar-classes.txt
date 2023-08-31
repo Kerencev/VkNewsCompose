@@ -1,1 +1,0 @@
-C:\Users\Keren\AndroidStudioProjects\VkNewsCompose\buildSrc\build\classes\kotlin\main\Android.class;C:\Users\Keren\AndroidStudioProjects\VkNewsCompose\buildSrc\build\classes\kotlin\main\Dependencies.class;C:\Users\Keren\AndroidStudioProjects\VkNewsCompose\buildSrc\build\classes\kotlin\main\Plugins.class
