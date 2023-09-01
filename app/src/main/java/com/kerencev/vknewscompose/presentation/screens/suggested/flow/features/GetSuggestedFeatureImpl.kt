@@ -10,7 +10,7 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flatMapConcat
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
 
@@ -21,14 +21,10 @@ class GetSuggestedFeatureImpl @Inject constructor(
     @OptIn(FlowPreview::class)
     override fun invoke(action: SuggestedInputAction.GetData): Flow<VkCommand> {
         return repository.getSuggested()
-            .flatMapConcat {
-                if (action.isRefreshing) {
-                    flowOf(
-                        SuggestedOutputAction.SetData(it),
-                        SuggestedEffect.ScrollToTop
-                    )
-                } else {
-                    flowOf(SuggestedOutputAction.SetData(it))
+            .flatMapConcat { profiles ->
+                flow {
+                    emit(SuggestedOutputAction.SetData(profiles))
+                    if (action.isRefreshing) emit(SuggestedEffect.ScrollToTop)
                 }
             }
             .onStart { emit(SuggestedOutputAction.Loading(isRefreshing = action.isRefreshing)) }

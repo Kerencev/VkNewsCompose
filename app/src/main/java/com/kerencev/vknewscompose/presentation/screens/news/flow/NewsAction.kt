@@ -27,9 +27,8 @@ sealed class NewsOutputAction : VkAction {
     /**
      * Successful loading of the list
      * @param result - list of the items
-     * @param isRefresh - updating the list or adding data
      */
-    class GetNewsSuccess(val result: List<NewsModel>, val isRefresh: Boolean) : NewsOutputAction()
+    class GetNewsSuccess(val result: List<NewsModel>) : NewsOutputAction()
 
     /**
      * Loading data while scrolling
@@ -76,6 +75,8 @@ sealed class NewsEffect : VkEffect {
      * Occurrence of an error when refreshing the news
      */
     class RefreshNewsError(val message: String) : NewsEffect()
+
+    object ScrollToTop : NewsEffect()
 
     object None : NewsEffect()
 

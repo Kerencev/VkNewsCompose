@@ -1,5 +1,6 @@
 package com.kerencev.vknewscompose.presentation.screens.news
 
+import android.util.Log
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -41,6 +42,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 @Composable
 fun NewsScreen(
@@ -64,12 +66,20 @@ fun NewsScreen(
         contentAlignment = Alignment.Center
     ) {
         val currentState = state.value
+        val listState = rememberLazyListState()
+
+        LaunchedEffect(listState) {
+            snapshotFlow { listState.firstVisibleItemIndex }
+                .distinctUntilChanged()
+                .onEach { sendEvent(NewsEvent.OnUserScroll(it)) }
+                .flowOn(Dispatchers.IO)
+                .launchIn(coroutineScope)
+        }
 
         SwipeRefresh(
             state = SwipeRefreshState(isRefreshing = currentState.isSwipeRefreshing),
             onRefresh = { sendEvent(NewsEvent.GetNews(isRefresh = true)) },
         ) {
-            val listState = rememberLazyListState()
 
             LazyColumn(
                 state = listState,
@@ -109,26 +119,12 @@ fun NewsScreen(
                     }
                 }
             }
-
-            LaunchedEffect(listState) {
-                snapshotFlow { listState.firstVisibleItemIndex }
-                    .distinctUntilChanged()
-                    .onEach { sendEvent(NewsEvent.OnUserScroll(it)) }
-                    .flowOn(Dispatchers.IO)
-                    .launchIn(coroutineScope)
-            }
-
-            LaunchedEffect(key1 = currentState.scrollToTop) {
-                if (currentState.scrollToTop) {
-                    listState.scrollToItem(0)
-                    sendEvent(NewsEvent.OnScrollToTop)
-                }
-            }
         }
 
         val visibilityState by animateFloatAsState(
             targetValue = if (currentState.isScrollToTopVisible) 1f else 0f
         )
+
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.TopCenter
@@ -145,14 +141,24 @@ fun NewsScreen(
                 }
             )
         }
-    }
 
-    when (val currentShot = shot.value) {
-        is NewsShot.ShowErrorMessage -> {
-            onError(currentShot.message)
-            sendEvent(NewsEvent.OnErrorInvoked)
+        when (val currentShot = shot.value) {
+            is NewsShot.ShowErrorMessage -> {
+                onError(currentShot.message)
+                sendEvent(NewsEvent.OnErrorInvoked)
+            }
+
+            is NewsShot.ScrollToTop -> {
+                SideEffect {
+                    coroutineScope.launch {
+                        listState.scrollToItem(0)
+                        sendEvent(NewsEvent.OnScrollToTop)
+                    }
+                }
+            }
+
+            is NewsShot.None -> Unit
         }
-
-        is NewsShot.None -> Unit
     }
+
 }

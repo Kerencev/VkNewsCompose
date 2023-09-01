@@ -59,7 +59,8 @@ fun HomeTabLayout(
                             modifier = Modifier.alpha(visibilityState),
                             text = newsType.toTitle(),
                             fontSize = 14.sp,
-                            fontWeight = FontWeight.Medium
+                            fontWeight = FontWeight.Medium,
+                            color = MaterialTheme.colors.onPrimary
                         )
                     }
                 )

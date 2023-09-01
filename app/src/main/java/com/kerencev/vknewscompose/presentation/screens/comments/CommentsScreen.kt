@@ -24,6 +24,7 @@ import com.kerencev.vknewscompose.presentation.model.NewsModelUi
 import com.kerencev.vknewscompose.presentation.screens.comments.flow.CommentsEvent
 import com.kerencev.vknewscompose.presentation.screens.comments.flow.CommentsViewState
 import com.kerencev.vknewscompose.presentation.screens.comments.views.CommentsColumn
+import com.kerencev.vknewscompose.ui.theme.LightBlue
 
 @Composable
 fun CommentsScreen(
@@ -65,7 +66,8 @@ fun CommentsScreenContent(
             IconButton(onClick = { onBackPressed() }) {
                 Icon(
                     imageVector = Icons.Filled.ArrowBack,
-                    contentDescription = null
+                    contentDescription = null,
+                    tint = LightBlue
                 )
             }
         }

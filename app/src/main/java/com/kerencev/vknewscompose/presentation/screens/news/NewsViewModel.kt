@@ -39,7 +39,7 @@ open class NewsViewModel @Inject constructor(
             )
 
             is NewsEvent.OnErrorInvoked -> NewsEffect.None
-            is NewsEvent.OnScrollToTop -> NewsOutputAction.OnScrollToTop
+            is NewsEvent.OnScrollToTop -> NewsEffect.None
             is NewsEvent.OnUserScroll -> NewsOutputAction.OnUserScroll(event.firstVisibleItemIndex)
         }
     }
@@ -56,6 +56,7 @@ open class NewsViewModel @Inject constructor(
         when (effect) {
             is NewsEffect.LikeError -> setShot { NewsShot.ShowErrorMessage(effect.message) }
             is NewsEffect.RefreshNewsError -> setShot { NewsShot.ShowErrorMessage(effect.message) }
+            is NewsEffect.ScrollToTop -> setShot { NewsShot.ScrollToTop }
             is NewsEffect.None -> setShot { NewsShot.None }
         }
     }
@@ -63,8 +64,7 @@ open class NewsViewModel @Inject constructor(
     override suspend fun produceState(action: VkAction) {
         when (action) {
             is NewsOutputAction.GetNewsSuccess -> {
-                val data = action.result.map { it.mapToUiModel() }
-                setState { setNews(list = data, scrollToTop = action.isRefresh) }
+                setState { setNews(list = action.result.map { it.mapToUiModel() }) }
             }
 
             is NewsOutputAction.GetNewsLoading -> setState { loading() }
@@ -74,7 +74,6 @@ open class NewsViewModel @Inject constructor(
             }
 
             is NewsOutputAction.GetNewsRefreshing -> setState { refreshing() }
-            is NewsOutputAction.OnScrollToTop -> setState { onScrollToTop() }
             is NewsOutputAction.OnUserScroll -> {
                 val isScrollToTopVisible =
                     action.firstVisibleItemIndex in 1 until firstVisibleItemIndex &&

@@ -6,6 +6,8 @@ sealed class NewsShot : VkShot {
 
     class ShowErrorMessage(val message: String) : NewsShot()
 
+    object ScrollToTop : NewsShot()
+
     object None : NewsShot()
 
 }
