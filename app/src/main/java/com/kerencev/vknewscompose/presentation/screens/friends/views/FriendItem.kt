@@ -32,8 +32,8 @@ import com.kerencev.vknewscompose.ui.theme.VkNewsComposeTheme
 
 @Composable
 fun FriendItem(
-    user: UserProfileModel,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    user: UserProfileModel
 ) {
     Row(
         modifier = modifier,

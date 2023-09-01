@@ -26,7 +26,7 @@ fun SuggestedDto.mapToModel(): Profile {
 
         SuggestedType.page, SuggestedType.group, null -> {
             GroupProfileModel(
-                id = id ?: 0,
+                id = -(id ?: 0),
                 name = name.orEmpty(),
                 avatarUrl = photo,
                 coverUrl = cover?.images?.last()?.url,

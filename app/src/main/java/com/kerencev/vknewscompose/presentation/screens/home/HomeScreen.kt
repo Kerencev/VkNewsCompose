@@ -22,6 +22,7 @@ import com.kerencev.vknewscompose.presentation.screens.news.NewsScreen
 import com.kerencev.vknewscompose.presentation.screens.news.NewsType
 import com.kerencev.vknewscompose.presentation.screens.news.NewsViewModel
 import com.kerencev.vknewscompose.presentation.screens.news.RecommendationViewModel
+import com.kerencev.vknewscompose.presentation.screens.profile.ProfileParams
 import com.kerencev.vknewscompose.presentation.screens.suggested.SuggestedScreen
 
 @Composable
@@ -32,6 +33,7 @@ fun HomeScreen(
     onError: (message: String) -> Unit,
     onImageClick: (index: Int, newsModelId: Long) -> Unit,
     onHeaderClick: (userId: Long) -> Unit,
+    onSuggestedClick: (ProfileParams) -> Unit,
 ) {
     val component = getApplicationComponent()
         .getNewsScreenComponentFactory()
@@ -50,6 +52,7 @@ fun HomeScreen(
         onError = onError,
         onImageClick = onImageClick,
         onHeaderClick = onHeaderClick,
+        onSuggestedClick = onSuggestedClick
     )
 }
 
@@ -64,6 +67,7 @@ fun HomeScreenContent(
     onError: (message: String) -> Unit,
     onImageClick: (index: Int, newsModelId: Long) -> Unit,
     onHeaderClick: (groupId: Long) -> Unit,
+    onSuggestedClick: (ProfileParams) -> Unit,
 ) {
     val pagerState = rememberPagerState(pageCount = { HomeTab.values().size })
 
@@ -99,6 +103,7 @@ fun HomeScreenContent(
                 HomeTab.SUGGESTED.index -> {
                     SuggestedScreen(
                         viewModelFactory = viewModelFactory,
+                        onItemClick = onSuggestedClick,
                     )
                 }
             }

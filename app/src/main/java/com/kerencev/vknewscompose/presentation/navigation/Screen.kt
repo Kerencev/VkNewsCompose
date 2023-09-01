@@ -43,6 +43,14 @@ sealed class Screen(
         }
     }
 
+    object UserProfileFromSuggested : Screen(ROUTE_SUGGESTED_USER_PROFILE) {
+        private const val ROUTE_FOR_ARGS = "suggested_user_profile"
+
+        fun getRouteWithArgs(profileId: Long, profileType: ProfileType): String {
+            return "$ROUTE_FOR_ARGS/$profileId/${profileType.name}"
+        }
+    }
+
     object GroupProfile : Screen(ROUTE_GROUP_PROFILE) {
         private const val ROUTE_FOR_ARGS = "group_profile"
 
@@ -53,6 +61,14 @@ sealed class Screen(
 
     object ProfilePhotos : Screen(ROUTE_PROFILE_PHOTOS) {
         private const val ROUTE_FOR_ARGS = "profile_photos"
+
+        fun getRouteWithArgs(userId: Long): String {
+            return "$ROUTE_FOR_ARGS/$userId"
+        }
+    }
+
+    object ProfilePhotosFromSuggested : Screen(ROUTE_SUGGESTED_PROFILE_PHOTOS) {
+        private const val ROUTE_FOR_ARGS = "suggested_profile_photos"
 
         fun getRouteWithArgs(userId: Long): String {
             return "$ROUTE_FOR_ARGS/$userId"
@@ -85,6 +101,14 @@ sealed class Screen(
         }
     }
 
+    object FriendsFromSuggested : Screen(ROUTE_SUGGESTED_FRIEND) {
+        private const val ROUTE_FOR_ARGS = "suggested_friends"
+
+        fun getRouteWithArgs(userId: Long): String {
+            return "$ROUTE_FOR_ARGS/$userId"
+        }
+    }
+
     companion object {
         const val KEY_NEWS_POST = "news_post"
         const val KEY_SELECTED_PHOTO = "selected_photo"
@@ -104,10 +128,15 @@ sealed class Screen(
         private const val ROUTE_RECOMMENDATION = "recommendation"
         private const val ROUTE_PROFILE_GRAPH = "profile_graph"
         private const val ROUTE_USER_PROFILE = "user_profile/{$KEY_PROFILE_ID}/{$KEY_PROFILE_TYPE}"
-        private const val ROUTE_GROUP_PROFILE = "group_profile/{$KEY_PROFILE_ID}/{$KEY_PROFILE_TYPE}"
+        private const val ROUTE_SUGGESTED_USER_PROFILE =
+            "suggested_user_profile/{$KEY_PROFILE_ID}/{$KEY_PROFILE_TYPE}"
+        private const val ROUTE_GROUP_PROFILE =
+            "group_profile/{$KEY_PROFILE_ID}/{$KEY_PROFILE_TYPE}"
         private const val ROUTE_PROFILE_PHOTOS = "profile_photos/{$KEY_USER_ID}"
+        private const val ROUTE_SUGGESTED_PROFILE_PHOTOS = "suggested_profile_photos/{$KEY_USER_ID}"
         private const val ROUTE_GROUP_PHOTOS = "group_photos/{$KEY_PROFILE_ID}"
         private const val ROUTE_COMMENTS = "comments/{$KEY_NEWS_POST}"
         private const val ROUTE_FRIENDS = "friends/{$KEY_FRIENDS}"
+        private const val ROUTE_SUGGESTED_FRIEND = "suggested_friends/{$KEY_FRIENDS}"
     }
 }

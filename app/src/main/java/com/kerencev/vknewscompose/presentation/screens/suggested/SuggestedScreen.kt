@@ -1,6 +1,8 @@
 package com.kerencev.vknewscompose.presentation.screens.suggested
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -19,7 +21,9 @@ import com.kerencev.vknewscompose.di.ViewModelFactory
 import com.kerencev.vknewscompose.domain.entities.GroupProfileModel
 import com.kerencev.vknewscompose.domain.entities.UserProfileModel
 import com.kerencev.vknewscompose.presentation.common.compose.rememberUnitParams
+import com.kerencev.vknewscompose.presentation.model.ProfileType
 import com.kerencev.vknewscompose.presentation.screens.friends.views.FriendItem
+import com.kerencev.vknewscompose.presentation.screens.profile.ProfileParams
 import com.kerencev.vknewscompose.presentation.screens.suggested.flow.SuggestedEvent
 import com.kerencev.vknewscompose.presentation.screens.suggested.flow.SuggestedShot
 import com.kerencev.vknewscompose.presentation.screens.suggested.flow.SuggestedViewState
@@ -29,7 +33,8 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun SuggestedScreen(
-    viewModelFactory: ViewModelFactory
+    viewModelFactory: ViewModelFactory,
+    onItemClick: (params: ProfileParams) -> Unit,
 ) {
     val viewModel: SuggestedViewModel = viewModel(factory = viewModelFactory)
     val state = viewModel.observedState.collectAsState()
@@ -42,6 +47,7 @@ fun SuggestedScreen(
         currentShot = shot,
         sendEvent = sendEvent,
         scope = scope,
+        onItemClick = onItemClick,
     )
 }
 
@@ -51,6 +57,7 @@ fun SuggestedScreenContent(
     currentShot: State<SuggestedShot>,
     sendEvent: (SuggestedEvent) -> Unit,
     scope: CoroutineScope,
+    onItemClick: (params: ProfileParams) -> Unit
 ) {
     val state = currentState.value
     SwipeRefresh(
@@ -65,8 +72,33 @@ fun SuggestedScreenContent(
             ) { profile ->
                 Spacer(modifier = Modifier.height(8.dp))
                 when (profile) {
-                    is UserProfileModel -> FriendItem(user = profile)
-                    is GroupProfileModel -> GroupItem(model = profile)
+                    is UserProfileModel -> FriendItem(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                onItemClick(
+                                    ProfileParams(
+                                        id = profile.id,
+                                        type = ProfileType.USER
+                                    )
+                                )
+                            },
+                        user = profile
+                    )
+
+                    is GroupProfileModel -> GroupItem(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                onItemClick(
+                                    ProfileParams(
+                                        id = profile.id,
+                                        type = ProfileType.GROUP
+                                    )
+                                )
+                            },
+                        model = profile
+                    )
                 }
                 Spacer(modifier = Modifier.height(8.dp))
             }

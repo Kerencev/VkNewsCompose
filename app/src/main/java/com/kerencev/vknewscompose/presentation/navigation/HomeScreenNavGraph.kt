@@ -16,6 +16,9 @@ fun NavGraphBuilder.homeScreenNavGraph(
     commentsScreenContent: @Composable (NewsModelUi) -> Unit,
     groupProfileScreenContent: @Composable (params: ProfileParams) -> Unit,
     groupPhotosScreenContent: @Composable (groupId: Long) -> Unit,
+    userProfileScreenContent: @Composable (params: ProfileParams) -> Unit,
+    userPhotosScreenContent: @Composable (userId: Long) -> Unit,
+    friendsScreenContent: @Composable (userId: Long) -> Unit,
 ) {
     navigation(
         startDestination = Screen.News.route,
@@ -45,10 +48,7 @@ fun NavGraphBuilder.homeScreenNavGraph(
             val profileId = it.arguments?.getLong(Screen.KEY_PROFILE_ID) ?: 0
             val profileType = it.arguments?.getString(Screen.KEY_PROFILE_TYPE).orEmpty()
             groupProfileScreenContent(
-                params = ProfileParams(
-                    id = profileId,
-                    type = ProfileType.valueOf(profileType)
-                )
+                params = ProfileParams(id = profileId, type = ProfileType.valueOf(profileType))
             )
         }
         composable(
@@ -59,6 +59,37 @@ fun NavGraphBuilder.homeScreenNavGraph(
         ) {
             val groupId = it.arguments?.getLong(Screen.KEY_PROFILE_ID) ?: 0
             groupPhotosScreenContent(groupId)
+        }
+        composable(
+            route = Screen.UserProfileFromSuggested.route,
+            arguments = listOf(
+                navArgument(name = Screen.KEY_PROFILE_ID) { type = NavType.LongType },
+                navArgument(name = Screen.KEY_PROFILE_TYPE) { type = NavType.StringType }
+            )
+        ) {
+            val profileId = it.arguments?.getLong(Screen.KEY_PROFILE_ID) ?: 0
+            val profileType = it.arguments?.getString(Screen.KEY_PROFILE_TYPE).orEmpty()
+            userProfileScreenContent(
+                params = ProfileParams(id = profileId, type = ProfileType.valueOf(profileType))
+            )
+        }
+        composable(
+            route = Screen.ProfilePhotosFromSuggested.route,
+            arguments = listOf(
+                navArgument(name = Screen.KEY_USER_ID) { type = NavType.LongType }
+            )
+        ) {
+            val groupId = it.arguments?.getLong(Screen.KEY_USER_ID) ?: 0
+            userPhotosScreenContent(groupId)
+        }
+        composable(
+            route = Screen.FriendsFromSuggested.route,
+            arguments = listOf(
+                navArgument(name = Screen.KEY_FRIENDS) { type = NavType.LongType }
+            )
+        ) {
+            val groupId = it.arguments?.getLong(Screen.KEY_FRIENDS) ?: 0
+            friendsScreenContent(groupId)
         }
     }
 }

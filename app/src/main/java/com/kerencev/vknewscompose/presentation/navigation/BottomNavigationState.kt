@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import com.kerencev.vknewscompose.data.repository.AuthRepositoryImpl
 import com.kerencev.vknewscompose.presentation.model.NewsModelUi
 import com.kerencev.vknewscompose.presentation.model.ProfileType
+import com.kerencev.vknewscompose.presentation.screens.profile.ProfileParams
 
 class BottomNavigationState(
     val navHostController: NavHostController
@@ -25,6 +26,19 @@ class BottomNavigationState(
 
     fun navigateToComments(newsModel: NewsModelUi) {
         navHostController.navigate(Screen.Comments.getRouteWithArgs(newsModel = newsModel))
+    }
+
+    fun navigateToProfile(profileParams: ProfileParams) {
+        when (profileParams.type) {
+            ProfileType.USER -> navHostController.navigate(
+                Screen.UserProfileFromSuggested.getRouteWithArgs(
+                    profileId = profileParams.id,
+                    profileType = ProfileType.USER
+                )
+            )
+
+            ProfileType.GROUP -> navigateToGroupProfile(profileParams.id)
+        }
     }
 
     fun navigateToUserProfile(profileId: Long) {
@@ -49,12 +63,20 @@ class BottomNavigationState(
         navHostController.navigate(Screen.ProfilePhotos.getRouteWithArgs(userId = userId))
     }
 
+    fun navigateToProfilePhotosFromSuggested(userId: Long) {
+        navHostController.navigate(Screen.ProfilePhotosFromSuggested.getRouteWithArgs(userId = userId))
+    }
+
     fun navigateToGroupPhotos(groupId: Long) {
         navHostController.navigate(Screen.GroupPhotos.getRouteWithArgs(groupId = groupId))
     }
 
     fun navigateToFriends(userId: Long) {
         navHostController.navigate(Screen.Friends.getRouteWithArgs(userId = userId))
+    }
+
+    fun navigateToFriendsFromSuggested(userId: Long) {
+        navHostController.navigate(Screen.FriendsFromSuggested.getRouteWithArgs(userId = userId))
     }
 
     private fun getCorrectBottomTabRoute(route: String): String {

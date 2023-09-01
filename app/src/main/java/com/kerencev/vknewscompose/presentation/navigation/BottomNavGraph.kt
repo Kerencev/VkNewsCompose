@@ -13,10 +13,13 @@ fun BottomNavGraph(
     commentsScreenContent: @Composable (NewsModelUi) -> Unit,
     recommendationScreenContent: @Composable () -> Unit,
     userProfileScreenContent: @Composable (profileParams: ProfileParams) -> Unit,
+    userProfileFromSuggestedScreenContent: @Composable (profileParams: ProfileParams) -> Unit,
     groupProfileScreenContent: @Composable (profileParams: ProfileParams) -> Unit,
     userPhotosScreenContent: @Composable (userId: Long) -> Unit,
+    userPhotosFromSuggestedScreenContent: @Composable (userId: Long) -> Unit,
     groupPhotosScreenContent: @Composable (groupId: Long) -> Unit,
     friendsScreenContent: @Composable (userId: Long) -> Unit,
+    friendsFromSuggestedScreenContent: @Composable (userId: Long) -> Unit,
 ) {
     NavHost(
         navController = navHostController,
@@ -27,6 +30,9 @@ fun BottomNavGraph(
             commentsScreenContent = commentsScreenContent,
             groupProfileScreenContent = groupProfileScreenContent,
             groupPhotosScreenContent = groupPhotosScreenContent,
+            userProfileScreenContent = userProfileFromSuggestedScreenContent,
+            userPhotosScreenContent = userPhotosFromSuggestedScreenContent,
+            friendsScreenContent = friendsFromSuggestedScreenContent,
         )
         recommendationScreenNavGraph(
             recommendationScreenContent = recommendationScreenContent,

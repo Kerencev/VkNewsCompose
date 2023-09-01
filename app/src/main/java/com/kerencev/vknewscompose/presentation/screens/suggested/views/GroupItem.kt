@@ -55,7 +55,6 @@ fun GroupItem(
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                modifier = modifier,
                 text = getMembersText(memberCount = model.memberCount),
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Medium,
