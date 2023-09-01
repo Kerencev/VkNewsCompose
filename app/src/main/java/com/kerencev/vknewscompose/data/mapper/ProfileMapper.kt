@@ -22,13 +22,13 @@ fun ProfileDto.mapToModel(): UserProfileModel {
     )
 }
 
-private fun getOnlineType(online: Int?, onlineMobile: Int?): OnlineType {
+fun getOnlineType(online: Int?, onlineMobile: Int?): OnlineType {
     return if (onlineMobile == 1) OnlineType.ONLINE_MOBILE
     else if (online == 1) OnlineType.ONLINE
     else OnlineType.OFFLINE
 }
 
-private fun getLastSeen(time: Long?): LastSeen {
+fun getLastSeen(time: Long?): LastSeen {
     time ?: return LastSeen()
     val minutes: Long = (System.currentTimeMillis() - ((time) * 1_000)) / 60_000
     var hours: Long? = null
@@ -46,7 +46,7 @@ private fun getLastSeen(time: Long?): LastSeen {
     )
 }
 
-private fun getPlatform(index: Int?): Platform {
+fun getPlatform(index: Int?): Platform {
     return when (index) {
         1 -> Platform.MOBILE
         2 -> Platform.IPHONE

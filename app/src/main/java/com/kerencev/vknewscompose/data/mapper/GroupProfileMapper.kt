@@ -9,5 +9,6 @@ fun GroupProfileDto.mapToModel(): GroupProfileModel {
         coverUrl = cover?.images?.last()?.url,
         avatarUrl = avatarUrl,
         name = name.orEmpty(),
+        memberCount = memberCount ?: 0
     )
 }

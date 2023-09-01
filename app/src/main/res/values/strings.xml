@@ -47,4 +47,5 @@
     <string name="set_last_seen_minutes">был(а) в сети %d мин. назад</string>
     <string name="set_last_seen_hours">был(а) в сети %d ч. назад</string>
     <string name="set_last_seen_days">был(а) в сети %d д. назад</string>
+    <string name="set_member_count">подписчики: %dК</string>
 </resources>

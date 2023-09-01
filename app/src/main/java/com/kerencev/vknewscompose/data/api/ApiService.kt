@@ -79,10 +79,11 @@ interface ApiService {
         @Query("count") count: Int
     ): FriendsResponseDto
 
-    @GET("newsfeed.getSuggestedSources?v=5.131&fields=photo_200, online")
+    @GET("newsfeed.getSuggestedSources?v=5.131&fields=photo_200, online, last_seen, cover, members_count")
     suspend fun getSuggested(
         @Query("offset") offset: Int,
-        @Query("count") count: Int
+        @Query("count") count: Int,
+        @Query("shuffle") bool: Int = 1
     ): SuggestedResponseDto
 
 }
