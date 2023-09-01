@@ -29,6 +29,7 @@
     <string name="new_posts">Свежие записи</string>
     <string name="news">Новости</string>
     <string name="recommendation">Рекомендации</string>
+    <string name="interesting">Интересное</string>
     <string name="set_count">Всего: %d</string>
     <string name="empty_data">Данных нет</string>
     <string name="set_photos_count">Фотографии: %d</string>
@@ -47,5 +48,6 @@
     <string name="set_last_seen_minutes">был(а) в сети %d мин. назад</string>
     <string name="set_last_seen_hours">был(а) в сети %d ч. назад</string>
     <string name="set_last_seen_days">был(а) в сети %d д. назад</string>
-    <string name="set_member_count">подписчики: %dК</string>
+    <string name="set_members_thousand">%dК Подписчиков</string>
+    <string name="set_members_million">%sМ Подписчиков</string>
 </resources>

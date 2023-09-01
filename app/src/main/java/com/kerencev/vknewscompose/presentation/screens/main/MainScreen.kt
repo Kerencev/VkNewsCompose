@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.kerencev.vknewscompose.R
+import com.kerencev.vknewscompose.di.ViewModelFactory
 import com.kerencev.vknewscompose.presentation.activity.MainViewModel
 import com.kerencev.vknewscompose.presentation.common.compose.SetupSystemBar
 import com.kerencev.vknewscompose.presentation.common.compose.rememberUnitParams
@@ -47,6 +48,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun MainScreen(
+    viewModelFactory: ViewModelFactory,
     mainViewModel: MainViewModel,
     onPhotoClick: (
         userId: Long?,
@@ -107,6 +109,7 @@ fun MainScreen(
             navHostController = navigationState.navHostController,
             newsScreenContent = {
                 HomeScreen(
+                    viewModelFactory = viewModelFactory,
                     paddingValues = paddingValues,
                     onCommentsClick = { navigationState.navigateToComments(it) },
                     onError = { sendEvent(MainEvent.ShowErrorMessage(it)) },

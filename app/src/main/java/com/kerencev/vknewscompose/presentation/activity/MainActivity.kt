@@ -51,6 +51,7 @@ class MainActivity : ComponentActivity() {
                             navHostController = navController,
                             mainScreenContent = {
                                 MainScreen(
+                                    viewModelFactory = viewModelFactory,
                                     mainViewModel = viewModel,
                                     onPhotoClick = { userId, type, index, newsModelId ->
                                         navController.navigate(

@@ -12,17 +12,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.kerencev.vknewscompose.di.ViewModelFactory
 import com.kerencev.vknewscompose.di.getApplicationComponent
 import com.kerencev.vknewscompose.presentation.model.NewsModelUi
-import com.kerencev.vknewscompose.presentation.screens.home.views.HomeTabLayout
+import com.kerencev.vknewscompose.presentation.screens.home.views.tabs.HomeTab
+import com.kerencev.vknewscompose.presentation.screens.home.views.tabs.HomeTabLayout
 import com.kerencev.vknewscompose.presentation.screens.news.NewsParams
 import com.kerencev.vknewscompose.presentation.screens.news.NewsScreen
 import com.kerencev.vknewscompose.presentation.screens.news.NewsType
 import com.kerencev.vknewscompose.presentation.screens.news.NewsViewModel
 import com.kerencev.vknewscompose.presentation.screens.news.RecommendationViewModel
+import com.kerencev.vknewscompose.presentation.screens.suggested.SuggestedScreen
 
 @Composable
 fun HomeScreen(
+    viewModelFactory: ViewModelFactory,
     paddingValues: PaddingValues,
     onCommentsClick: (newsModel: NewsModelUi) -> Unit,
     onError: (message: String) -> Unit,
@@ -38,19 +42,21 @@ fun HomeScreen(
         viewModel(factory = component.getViewModelFactory())
 
     HomeScreenContent(
+        viewModelFactory = viewModelFactory,
         newsViewModel = newsViewModel,
         recommendationViewModel = recommendationViewModel,
         paddingValues = paddingValues,
         onCommentsClick = onCommentsClick,
         onError = onError,
         onImageClick = onImageClick,
-        onHeaderClick = onHeaderClick
+        onHeaderClick = onHeaderClick,
     )
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreenContent(
+    viewModelFactory: ViewModelFactory,
     newsViewModel: NewsViewModel,
     recommendationViewModel: RecommendationViewModel,
     paddingValues: PaddingValues,
@@ -59,7 +65,7 @@ fun HomeScreenContent(
     onImageClick: (index: Int, newsModelId: Long) -> Unit,
     onHeaderClick: (groupId: Long) -> Unit,
 ) {
-    val pagerState = rememberPagerState(pageCount = { NewsType.values().size })
+    val pagerState = rememberPagerState(pageCount = { HomeTab.values().size })
 
     Column(modifier = Modifier.padding(bottom = paddingValues.calculateBottomPadding())) {
         HomeTabLayout(
@@ -70,7 +76,7 @@ fun HomeScreenContent(
         )
         HorizontalPager(state = pagerState) { index ->
             when (index) {
-                NewsType.NEWS.index -> {
+                HomeTab.NEWS.index -> {
                     NewsScreen(
                         viewModel = newsViewModel,
                         onCommentsClick = onCommentsClick,
@@ -80,13 +86,19 @@ fun HomeScreenContent(
                     )
                 }
 
-                NewsType.RECOMMENDATION.index -> {
+                HomeTab.RECOMMENDATION.index -> {
                     NewsScreen(
                         viewModel = recommendationViewModel,
                         onCommentsClick = onCommentsClick,
                         onError = onError,
                         onImageClick = onImageClick,
                         onHeaderClick = onHeaderClick,
+                    )
+                }
+
+                HomeTab.SUGGESTED.index -> {
+                    SuggestedScreen(
+                        viewModelFactory = viewModelFactory,
                     )
                 }
             }

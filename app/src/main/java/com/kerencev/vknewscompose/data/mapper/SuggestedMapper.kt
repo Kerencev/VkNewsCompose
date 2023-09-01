@@ -11,7 +11,7 @@ fun SuggestedDto.mapToModel(): Profile {
         SuggestedType.profile -> {
             UserProfileModel(
                 id = id ?: 0,
-                name = "$name $lastName",
+                name = "$firstName $lastName",
                 avatarUrl = photo,
                 coverUrl = null,
                 lastName = lastName.orEmpty(),

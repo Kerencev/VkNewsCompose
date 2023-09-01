@@ -1,4 +1,4 @@
-package com.kerencev.vknewscompose.presentation.screens.home.views
+package com.kerencev.vknewscompose.presentation.screens.home.views.tabs
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -17,12 +17,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.pager.pagerTabIndicatorOffset
-import com.kerencev.vknewscompose.presentation.screens.news.NewsType
-import com.kerencev.vknewscompose.presentation.screens.news.toTitle
+import com.kerencev.vknewscompose.R
 import com.kerencev.vknewscompose.ui.theme.LightBlue
 import kotlinx.coroutines.launch
 
@@ -46,7 +46,7 @@ fun HomeTabLayout(
             )
         },
     ) {
-        NewsType.values().forEachIndexed { index, newsType ->
+        HomeTab.values().forEachIndexed { index, newsType ->
             val isSelected = pagerState.currentPage == index
             val visibilityState by animateFloatAsState(targetValue = if (isSelected) 1f else 0.5f)
             Row {
@@ -58,7 +58,7 @@ fun HomeTabLayout(
                         Text(
                             modifier = Modifier.alpha(visibilityState),
                             text = newsType.toTitle(),
-                            fontSize = 16.sp,
+                            fontSize = 14.sp,
                             fontWeight = FontWeight.Medium
                         )
                     }

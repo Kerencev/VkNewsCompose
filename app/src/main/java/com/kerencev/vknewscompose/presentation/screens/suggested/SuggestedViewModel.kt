@@ -4,10 +4,11 @@ import com.kerencev.vknewscompose.presentation.common.mvi.BaseViewModel
 import com.kerencev.vknewscompose.presentation.common.mvi.VkAction
 import com.kerencev.vknewscompose.presentation.common.mvi.VkCommand
 import com.kerencev.vknewscompose.presentation.common.mvi.VkEffect
-import com.kerencev.vknewscompose.presentation.common.mvi.VkShot
+import com.kerencev.vknewscompose.presentation.screens.suggested.flow.SuggestedEffect
 import com.kerencev.vknewscompose.presentation.screens.suggested.flow.SuggestedEvent
 import com.kerencev.vknewscompose.presentation.screens.suggested.flow.SuggestedInputAction
 import com.kerencev.vknewscompose.presentation.screens.suggested.flow.SuggestedOutputAction
+import com.kerencev.vknewscompose.presentation.screens.suggested.flow.SuggestedShot
 import com.kerencev.vknewscompose.presentation.screens.suggested.flow.SuggestedViewState
 import com.kerencev.vknewscompose.presentation.screens.suggested.flow.features.GetSuggestedFeature
 import kotlinx.coroutines.flow.Flow
@@ -15,13 +16,18 @@ import javax.inject.Inject
 
 class SuggestedViewModel @Inject constructor(
     private val getSuggestedFeature: GetSuggestedFeature
-) : BaseViewModel<SuggestedEvent, SuggestedViewState, VkShot>() {
+) : BaseViewModel<SuggestedEvent, SuggestedViewState, SuggestedShot>() {
+
+    init {
+        send(SuggestedEvent.GetData())
+    }
 
     override fun initState() = SuggestedViewState()
 
     override fun produceCommand(event: SuggestedEvent): VkCommand {
         return when (event) {
             is SuggestedEvent.GetData -> SuggestedInputAction.GetData(isRefreshing = event.isRefreshing)
+            is SuggestedEvent.OnScrollToTop -> SuggestedEffect.None
         }
     }
 
@@ -32,7 +38,12 @@ class SuggestedViewModel @Inject constructor(
         }
     }
 
-    override suspend fun produceShot(effect: VkEffect) = Unit
+    override suspend fun produceShot(effect: VkEffect) {
+        when (effect) {
+            is SuggestedEffect.ScrollToTop -> setShot { SuggestedShot.ScrollToTop }
+            is SuggestedEffect.None -> setShot { SuggestedShot.None }
+        }
+    }
 
     override suspend fun produceState(action: VkAction) {
         when (action) {
