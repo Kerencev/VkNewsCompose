@@ -7,6 +7,7 @@ import com.kerencev.vknewscompose.data.dto.likes.LikesCountResponseDto
 import com.kerencev.vknewscompose.data.dto.news_feed.NewsFeedResponseDto
 import com.kerencev.vknewscompose.data.dto.profile.ProfilePhotosResponseDto
 import com.kerencev.vknewscompose.data.dto.profile.ProfileResponseDto
+import com.kerencev.vknewscompose.data.dto.search.SearchResponseDto
 import com.kerencev.vknewscompose.data.dto.suggested.SuggestedResponseDto
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -74,7 +75,7 @@ interface ApiService {
     @GET("friends.search?v=5.131&fields=photo_200, online, last_seen")
     suspend fun getFriends(
         @Query("user_id") userId: String,
-        @Query("q") searchText: String,
+        @Query("q") query: String,
         @Query("offset") offset: Int,
         @Query("count") count: Int
     ): FriendsResponseDto
@@ -85,5 +86,13 @@ interface ApiService {
         @Query("count") count: Int,
         @Query("shuffle") bool: Int = 1
     ): SuggestedResponseDto
+
+    @GET("search.getHints?v=5.131&fields=photo_200, online, last_seen, cover, members_count")
+    suspend fun search(
+        @Query("search_global") searchGlobal: Int = 1,
+        @Query("q") query: String,
+        @Query("limit") count: Int,
+        @Query("offset") offset: Int,
+    ): SearchResponseDto
 
 }

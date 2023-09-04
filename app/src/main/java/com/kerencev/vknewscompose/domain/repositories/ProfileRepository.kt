@@ -1,9 +1,10 @@
 package com.kerencev.vknewscompose.domain.repositories
 
+import com.kerencev.vknewscompose.domain.entities.NewsModel
+import com.kerencev.vknewscompose.domain.entities.PagingModel
 import com.kerencev.vknewscompose.domain.entities.PhotoModel
 import com.kerencev.vknewscompose.domain.entities.PhotosModel
 import com.kerencev.vknewscompose.domain.entities.Profile
-import com.kerencev.vknewscompose.domain.entities.WallModel
 import kotlinx.coroutines.flow.Flow
 
 interface ProfileRepository {
@@ -34,7 +35,7 @@ interface ProfileRepository {
      * @param userId - Id of the user for whom the data will be received
      * @param isRefresh - Updating data or getting it from the cache
      */
-    fun getWallData(userId: Long, isRefresh: Boolean = false): Flow<WallModel>
+    fun getWallData(userId: Long, isRefresh: Boolean = false): Flow<PagingModel<NewsModel>>
 
     /**
      * Get a list of photos for the wall post

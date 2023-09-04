@@ -37,7 +37,10 @@
     <string name="log_out">Выйти</string>
     <string name="set_page">%d из %d</string>
     <string name="friends">Друзья</string>
+    <string name="global_search">Глобальный поиск</string>
     <string name="search_friends_label">"Введите имя и фамилию"</string>
+    <string name="search_global_label">"Поиск"</string>
+    <string name="search_global_text">"Поиск людей, групп и сообществ"</string>
     <string name="tab_title_news">Лента</string>
     <string name="tab_title_recommended">Для вас</string>
     <string name="now">только что</string>

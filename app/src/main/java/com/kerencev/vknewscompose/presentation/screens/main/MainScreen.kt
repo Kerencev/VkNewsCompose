@@ -1,9 +1,7 @@
 package com.kerencev.vknewscompose.presentation.screens.main
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.systemBars
@@ -21,7 +19,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -45,6 +42,7 @@ import com.kerencev.vknewscompose.presentation.screens.main.flow.MainShot
 import com.kerencev.vknewscompose.presentation.screens.profile.ProfileParams
 import com.kerencev.vknewscompose.presentation.screens.profile.ProfileScreen
 import com.kerencev.vknewscompose.presentation.screens.profile_photos.ProfilePhotosScreen
+import com.kerencev.vknewscompose.presentation.screens.search.SearchScreen
 import com.kerencev.vknewscompose.ui.theme.LightBlue
 import kotlinx.coroutines.launch
 
@@ -56,7 +54,7 @@ fun MainScreen(
         userId: Long?,
         type: PhotoType,
         index: Int,
-        newsModelId: Long
+        newsModelId: Long?
     ) -> Unit
 ) {
     SetupSystemBar()
@@ -107,6 +105,7 @@ fun MainScreen(
             }
         }
     ) { paddingValues ->
+        //TODO: get away from repetitive screens
         BottomNavGraph(
             navHostController = navigationState.navHostController,
             newsScreenContent = {
@@ -133,19 +132,20 @@ fun MainScreen(
                 )
             },
             recommendationScreenContent = {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(text = "Здесь будут рекомендации")
-                }
+                SearchScreen(
+                    viewModelFactory = viewModelFactory,
+                    paddingValues = paddingValues,
+                    onItemClick = { profileParams ->
+                        navigationState.navigateToProfile(profileParams = profileParams)
+                    }
+                )
             },
             userProfileScreenContent = { params ->
                 ProfileScreen(
                     profileParams = params,
                     paddingValues = paddingValues,
                     onPhotoClick = { index ->
-                        onPhotoClick(params.id, PhotoType.PROFILE, index, 0)
+                        onPhotoClick(params.id, PhotoType.PROFILE, index, null)
                     },
                     onWallItemClick = { index, itemId ->
                         onPhotoClick(params.id, PhotoType.WALL, index, itemId)
@@ -162,7 +162,7 @@ fun MainScreen(
                     profileParams = params,
                     paddingValues = paddingValues,
                     onPhotoClick = { index ->
-                        onPhotoClick(params.id, PhotoType.PROFILE, index, 0)
+                        onPhotoClick(params.id, PhotoType.PROFILE, index, null)
                     },
                     onWallItemClick = { index, itemId ->
                         onPhotoClick(params.id, PhotoType.WALL, index, itemId)
@@ -181,7 +181,7 @@ fun MainScreen(
                     profileParams = params,
                     paddingValues = paddingValues,
                     onPhotoClick = { index ->
-                        onPhotoClick(params.id, PhotoType.PROFILE, index, 0)
+                        onPhotoClick(params.id, PhotoType.PROFILE, index, null)
                     },
                     onWallItemClick = { index, itemId ->
                         onPhotoClick(params.id, PhotoType.WALL, index, itemId)
@@ -196,7 +196,7 @@ fun MainScreen(
                     userId = userId,
                     paddingValues = paddingValues,
                     onPhotoClick = { index ->
-                        onPhotoClick(userId, PhotoType.PROFILE, index, 0)
+                        onPhotoClick(userId, PhotoType.PROFILE, index, null)
                     },
                     onBackPressed = { navigationState.navHostController.popBackStack() }
                 )
@@ -206,7 +206,7 @@ fun MainScreen(
                     userId = userId,
                     paddingValues = paddingValues,
                     onPhotoClick = { index ->
-                        onPhotoClick(userId, PhotoType.PROFILE, index, 0)
+                        onPhotoClick(userId, PhotoType.PROFILE, index, null)
                     },
                     onBackPressed = { navigationState.navHostController.popBackStack() }
                 )
@@ -216,7 +216,7 @@ fun MainScreen(
                     userId = groupId,
                     paddingValues = paddingValues,
                     onPhotoClick = { index ->
-                        onPhotoClick(groupId, PhotoType.PROFILE, index, 0)
+                        onPhotoClick(groupId, PhotoType.PROFILE, index, null)
                     },
                     onBackPressed = { navigationState.navHostController.popBackStack() }
                 )

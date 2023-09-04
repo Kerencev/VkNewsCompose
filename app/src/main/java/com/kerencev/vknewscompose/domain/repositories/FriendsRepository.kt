@@ -1,6 +1,7 @@
 package com.kerencev.vknewscompose.domain.repositories
 
-import com.kerencev.vknewscompose.domain.entities.FriendsModel
+import com.kerencev.vknewscompose.domain.entities.PagingModel
+import com.kerencev.vknewscompose.domain.entities.UserProfileModel
 import kotlinx.coroutines.flow.Flow
 
 interface FriendsRepository {
@@ -11,5 +12,9 @@ interface FriendsRepository {
      * @param searchText - The text by which the list of friends will be received
      * @param isRefresh - The list of friends is updated or added
      */
-    fun getFriends(userId: Long, searchText: String, isRefresh: Boolean): Flow<FriendsModel>
+    fun getFriends(
+        userId: Long,
+        searchText: String,
+        isRefresh: Boolean
+    ): Flow<PagingModel<UserProfileModel>>
 }

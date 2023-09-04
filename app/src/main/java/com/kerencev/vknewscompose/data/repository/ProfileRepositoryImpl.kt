@@ -5,10 +5,10 @@ import com.kerencev.vknewscompose.data.mapper.mapToModel
 import com.kerencev.vknewscompose.data.utils.PagingCache
 import com.kerencev.vknewscompose.domain.entities.GroupProfileModel
 import com.kerencev.vknewscompose.domain.entities.NewsModel
+import com.kerencev.vknewscompose.domain.entities.PagingModel
 import com.kerencev.vknewscompose.domain.entities.PhotoModel
 import com.kerencev.vknewscompose.domain.entities.PhotosModel
 import com.kerencev.vknewscompose.domain.entities.UserProfileModel
-import com.kerencev.vknewscompose.domain.entities.WallModel
 import com.kerencev.vknewscompose.domain.repositories.ProfileRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -94,7 +94,7 @@ class ProfileRepositoryImpl @Inject constructor(
         if (isRefresh) wallItemsCache.clearCacheById(userId)
         if (wallItemsCache.isRemoteDataOver(userId)) {
             delay(100)
-            emit(WallModel(items = wallItemsCache.getById(userId), isItemsOver = true))
+            emit(PagingModel(data = wallItemsCache.getById(userId), isItemsOver = true))
             return@flow
         }
         val response = apiService.getWall(
@@ -110,8 +110,8 @@ class ProfileRepositoryImpl @Inject constructor(
             remoteTotalCount = remoteTotalCount
         )
         emit(
-            WallModel(
-                items = wallItems,
+            PagingModel(
+                data = wallItems,
                 isItemsOver = wallItems.size >= remoteTotalCount
             )
         )

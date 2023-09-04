@@ -26,8 +26,9 @@ data class SuggestedDto(
     val cover: Cover?,
     @SerializedName("members_count") val memberCount: Int?,
     val platform: Int?,
+    val description: String?,
 )
 
 enum class SuggestedType {
-    page, group, profile
+    group, profile
 }

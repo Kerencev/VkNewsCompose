@@ -26,7 +26,8 @@ data class GroupProfileModel(
     override val name: String,
     override val avatarUrl: String?,
     override val coverUrl: String?,
-    val memberCount: Int
+    val memberCount: Int,
+    val description: String
 ) : Profile
 
 enum class OnlineType {

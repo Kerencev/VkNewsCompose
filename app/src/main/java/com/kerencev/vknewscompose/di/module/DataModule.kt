@@ -9,6 +9,7 @@ import com.kerencev.vknewscompose.data.repository.CommentsRepositoryImpl
 import com.kerencev.vknewscompose.data.repository.FriendsRepositoryImpl
 import com.kerencev.vknewscompose.data.repository.NewsFeedRepositoryImpl
 import com.kerencev.vknewscompose.data.repository.ProfileRepositoryImpl
+import com.kerencev.vknewscompose.data.repository.SearchRepositoryImpl
 import com.kerencev.vknewscompose.data.repository.SuggestedRepositoryImpl
 import com.kerencev.vknewscompose.di.annotation.ApplicationScope
 import com.kerencev.vknewscompose.domain.repositories.AuthRepository
@@ -16,6 +17,7 @@ import com.kerencev.vknewscompose.domain.repositories.CommentsRepository
 import com.kerencev.vknewscompose.domain.repositories.FriendsRepository
 import com.kerencev.vknewscompose.domain.repositories.NewsFeedRepository
 import com.kerencev.vknewscompose.domain.repositories.ProfileRepository
+import com.kerencev.vknewscompose.domain.repositories.SearchRepository
 import com.kerencev.vknewscompose.domain.repositories.SuggestedRepository
 import com.vk.api.sdk.VKKeyValueStorage
 import com.vk.api.sdk.VKPreferencesKeyValueStorage
@@ -70,5 +72,9 @@ interface DataModule {
     @ApplicationScope
     @Binds
     fun bindSuggestedRepository(impl: SuggestedRepositoryImpl): SuggestedRepository
+
+    @ApplicationScope
+    @Binds
+    fun bindSearchRepository(impl: SearchRepositoryImpl): SearchRepository
 
 }

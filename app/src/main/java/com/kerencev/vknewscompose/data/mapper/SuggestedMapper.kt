@@ -24,13 +24,14 @@ fun SuggestedDto.mapToModel(): Profile {
             )
         }
 
-        SuggestedType.page, SuggestedType.group, null -> {
+        SuggestedType.group, null -> {
             GroupProfileModel(
                 id = -(id ?: 0),
                 name = name.orEmpty(),
                 avatarUrl = photo,
                 coverUrl = cover?.images?.last()?.url,
-                memberCount = memberCount ?: 0
+                memberCount = memberCount ?: 0,
+                description = description.orEmpty()
             )
         }
     }

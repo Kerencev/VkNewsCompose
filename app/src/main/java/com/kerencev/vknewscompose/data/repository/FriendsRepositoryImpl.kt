@@ -3,7 +3,7 @@ package com.kerencev.vknewscompose.data.repository
 import com.kerencev.vknewscompose.data.api.ApiService
 import com.kerencev.vknewscompose.data.mapper.mapToModel
 import com.kerencev.vknewscompose.data.utils.PagingCache
-import com.kerencev.vknewscompose.domain.entities.FriendsModel
+import com.kerencev.vknewscompose.domain.entities.PagingModel
 import com.kerencev.vknewscompose.domain.entities.UserProfileModel
 import com.kerencev.vknewscompose.domain.repositories.FriendsRepository
 import kotlinx.coroutines.flow.Flow
@@ -24,15 +24,15 @@ class FriendsRepositoryImpl @Inject constructor(
         userId: Long,
         searchText: String,
         isRefresh: Boolean,
-    ): Flow<FriendsModel> = flow {
+    ): Flow<PagingModel<UserProfileModel>> = flow {
         if (isRefresh) friendsCache.clearCacheById(userId)
         if (friendsCache.isRemoteDataOver(userId)) {
-            emit(FriendsModel(friends = friendsCache.getById(userId), isFriendsOver = true))
+            emit(PagingModel(data = friendsCache.getById(userId), isItemsOver = true))
             return@flow
         }
         val response = apiService.getFriends(
             userId = userId.toString(),
-            searchText = searchText,
+            query = searchText,
             offset = friendsCache.getCurrentPageById(userId) * PAGE_SIZE,
             count = PAGE_SIZE,
         )
@@ -44,9 +44,9 @@ class FriendsRepositoryImpl @Inject constructor(
             remoteTotalCount = remoteTotalCount
         )
         emit(
-            FriendsModel(
-                friends = friends,
-                isFriendsOver = friends.size >= remoteTotalCount
+            PagingModel(
+                data = friends,
+                isItemsOver = friends.size >= remoteTotalCount
             )
         )
     }

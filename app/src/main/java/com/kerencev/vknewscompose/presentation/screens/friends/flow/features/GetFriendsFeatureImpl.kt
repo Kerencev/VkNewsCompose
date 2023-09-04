@@ -28,8 +28,8 @@ class GetFriendsFeatureImpl @Inject constructor(
                 flowOf(
                     FriendsOutputAction.SetFriends(
                         searchText = action.searchText,
-                        friends = friends.friends,
-                        isFriendsOver = friends.isFriendsOver
+                        friends = friends.data,
+                        isFriendsOver = friends.isItemsOver
                     ) as FriendsOutputAction
                 )
             }

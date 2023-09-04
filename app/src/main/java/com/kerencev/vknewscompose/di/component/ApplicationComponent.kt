@@ -7,6 +7,8 @@ import com.kerencev.vknewscompose.di.module.CommonFeatureModule
 import com.kerencev.vknewscompose.di.module.DataModule
 import com.kerencev.vknewscompose.di.module.MainFeatureModule
 import com.kerencev.vknewscompose.di.module.MainViewModelModule
+import com.kerencev.vknewscompose.di.module.SearchFeatureModule
+import com.kerencev.vknewscompose.di.module.SearchViewModelModule
 import com.kerencev.vknewscompose.di.module.SuggestedFeatureModule
 import com.kerencev.vknewscompose.di.module.SuggestedViewModelModule
 import dagger.BindsInstance
@@ -18,8 +20,10 @@ import dagger.Component
         DataModule::class,
         MainViewModelModule::class,
         SuggestedViewModelModule::class,
+        SearchViewModelModule::class,
         MainFeatureModule::class,
         SuggestedFeatureModule::class,
+        SearchFeatureModule::class,
         CommonFeatureModule::class,
     ]
 )

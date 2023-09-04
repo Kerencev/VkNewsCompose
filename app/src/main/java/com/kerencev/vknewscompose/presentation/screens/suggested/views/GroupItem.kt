@@ -25,6 +25,7 @@ import com.kerencev.vknewscompose.R
 import com.kerencev.vknewscompose.domain.entities.GroupProfileModel
 import com.kerencev.vknewscompose.ui.theme.VkNewsComposeTheme
 
+//TODO: Add description
 @Composable
 fun GroupItem(
     modifier: Modifier = Modifier,
@@ -87,7 +88,8 @@ fun SuggestedGroupItemPreview() {
                 name = "Очень длинное название группы",
                 avatarUrl = null,
                 coverUrl = null,
-                memberCount = 375645
+                memberCount = 375645,
+                description = "Описание группы вот такое вот авотова вовоыа вавоыао выа овы ао выо ао выоа овы ао выао овыа о авооыва "
             )
         )
     }

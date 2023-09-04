@@ -26,7 +26,7 @@ class GetAllProfileDataFeatureImpl @Inject constructor(
             ProfileOutputAction.SetAllProfileData(
                 profile = profile,
                 photos = photos,
-                wallItems = wallModel.items,
+                wallItems = wallModel.data,
                 isWallItemsOver = wallModel.isItemsOver
             ) as VkCommand
         }

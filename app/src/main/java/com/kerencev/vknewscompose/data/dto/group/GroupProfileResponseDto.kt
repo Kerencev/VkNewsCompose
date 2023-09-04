@@ -15,7 +15,8 @@ data class GroupProfileDto(
     @SerializedName("screen_name") val screenName: String?,
     @SerializedName("is_closed") val isClosed: Int?,
     val type: String?,
-    @SerializedName("members_count") val memberCount: Int?
+    @SerializedName("members_count") val memberCount: Int?,
+    val description: String?
 )
 
 data class Cover(

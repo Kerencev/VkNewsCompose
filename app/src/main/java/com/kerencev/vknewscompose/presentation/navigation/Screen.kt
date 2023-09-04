@@ -6,6 +6,7 @@ import com.kerencev.vknewscompose.presentation.model.NewsModelUi
 import com.kerencev.vknewscompose.presentation.model.PhotoType
 import com.kerencev.vknewscompose.presentation.model.ProfileType
 
+//TODO: Если не получится избавиться от повторяющихся экранов, разбить на файлы по табам
 sealed class Screen(
     val route: String
 ) {
@@ -19,9 +20,9 @@ sealed class Screen(
             userId: Long?,
             type: PhotoType,
             initialNumber: Int,
-            newsModelId: Long
+            newsModelId: Long?
         ): String {
-            return "$ROUTE_FOR_ARGS/$initialNumber/${type.name}/$newsModelId/$userId"
+            return "$ROUTE_FOR_ARGS/$initialNumber/${type.name}/${newsModelId ?: 0}/${userId ?: 0}"
         }
     }
 

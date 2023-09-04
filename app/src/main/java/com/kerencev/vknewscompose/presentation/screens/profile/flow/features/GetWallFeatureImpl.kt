@@ -20,11 +20,11 @@ class GetWallFeatureImpl @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun invoke(action: ProfileInputAction.GetWall): Flow<VkCommand> {
         return repository.getWallData(userId = action.id)
-            .flatMapConcat { result ->
+            .flatMapConcat { wall ->
                 flowOf(
                     ProfileOutputAction.SetWall(
-                        wallItems = result.items,
-                        isItemsOver = result.isItemsOver
+                        wallItems = wall.data,
+                        isItemsOver = wall.isItemsOver
                     ) as VkCommand
                 )
             }
