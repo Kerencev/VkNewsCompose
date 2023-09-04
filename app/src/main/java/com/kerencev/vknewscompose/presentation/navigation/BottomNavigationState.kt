@@ -6,8 +6,8 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.kerencev.vknewscompose.data.repository.AuthRepositoryImpl
+import com.kerencev.vknewscompose.domain.entities.ProfileType
 import com.kerencev.vknewscompose.presentation.model.NewsModelUi
-import com.kerencev.vknewscompose.presentation.model.ProfileType
 import com.kerencev.vknewscompose.presentation.screens.profile.ProfileParams
 
 class BottomNavigationState(

@@ -1,4 +1,4 @@
-package com.kerencev.vknewscompose.presentation.screens.suggested.views
+package com.kerencev.vknewscompose.presentation.common.views.profile_item
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -80,7 +80,7 @@ private fun getMembersText(memberCount: Int): String {
 
 @Preview(showBackground = true)
 @Composable
-fun SuggestedGroupItemPreview() {
+fun GroupItemPreview() {
     VkNewsComposeTheme {
         GroupItem(
             model = GroupProfileModel(

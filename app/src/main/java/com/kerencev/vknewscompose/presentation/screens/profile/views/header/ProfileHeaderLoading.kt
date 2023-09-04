@@ -1,6 +1,5 @@
 package com.kerencev.vknewscompose.presentation.screens.profile.views.header
 
-//import androidx.compose.material.Card
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -21,7 +20,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.kerencev.vknewscompose.R
-import com.kerencev.vknewscompose.presentation.model.ProfileType
+import com.kerencev.vknewscompose.domain.entities.ProfileType
 import com.kerencev.vknewscompose.ui.theme.LightGray
 import com.kerencev.vknewscompose.ui.theme.Shapes
 import com.valentinilk.shimmer.shimmer

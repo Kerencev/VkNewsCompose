@@ -6,8 +6,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.kerencev.vknewscompose.domain.entities.Profile
+import com.kerencev.vknewscompose.domain.entities.ProfileType
 import com.kerencev.vknewscompose.presentation.common.ContentState
-import com.kerencev.vknewscompose.presentation.model.ProfileType
 
 @Composable
 fun ProfileHeader(

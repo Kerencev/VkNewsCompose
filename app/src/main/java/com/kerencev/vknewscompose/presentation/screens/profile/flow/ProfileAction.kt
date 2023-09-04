@@ -3,9 +3,9 @@ package com.kerencev.vknewscompose.presentation.screens.profile.flow
 import com.kerencev.vknewscompose.domain.entities.NewsModel
 import com.kerencev.vknewscompose.domain.entities.PhotosModel
 import com.kerencev.vknewscompose.domain.entities.Profile
+import com.kerencev.vknewscompose.domain.entities.ProfileType
 import com.kerencev.vknewscompose.presentation.common.mvi.VkAction
 import com.kerencev.vknewscompose.presentation.common.mvi.VkEffect
-import com.kerencev.vknewscompose.presentation.model.ProfileType
 import com.kerencev.vknewscompose.presentation.screens.profile.ProfileParams
 
 sealed class ProfileInputAction : VkAction {

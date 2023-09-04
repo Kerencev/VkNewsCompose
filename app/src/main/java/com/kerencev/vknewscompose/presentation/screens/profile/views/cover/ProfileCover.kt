@@ -4,8 +4,8 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import com.kerencev.vknewscompose.domain.entities.Profile
+import com.kerencev.vknewscompose.domain.entities.ProfileType
 import com.kerencev.vknewscompose.presentation.common.ContentState
-import com.kerencev.vknewscompose.presentation.model.ProfileType
 
 @Composable
 fun ProfileCover(

@@ -6,9 +6,9 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
+import com.kerencev.vknewscompose.domain.entities.ProfileType
 import com.kerencev.vknewscompose.presentation.extensions.getParcelableNew
 import com.kerencev.vknewscompose.presentation.model.NewsModelUi
-import com.kerencev.vknewscompose.presentation.model.ProfileType
 import com.kerencev.vknewscompose.presentation.screens.profile.ProfileParams
 
 fun NavGraphBuilder.homeScreenNavGraph(

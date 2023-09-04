@@ -1,4 +1,4 @@
-package com.kerencev.vknewscompose.presentation.screens.friends.views
+package com.kerencev.vknewscompose.presentation.common.views.profile_item
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,7 +31,7 @@ import com.kerencev.vknewscompose.presentation.common.views.status.UserStatusOnl
 import com.kerencev.vknewscompose.ui.theme.VkNewsComposeTheme
 
 @Composable
-fun FriendItem(
+fun UserItem(
     modifier: Modifier = Modifier,
     user: UserProfileModel
 ) {
@@ -81,7 +81,7 @@ fun FriendItem(
 @Composable
 fun FriendItemPreview() {
     VkNewsComposeTheme {
-        FriendItem(
+        UserItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 4.dp),

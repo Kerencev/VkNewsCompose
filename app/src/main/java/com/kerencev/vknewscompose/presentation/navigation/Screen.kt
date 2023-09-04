@@ -1,10 +1,10 @@
 package com.kerencev.vknewscompose.presentation.navigation
 
 import com.google.gson.Gson
+import com.kerencev.vknewscompose.domain.entities.ProfileType
 import com.kerencev.vknewscompose.presentation.extensions.encode
 import com.kerencev.vknewscompose.presentation.model.NewsModelUi
 import com.kerencev.vknewscompose.presentation.model.PhotoType
-import com.kerencev.vknewscompose.presentation.model.ProfileType
 
 //TODO: Если не получится избавиться от повторяющихся экранов, разбить на файлы по табам
 sealed class Screen(

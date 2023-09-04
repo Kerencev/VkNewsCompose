@@ -26,11 +26,11 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.kerencev.vknewscompose.R
 import com.kerencev.vknewscompose.di.ViewModelFactory
+import com.kerencev.vknewscompose.domain.entities.ProfileType
 import com.kerencev.vknewscompose.presentation.activity.MainViewModel
 import com.kerencev.vknewscompose.presentation.common.compose.SetupSystemBar
 import com.kerencev.vknewscompose.presentation.common.compose.rememberUnitParams
 import com.kerencev.vknewscompose.presentation.model.PhotoType
-import com.kerencev.vknewscompose.presentation.model.ProfileType
 import com.kerencev.vknewscompose.presentation.navigation.BottomNavGraph
 import com.kerencev.vknewscompose.presentation.navigation.NavigationItem
 import com.kerencev.vknewscompose.presentation.navigation.rememberNavigationState

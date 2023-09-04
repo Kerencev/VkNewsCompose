@@ -2,6 +2,7 @@ package com.kerencev.vknewscompose.domain.entities
 
 interface Profile {
     val id: Long
+    val type: ProfileType
     val name: String
     val avatarUrl: String?
     val coverUrl: String?
@@ -9,6 +10,7 @@ interface Profile {
 
 data class UserProfileModel(
     override val id: Long,
+    override val type: ProfileType = ProfileType.USER,
     override val name: String,
     override val avatarUrl: String?,
     override val coverUrl: String?,
@@ -23,12 +25,17 @@ data class UserProfileModel(
 
 data class GroupProfileModel(
     override val id: Long,
+    override val type: ProfileType = ProfileType.GROUP,
     override val name: String,
     override val avatarUrl: String?,
     override val coverUrl: String?,
     val memberCount: Int,
     val description: String
 ) : Profile
+
+enum class ProfileType {
+    USER, GROUP
+}
 
 enum class OnlineType {
     OFFLINE, ONLINE, ONLINE_MOBILE

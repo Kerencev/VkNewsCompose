@@ -1,7 +1,7 @@
 package com.kerencev.vknewscompose.presentation.screens.profile.flow.features
 
+import com.kerencev.vknewscompose.domain.entities.ProfileType
 import com.kerencev.vknewscompose.presentation.common.mvi.VkCommand
-import com.kerencev.vknewscompose.presentation.model.ProfileType
 import com.kerencev.vknewscompose.presentation.screens.profile.flow.ProfileInputAction
 import com.kerencev.vknewscompose.presentation.screens.profile.flow.ProfileOutputAction
 import kotlinx.coroutines.flow.Flow
