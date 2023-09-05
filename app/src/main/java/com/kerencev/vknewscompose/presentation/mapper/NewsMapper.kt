@@ -8,7 +8,8 @@ import com.kerencev.vknewscompose.presentation.model.NewsModelUi
 fun NewsModel.mapToUiModel(): NewsModelUi {
     return NewsModelUi(
         id = id,
-        communityId = communityId,
+        type = type,
+        ownerId = ownerId,
         communityName = communityName,
         postTime = postTime,
         communityImageUrl = communityImageUrl,
@@ -25,7 +26,8 @@ fun NewsModel.mapToUiModel(): NewsModelUi {
 fun NewsModelUi.mapToModel(): NewsModel {
     return NewsModel(
         id = id,
-        communityId = communityId,
+        type = type,
+        ownerId = ownerId,
         communityName = communityName,
         postTime = postTime,
         communityImageUrl = communityImageUrl,

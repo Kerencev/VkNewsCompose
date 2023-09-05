@@ -103,6 +103,7 @@ fun MainScreen(
     ) { paddingValues ->
         BottomNavGraph(
             navHostController = navigationState.navHostController,
+
             homeScreenContent = {
                 HomeScreen(
                     viewModelFactory = viewModelFactory,
@@ -112,11 +113,10 @@ fun MainScreen(
                     onImageClick = { index, newsModelId ->
                         onPhotoClick(null, PhotoType.NEWS, index, newsModelId)
                     },
-                    //TODO: add ProfileType.User
-                    onHeaderClick = { profileId ->
+                    onHeaderClick = { profileParams ->
                         navigationState.navigateToProfile(
                             from = NavigationItem.Home,
-                            params = ProfileParams(id = profileId, type = ProfileType.GROUP)
+                            params = profileParams
                         )
                     },
                     onSuggestedClick = { profileParams ->
@@ -127,12 +127,14 @@ fun MainScreen(
                     }
                 )
             },
+
             commentsScreenContent = { newsModel ->
                 CommentsScreen(
                     newsModel = newsModel,
                     onBackPressed = { navigationState.navHostController.popBackStack() }
                 )
             },
+
             searchScreenContent = {
                 SearchScreen(
                     viewModelFactory = viewModelFactory,
@@ -145,6 +147,7 @@ fun MainScreen(
                     }
                 )
             },
+
             profileScreenContent = { from, params ->
                 ProfileScreen(
                     profileParams = params,
@@ -166,6 +169,7 @@ fun MainScreen(
                     onBackPressed = { navigationState.navHostController.popBackStack() },
                 )
             },
+
             profilePhotosScreenContent = { userId ->
                 ProfilePhotosScreen(
                     userId = userId,
@@ -176,6 +180,7 @@ fun MainScreen(
                     onBackPressed = { navigationState.navHostController.popBackStack() }
                 )
             },
+
             friendsScreenContent = { from, userId ->
                 FriendsScreen(
                     paddingValues = paddingValues,

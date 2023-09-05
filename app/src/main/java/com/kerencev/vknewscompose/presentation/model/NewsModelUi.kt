@@ -5,6 +5,7 @@ import android.os.Parcelable
 import androidx.compose.runtime.Immutable
 import androidx.navigation.NavType
 import com.google.gson.Gson
+import com.kerencev.vknewscompose.domain.entities.ProfileType
 import com.kerencev.vknewscompose.presentation.extensions.getParcelableNew
 import kotlinx.parcelize.Parcelize
 
@@ -12,7 +13,8 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class NewsModelUi(
     val id: Long,
-    val communityId: Long,
+    val type: ProfileType,
+    val ownerId: Long,
     val communityName: String,
     val postTime: String,
     val communityImageUrl: String?,

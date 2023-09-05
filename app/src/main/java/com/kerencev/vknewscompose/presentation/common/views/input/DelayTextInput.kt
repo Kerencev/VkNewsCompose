@@ -11,7 +11,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import com.kerencev.vknewscompose.presentation.common.views.input.BaseTextInput
 import com.kerencev.vknewscompose.ui.theme.Black500
 import com.kerencev.vknewscompose.ui.theme.LightBlue
 import com.kerencev.vknewscompose.ui.theme.LightGray

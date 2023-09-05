@@ -36,6 +36,7 @@ import com.kerencev.vknewscompose.presentation.screens.news.flow.NewsEvent
 import com.kerencev.vknewscompose.presentation.screens.news.flow.NewsShot
 import com.kerencev.vknewscompose.presentation.screens.news.flow.NewsViewState
 import com.kerencev.vknewscompose.presentation.screens.news.views.NewsCard
+import com.kerencev.vknewscompose.presentation.screens.profile.ProfileParams
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
@@ -49,7 +50,7 @@ fun NewsScreen(
     onCommentsClick: (newsModel: NewsModelUi) -> Unit,
     onError: (message: String) -> Unit,
     onImageClick: (index: Int, newsModelId: Long) -> Unit,
-    onHeaderClick: (profileId: Long) -> Unit,
+    onHeaderClick: (params: ProfileParams) -> Unit,
     paddingValues: PaddingValues = PaddingValues()
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -99,7 +100,9 @@ fun NewsScreen(
                         onImageClick = { index ->
                             onImageClick(index, newsItem.id)
                         },
-                        onHeaderClick = { onHeaderClick(newsItem.communityId) }
+                        onHeaderClick = {
+                            onHeaderClick(ProfileParams(id = newsItem.ownerId, type = newsItem.type))
+                        }
                     )
                 }
                 item {

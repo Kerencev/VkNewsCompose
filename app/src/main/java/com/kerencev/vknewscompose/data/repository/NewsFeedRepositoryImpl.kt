@@ -48,10 +48,10 @@ class NewsFeedRepositoryImpl @Inject constructor(
 
     override fun changeLikeStatus(newsModel: NewsModel) = flow {
         if (newsModel.isLiked) {
-            apiService.deleteLike(ownerId = newsModel.communityId, postId = newsModel.id)
+            apiService.deleteLike(ownerId = newsModel.ownerId, postId = newsModel.id)
             emit(newsModel.copy(likesCount = newsModel.likesCount - 1, isLiked = false))
         } else {
-            apiService.addLike(ownerId = newsModel.communityId, postId = newsModel.id)
+            apiService.addLike(ownerId = newsModel.ownerId, postId = newsModel.id)
             emit(newsModel.copy(likesCount = newsModel.likesCount + 1, isLiked = true))
         }
     }

@@ -13,7 +13,7 @@ class CommentsRepositoryImpl @Inject constructor(
 
     override fun getComments(newsModel: NewsModel) = flow {
         val response = apiService.getComments(
-            ownerId = newsModel.communityId,
+            ownerId = newsModel.ownerId,
             postId = newsModel.id
         )
         emit(response.mapToModel())

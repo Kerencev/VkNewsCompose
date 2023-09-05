@@ -2,7 +2,8 @@ package com.kerencev.vknewscompose.domain.entities
 
 data class NewsModel(
     val id: Long,
-    val communityId: Long,
+    val type: ProfileType,
+    val ownerId: Long,
     val communityName: String,
     val postTime: String,
     val communityImageUrl: String?,

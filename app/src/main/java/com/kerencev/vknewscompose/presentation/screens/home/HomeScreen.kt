@@ -32,8 +32,8 @@ fun HomeScreen(
     onCommentsClick: (newsModel: NewsModelUi) -> Unit,
     onError: (message: String) -> Unit,
     onImageClick: (index: Int, newsModelId: Long) -> Unit,
-    onHeaderClick: (userId: Long) -> Unit,
-    onSuggestedClick: (ProfileParams) -> Unit,
+    onHeaderClick: (params: ProfileParams) -> Unit,
+    onSuggestedClick: (params: ProfileParams) -> Unit,
 ) {
     val component = getApplicationComponent()
         .getNewsScreenComponentFactory()
@@ -66,8 +66,8 @@ fun HomeScreenContent(
     onCommentsClick: (newsModel: NewsModelUi) -> Unit,
     onError: (message: String) -> Unit,
     onImageClick: (index: Int, newsModelId: Long) -> Unit,
-    onHeaderClick: (groupId: Long) -> Unit,
-    onSuggestedClick: (ProfileParams) -> Unit,
+    onHeaderClick: (params: ProfileParams) -> Unit,
+    onSuggestedClick: (params: ProfileParams) -> Unit,
 ) {
     val pagerState = rememberPagerState(pageCount = { HomeTab.values().size })
 
