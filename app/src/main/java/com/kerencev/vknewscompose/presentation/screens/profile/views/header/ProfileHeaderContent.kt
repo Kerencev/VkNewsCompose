@@ -1,11 +1,9 @@
 package com.kerencev.vknewscompose.presentation.screens.profile.views.header
 
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -21,19 +19,18 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.kerencev.vknewscompose.R
+import com.kerencev.vknewscompose.domain.entities.GroupProfileModel
 import com.kerencev.vknewscompose.domain.entities.LastSeen
 import com.kerencev.vknewscompose.domain.entities.OnlineType
 import com.kerencev.vknewscompose.domain.entities.Platform
 import com.kerencev.vknewscompose.domain.entities.Profile
 import com.kerencev.vknewscompose.domain.entities.UserProfileModel
-import com.kerencev.vknewscompose.presentation.common.views.icon.IconWithText
 import com.kerencev.vknewscompose.presentation.common.views.status.UserStatus
 import com.kerencev.vknewscompose.ui.theme.Shapes
 import com.kerencev.vknewscompose.ui.theme.VkNewsComposeTheme
@@ -44,7 +41,6 @@ fun ProfileHeaderContent(
     avatarAlpha: Float,
     avatarSize: Dp,
     contentPadding: PaddingValues,
-    namePadding: PaddingValues,
     contentAlignment: Alignment.Horizontal,
     avatarPadding: PaddingValues,
     avatarAlign: Alignment,
@@ -62,33 +58,18 @@ fun ProfileHeaderContent(
                 horizontalAlignment = contentAlignment
             ) {
                 Text(
-                    modifier = Modifier.padding(namePadding),
+                    modifier = Modifier.padding(top = 8.dp),
                     text = profile.name,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center
                 )
                 if (profile is UserProfileModel) {
-                    Row(
-                        modifier = Modifier.padding(bottom = 8.dp)
-                    ) {
-                        if (!profile.city.isNullOrBlank()) {
-                            IconWithText(
-                                modifier = Modifier.weight(1f),
-                                text = profile.city,
-                                iconRes = R.drawable.ic_location,
-                                horizontalArrangement = Arrangement.Center
-                            )
-                        }
-                        if (!profile.universityName.isNullOrBlank()) {
-                            IconWithText(
-                                modifier = Modifier.weight(1f),
-                                text = profile.universityName,
-                                iconRes = R.drawable.ic_hat_education,
-                                horizontalArrangement = Arrangement.Center
-                            )
-                        }
-                    }
+                    UserProfileHeader(
+                        modifier = Modifier.padding(bottom = 8.dp),
+                        profile = profile
+                    )
+                } else if (profile is GroupProfileModel) {
+                    GroupProfileHeader(profile = profile)
                 }
             }
         }
@@ -150,7 +131,6 @@ fun ProfileHeaderPreview() {
             avatarAlpha = 1f,
             avatarSize = 100.dp,
             contentPadding = PaddingValues(top = 50.dp),
-            namePadding = PaddingValues(top = 8.dp),
             contentAlignment = Alignment.CenterHorizontally,
             avatarPadding = PaddingValues(),
             avatarAlign = Alignment.TopCenter,

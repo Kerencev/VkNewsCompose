@@ -53,7 +53,7 @@ interface ApiService {
         @Query("user_ids") usersIds: String
     ): ProfileResponseDto
 
-    @GET("groups.getById?v=5.131&fields=cover")
+    @GET("groups.getById?v=5.131&fields=cover, description, members_count")
     suspend fun getGroupProfile(
         @Query("group_id") groupId: String
     ): GroupProfileResponseDto

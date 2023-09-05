@@ -17,39 +17,26 @@ class CalculateProfileParamsFeatureImpl @Inject constructor() : CalculateProfile
         action.firstVisibleItem?.let { firstVisibleItem = it }
         action.firstVisibleItemScrollOffset?.let { firstVisibleItemScrollOffset = it }
 
-        val topBarAlpha = getTopBarAlpha(action.profileType)
+        val topBarAlpha = getTopBarAlpha()
         val blurBackgroundAlpha = getBlurBackgroundAlpha(action.profileType, topBarAlpha)
-        val avatarAlpha = getAvatarAlpha(topBarAlpha)
-        val avatarSize = getAvatarSize(topBarAlpha)
 
         emit(
             ProfileOutputAction.SetUiParams(
                 topBarAlpha = topBarAlpha,
                 blurBackgroundAlpha = blurBackgroundAlpha,
-                avatarAlpha = avatarAlpha,
-                avatarSize = avatarSize
+                avatarAlpha = 1f - topBarAlpha,
+                avatarSize = ((1f - topBarAlpha) * 100f)
             )
         )
     }
 
-    private fun getTopBarAlpha(profileType: ProfileType) =
-        if (firstVisibleItem == 0) {
-            (firstVisibleItemScrollOffset / getAlphaDivider(profileType))
-                .coerceAtMost(1f)
-        } else 1f
-
-    private fun getAlphaDivider(profileType: ProfileType) = when (profileType) {
-        ProfileType.USER -> 300f
-        ProfileType.GROUP -> 100f
-    }
+    private fun getTopBarAlpha() =
+        if (firstVisibleItem == 0) (firstVisibleItemScrollOffset / 300f).coerceAtMost(1f)
+        else 1f
 
     private fun getBlurBackgroundAlpha(profileType: ProfileType, topBarAlpha: Float) =
         when (profileType) {
             ProfileType.USER -> 1f - (topBarAlpha + 0.5f)
             ProfileType.GROUP -> 1f - (topBarAlpha)
         }
-
-    private fun getAvatarAlpha(topBarAlpha: Float) = 1f - topBarAlpha
-
-    private fun getAvatarSize(topBarAlpha: Float) = ((1f - topBarAlpha) * 100f)
 }

@@ -20,27 +20,24 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.kerencev.vknewscompose.R
-import com.kerencev.vknewscompose.domain.entities.ProfileType
 import com.kerencev.vknewscompose.ui.theme.LightGray
 import com.kerencev.vknewscompose.ui.theme.Shapes
 import com.valentinilk.shimmer.shimmer
 
 @Composable
 fun ProfileHeaderLoading(
-    profileType: ProfileType,
     avatarAlpha: Float,
     avatarSize: Dp,
     contentPadding: PaddingValues,
     avatarPadding: PaddingValues,
     avatarAlign: Alignment,
 ) {
-    val height = if (profileType == ProfileType.USER) 120.dp else 80.dp
     Box {
         Box(
             modifier = Modifier
                 .padding(contentPadding)
                 .clip(Shapes.large)
-                .height(height)
+                .height(120.dp)
                 .fillMaxWidth()
                 .shimmer()
                 .background(LightGray)

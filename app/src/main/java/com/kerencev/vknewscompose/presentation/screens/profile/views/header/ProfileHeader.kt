@@ -17,8 +17,7 @@ fun ProfileHeader(
     avatarSize: Dp,
     onRetryClick: () -> Unit
 ) {
-    val contentPadding = getContentPadding(profileType = profileType, avatarSize = avatarSize)
-    val namePadding = getNamePadding(profileType = profileType)
+    val contentPadding = PaddingValues(top = avatarSize / 2)
     val contentAlignment = getContentAlignment(profileType = profileType)
     val avatarPadding = getAvatarPadding(profileType = profileType)
     val avatarAlign = getAvatarAlign(profileType = profileType)
@@ -29,14 +28,12 @@ fun ProfileHeader(
             avatarAlpha = avatarAlpha,
             avatarSize = avatarSize,
             contentPadding = contentPadding,
-            namePadding = namePadding,
             contentAlignment = contentAlignment,
             avatarPadding = avatarPadding,
             avatarAlign = avatarAlign,
         )
 
         is ContentState.Loading -> ProfileHeaderLoading(
-            profileType = profileType,
             avatarAlpha = avatarAlpha,
             avatarSize = avatarSize,
             contentPadding = contentPadding,
@@ -54,16 +51,6 @@ fun ProfileHeader(
             onRetryClick = onRetryClick
         )
     }
-}
-
-private fun getContentPadding(profileType: ProfileType, avatarSize: Dp) = when (profileType) {
-    ProfileType.USER -> PaddingValues(top = avatarSize / 2)
-    ProfileType.GROUP -> PaddingValues(top = avatarSize / 2)
-}
-
-private fun getNamePadding(profileType: ProfileType) = when (profileType) {
-    ProfileType.USER -> PaddingValues(top = 8.dp)
-    ProfileType.GROUP -> PaddingValues(bottom = 8.dp)
 }
 
 private fun getContentAlignment(profileType: ProfileType) = when (profileType) {
