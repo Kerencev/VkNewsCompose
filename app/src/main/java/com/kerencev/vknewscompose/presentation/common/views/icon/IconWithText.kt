@@ -1,4 +1,4 @@
-package com.kerencev.vknewscompose.presentation.common.views
+package com.kerencev.vknewscompose.presentation.common.views.icon
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement

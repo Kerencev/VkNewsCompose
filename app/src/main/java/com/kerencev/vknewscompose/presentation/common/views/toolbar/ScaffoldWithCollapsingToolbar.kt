@@ -1,4 +1,4 @@
-package com.kerencev.vknewscompose.presentation.common.views
+package com.kerencev.vknewscompose.presentation.common.views.toolbar
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets

@@ -1,4 +1,4 @@
-package com.kerencev.vknewscompose.presentation.common.views
+package com.kerencev.vknewscompose.presentation.common.views.input
 
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.MaterialTheme

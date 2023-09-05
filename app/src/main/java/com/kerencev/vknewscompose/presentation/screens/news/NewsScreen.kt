@@ -1,6 +1,5 @@
 package com.kerencev.vknewscompose.presentation.screens.news
 
-import android.util.Log
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -29,9 +28,9 @@ import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.kerencev.vknewscompose.R
 import com.kerencev.vknewscompose.presentation.common.compose.rememberUnitParams
 import com.kerencev.vknewscompose.presentation.common.mvi.BaseViewModel
-import com.kerencev.vknewscompose.presentation.common.views.ProgressBarDefault
-import com.kerencev.vknewscompose.presentation.common.views.TextWithButton
-import com.kerencev.vknewscompose.presentation.common.views.TopPopupCard
+import com.kerencev.vknewscompose.presentation.common.views.loading.ProgressBarDefault
+import com.kerencev.vknewscompose.presentation.common.views.text.TextWithButton
+import com.kerencev.vknewscompose.presentation.common.views.text.TopPopupCard
 import com.kerencev.vknewscompose.presentation.model.NewsModelUi
 import com.kerencev.vknewscompose.presentation.screens.news.flow.NewsEvent
 import com.kerencev.vknewscompose.presentation.screens.news.flow.NewsShot

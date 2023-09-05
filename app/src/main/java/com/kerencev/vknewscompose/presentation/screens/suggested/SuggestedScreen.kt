@@ -62,7 +62,8 @@ fun SuggestedScreenContent(
             ) { profile ->
                 ProfileItem(
                     profile = profile,
-                    onClick = { onItemClick(ProfileParams(id = profile.id, type = profile.type)) })
+                    onClick = { onItemClick(ProfileParams(id = profile.id, type = profile.type)) }
+                )
             }
         }
 

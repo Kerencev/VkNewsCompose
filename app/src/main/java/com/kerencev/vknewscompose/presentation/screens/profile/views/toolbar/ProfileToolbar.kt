@@ -31,7 +31,7 @@ import coil.compose.AsyncImage
 import com.kerencev.vknewscompose.R
 import com.kerencev.vknewscompose.domain.entities.Profile
 import com.kerencev.vknewscompose.presentation.common.ContentState
-import com.kerencev.vknewscompose.presentation.common.views.IconBack
+import com.kerencev.vknewscompose.presentation.common.views.icon.IconBack
 import com.kerencev.vknewscompose.presentation.screens.profile.flow.ProfileViewState
 import com.valentinilk.shimmer.shimmer
 

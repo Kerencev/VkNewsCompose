@@ -12,9 +12,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.kerencev.vknewscompose.R
@@ -22,15 +20,15 @@ import com.kerencev.vknewscompose.di.ViewModelFactory
 import com.kerencev.vknewscompose.domain.entities.Profile
 import com.kerencev.vknewscompose.presentation.common.compose.rememberUnitParams
 import com.kerencev.vknewscompose.presentation.common.mvi.state.SearchViewState
-import com.kerencev.vknewscompose.presentation.common.views.ProgressBarDefault
-import com.kerencev.vknewscompose.presentation.common.views.ScaffoldWithCollapsingToolbar
-import com.kerencev.vknewscompose.presentation.common.views.TextWithButton
+import com.kerencev.vknewscompose.presentation.common.views.loading.ProgressBarDefault
+import com.kerencev.vknewscompose.presentation.common.views.toolbar.ScaffoldWithCollapsingToolbar
+import com.kerencev.vknewscompose.presentation.common.views.text.TextTotalCount
+import com.kerencev.vknewscompose.presentation.common.views.text.TextWithButton
 import com.kerencev.vknewscompose.presentation.common.views.profile_item.ProfileItem
 import com.kerencev.vknewscompose.presentation.common.views.search.SearchLayout
 import com.kerencev.vknewscompose.presentation.screens.profile.ProfileParams
 import com.kerencev.vknewscompose.presentation.screens.search.flow.SearchEvent
 import com.kerencev.vknewscompose.presentation.screens.search.views.SearchImage
-import com.kerencev.vknewscompose.ui.theme.LightBlue
 
 @Composable
 fun SearchScreen(
@@ -92,14 +90,7 @@ fun SearchScreenContent(
                         onClick = { sendEvent(SearchEvent.Retry) }
                     )
 
-                    state.isItemsOver -> Text(
-                        modifier = Modifier
-                            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
-                        text = stringResource(id = R.string.set_count, state.items.size),
-                        color = LightBlue,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Medium,
-                    )
+                    state.isItemsOver -> TextTotalCount(count = state.items.size)
 
                     state.items.isEmpty() -> SearchImage(
                         modifier = Modifier.padding(
@@ -109,9 +100,7 @@ fun SearchScreenContent(
                         )
                     )
 
-                    !state.isSwipeRefreshing -> SideEffect {
-                        sendEvent(SearchEvent.GetNextPage)
-                    }
+                    !state.isSwipeRefreshing -> SideEffect { sendEvent(SearchEvent.GetNextPage) }
                 }
             }
         }

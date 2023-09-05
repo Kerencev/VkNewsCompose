@@ -23,7 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.kerencev.vknewscompose.R
-import com.kerencev.vknewscompose.presentation.common.views.CardTitle
+import com.kerencev.vknewscompose.ui.theme.SecondTitle
 
 @Composable
 fun NewsText(
@@ -75,9 +75,10 @@ fun NewsText(
                         .height(20.dp)
                         .width(2.dp)
                 )
-                CardTitle(
+                Text(
+                    modifier = Modifier.background(color = surfaceColor),
                     text = stringResource(id = R.string.show_more),
-                    modifier = Modifier.background(color = surfaceColor)
+                    style = SecondTitle
                 )
             }
         }

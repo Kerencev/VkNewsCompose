@@ -19,6 +19,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
@@ -31,10 +32,10 @@ import coil.compose.AsyncImage
 import com.kerencev.vknewscompose.R
 import com.kerencev.vknewscompose.domain.entities.Photo
 import com.kerencev.vknewscompose.domain.entities.PhotoModel
-import com.kerencev.vknewscompose.presentation.common.views.BoxIcon
-import com.kerencev.vknewscompose.presentation.common.views.CardTitle
-import com.kerencev.vknewscompose.presentation.common.views.ShimmerDefault
+import com.kerencev.vknewscompose.presentation.common.views.icon.BoxIcon
+import com.kerencev.vknewscompose.presentation.common.views.loading.ShimmerDefault
 import com.kerencev.vknewscompose.ui.theme.LightBlue
+import com.kerencev.vknewscompose.ui.theme.SecondTitle
 import com.kerencev.vknewscompose.ui.theme.Shapes
 
 @Composable
@@ -60,11 +61,15 @@ fun ProfilePhotos(
                     .clickable { onShowAllClick() },
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                CardTitle(
+                Text(
                     modifier = Modifier.weight(1f),
-                    text = stringResource(id = R.string.photo)
+                    text = stringResource(id = R.string.photo),
+                    style = SecondTitle
                 )
-                CardTitle(text = stringResource(id = R.string.show_all))
+                Text(
+                    text = stringResource(id = R.string.show_all),
+                    style = SecondTitle
+                )
                 Icon(
                     modifier = Modifier.padding(top = 2.dp),
                     painter = painterResource(id = R.drawable.ic_arrow_right),

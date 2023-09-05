@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.kerencev.vknewscompose.R
 import com.kerencev.vknewscompose.extensions.formatStatisticCount
-import com.kerencev.vknewscompose.presentation.common.views.IconWithText
+import com.kerencev.vknewscompose.presentation.common.views.icon.IconWithText
 import com.kerencev.vknewscompose.presentation.model.NewsModelUi
 import com.kerencev.vknewscompose.ui.theme.DarkRed
 

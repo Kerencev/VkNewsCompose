@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.kerencev.vknewscompose.presentation.common.compose.clearFocusOnKeyboardDismiss
-import com.kerencev.vknewscompose.presentation.common.views.DelayTextInput
+import com.kerencev.vknewscompose.presentation.common.views.input.DelayTextInput
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

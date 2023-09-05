@@ -12,7 +12,7 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.kerencev.vknewscompose.presentation.common.views.AsyncShimmerImage
+import com.kerencev.vknewscompose.presentation.common.views.loading.AsyncShimmerImage
 
 @Composable
 fun UserProfileCover(

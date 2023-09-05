@@ -1,4 +1,4 @@
-package com.kerencev.vknewscompose.presentation.common.views
+package com.kerencev.vknewscompose.presentation.common.views.loading
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

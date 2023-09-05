@@ -8,7 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.Dp
-import com.kerencev.vknewscompose.presentation.common.views.AsyncShimmerImage
+import com.kerencev.vknewscompose.presentation.common.views.loading.AsyncShimmerImage
 
 @Composable
 fun GroupProfileCover(

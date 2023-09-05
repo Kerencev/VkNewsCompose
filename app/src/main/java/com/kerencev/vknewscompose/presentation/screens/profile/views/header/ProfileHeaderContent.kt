@@ -33,7 +33,7 @@ import com.kerencev.vknewscompose.domain.entities.OnlineType
 import com.kerencev.vknewscompose.domain.entities.Platform
 import com.kerencev.vknewscompose.domain.entities.Profile
 import com.kerencev.vknewscompose.domain.entities.UserProfileModel
-import com.kerencev.vknewscompose.presentation.common.views.IconWithText
+import com.kerencev.vknewscompose.presentation.common.views.icon.IconWithText
 import com.kerencev.vknewscompose.presentation.common.views.status.UserStatus
 import com.kerencev.vknewscompose.ui.theme.Shapes
 import com.kerencev.vknewscompose.ui.theme.VkNewsComposeTheme

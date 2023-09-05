@@ -14,9 +14,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.kerencev.vknewscompose.R
@@ -24,14 +22,14 @@ import com.kerencev.vknewscompose.di.getApplicationComponent
 import com.kerencev.vknewscompose.domain.entities.UserProfileModel
 import com.kerencev.vknewscompose.presentation.common.compose.rememberUnitParams
 import com.kerencev.vknewscompose.presentation.common.mvi.state.SearchViewState
-import com.kerencev.vknewscompose.presentation.common.views.IconBack
-import com.kerencev.vknewscompose.presentation.common.views.ProgressBarDefault
-import com.kerencev.vknewscompose.presentation.common.views.ScaffoldWithCollapsingToolbar
-import com.kerencev.vknewscompose.presentation.common.views.TextWithButton
+import com.kerencev.vknewscompose.presentation.common.views.icon.IconBack
+import com.kerencev.vknewscompose.presentation.common.views.loading.ProgressBarDefault
+import com.kerencev.vknewscompose.presentation.common.views.toolbar.ScaffoldWithCollapsingToolbar
+import com.kerencev.vknewscompose.presentation.common.views.text.TextTotalCount
+import com.kerencev.vknewscompose.presentation.common.views.text.TextWithButton
+import com.kerencev.vknewscompose.presentation.common.views.profile_item.UserItem
 import com.kerencev.vknewscompose.presentation.common.views.search.SearchLayout
 import com.kerencev.vknewscompose.presentation.screens.friends.flow.FriendsEvent
-import com.kerencev.vknewscompose.presentation.common.views.profile_item.UserItem
-import com.kerencev.vknewscompose.ui.theme.LightBlue
 
 @Composable
 fun FriendsScreen(
@@ -103,22 +101,10 @@ fun FriendsScreenContent(
                         onClick = { sendEvent(FriendsEvent.GetFriends(isRefresh = false)) }
                     )
 
-                    state.isItemsOver -> Text(
-                        modifier = Modifier
-                            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
-                        text = stringResource(
-                            id = R.string.set_count,
-                            state.items.size
-                        ),
-                        color = LightBlue,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Medium,
-                    )
+                    state.isItemsOver -> TextTotalCount(count = state.items.size)
 
                     !state.isSwipeRefreshing -> SideEffect {
-                        sendEvent(
-                            FriendsEvent.GetFriends(isRefresh = state.items.isEmpty())
-                        )
+                        sendEvent(FriendsEvent.GetFriends(isRefresh = state.items.isEmpty()))
                     }
                 }
             }

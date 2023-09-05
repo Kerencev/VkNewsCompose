@@ -17,9 +17,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kerencev.vknewscompose.R
 import com.kerencev.vknewscompose.di.getApplicationComponent
 import com.kerencev.vknewscompose.presentation.common.compose.rememberUnit
-import com.kerencev.vknewscompose.presentation.common.views.ProgressBarDefault
-import com.kerencev.vknewscompose.presentation.common.views.ScaffoldWithCollapsingToolbar
-import com.kerencev.vknewscompose.presentation.common.views.TextWithButton
+import com.kerencev.vknewscompose.presentation.common.views.loading.ProgressBarDefault
+import com.kerencev.vknewscompose.presentation.common.views.toolbar.ScaffoldWithCollapsingToolbar
+import com.kerencev.vknewscompose.presentation.common.views.text.TextWithButton
 import com.kerencev.vknewscompose.presentation.model.NewsModelUi
 import com.kerencev.vknewscompose.presentation.screens.comments.flow.CommentsEvent
 import com.kerencev.vknewscompose.presentation.screens.comments.flow.CommentsViewState

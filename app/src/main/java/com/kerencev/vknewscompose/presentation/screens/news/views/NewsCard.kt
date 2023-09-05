@@ -17,7 +17,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import com.kerencev.vknewscompose.R
-import com.kerencev.vknewscompose.presentation.common.views.ImageContent
+import com.kerencev.vknewscompose.presentation.common.views.image_content.ImageContent
 import com.kerencev.vknewscompose.presentation.model.NewsModelUi
 
 @Composable

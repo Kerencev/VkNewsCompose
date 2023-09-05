@@ -1,4 +1,4 @@
-package com.kerencev.vknewscompose.presentation.screens.photos_pager.views
+package com.kerencev.vknewscompose.presentation.common.views.loading
 
 import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.RepeatMode

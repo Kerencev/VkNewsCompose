@@ -22,7 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.kerencev.vknewscompose.R
-import com.kerencev.vknewscompose.presentation.common.views.TextWithButton
+import com.kerencev.vknewscompose.presentation.common.views.text.TextWithButton
 import com.kerencev.vknewscompose.ui.theme.Shapes
 
 @Composable
