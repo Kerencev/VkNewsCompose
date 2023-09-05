@@ -31,9 +31,9 @@ import com.kerencev.vknewscompose.presentation.activity.MainViewModel
 import com.kerencev.vknewscompose.presentation.common.compose.SetupSystemBar
 import com.kerencev.vknewscompose.presentation.common.compose.rememberUnitParams
 import com.kerencev.vknewscompose.presentation.model.PhotoType
-import com.kerencev.vknewscompose.presentation.navigation.BottomNavGraph
-import com.kerencev.vknewscompose.presentation.navigation.NavigationItem
-import com.kerencev.vknewscompose.presentation.navigation.rememberNavigationState
+import com.kerencev.vknewscompose.presentation.navigation.main.BottomNavGraph
+import com.kerencev.vknewscompose.presentation.navigation.main.NavigationItem
+import com.kerencev.vknewscompose.presentation.navigation.main.rememberNavigationState
 import com.kerencev.vknewscompose.presentation.screens.comments.CommentsScreen
 import com.kerencev.vknewscompose.presentation.screens.friends.FriendsScreen
 import com.kerencev.vknewscompose.presentation.screens.home.HomeScreen
@@ -81,7 +81,7 @@ fun MainScreen(
 
                 val items = listOf(
                     NavigationItem.Home,
-                    NavigationItem.Recommendation,
+                    NavigationItem.Search,
                     NavigationItem.Profile
                 )
                 items.forEach { item ->
@@ -91,12 +91,8 @@ fun MainScreen(
 
                     BottomNavigationItem(
                         selected = selected,
-                        onClick = {
-                            if (!selected) {
-                                navigationState.navigateTo(item.screen.route)
-                            }
-                        },
-                        icon = { Icon(item.icon, contentDescription = item.title) },
+                        onClick = { if (!selected) navigationState.navigateTo(item.screen.route) },
+                        icon = { Icon(imageVector = item.icon, contentDescription = item.title) },
                         label = { Text(text = item.title) },
                         selectedContentColor = LightBlue,
                         unselectedContentColor = MaterialTheme.colors.onSecondary
@@ -105,10 +101,9 @@ fun MainScreen(
             }
         }
     ) { paddingValues ->
-        //TODO: get away from repetitive screens
         BottomNavGraph(
             navHostController = navigationState.navHostController,
-            newsScreenContent = {
+            homeScreenContent = {
                 HomeScreen(
                     viewModelFactory = viewModelFactory,
                     paddingValues = paddingValues,
@@ -117,11 +112,18 @@ fun MainScreen(
                     onImageClick = { index, newsModelId ->
                         onPhotoClick(null, PhotoType.NEWS, index, newsModelId)
                     },
+                    //TODO: add ProfileType.User
                     onHeaderClick = { profileId ->
-                        navigationState.navigateToGroupProfile(profileId = profileId)
+                        navigationState.navigateToProfile(
+                            from = NavigationItem.Home,
+                            params = ProfileParams(id = profileId, type = ProfileType.GROUP)
+                        )
                     },
                     onSuggestedClick = { profileParams ->
-                        navigationState.navigateToProfile(profileParams = profileParams)
+                        navigationState.navigateToProfile(
+                            from = NavigationItem.Home,
+                            params = profileParams
+                        )
                     }
                 )
             },
@@ -131,33 +133,19 @@ fun MainScreen(
                     onBackPressed = { navigationState.navHostController.popBackStack() }
                 )
             },
-            recommendationScreenContent = {
+            searchScreenContent = {
                 SearchScreen(
                     viewModelFactory = viewModelFactory,
                     paddingValues = paddingValues,
                     onItemClick = { profileParams ->
-                        navigationState.navigateToProfile(profileParams = profileParams)
+                        navigationState.navigateToProfile(
+                            from = NavigationItem.Search,
+                            params = profileParams
+                        )
                     }
                 )
             },
-            userProfileScreenContent = { params ->
-                ProfileScreen(
-                    profileParams = params,
-                    paddingValues = paddingValues,
-                    onPhotoClick = { index ->
-                        onPhotoClick(params.id, PhotoType.PROFILE, index, null)
-                    },
-                    onWallItemClick = { index, itemId ->
-                        onPhotoClick(params.id, PhotoType.WALL, index, itemId)
-                    },
-                    onShowAllPhotosClick = { navigationState.navigateToProfilePhotos(params.id) },
-                    onProfileRefreshError = { sendEvent(MainEvent.ShowErrorMessage(it)) },
-                    onLogoutClick = { sendEvent(MainEvent.Logout) },
-                    onFriendsClick = { navigationState.navigateToFriends(params.id) },
-                    onBackPressed = { navigationState.navHostController.popBackStack() },
-                )
-            },
-            userProfileFromSuggestedScreenContent = { params ->
+            profileScreenContent = { from, params ->
                 ProfileScreen(
                     profileParams = params,
                     paddingValues = paddingValues,
@@ -168,30 +156,17 @@ fun MainScreen(
                         onPhotoClick(params.id, PhotoType.WALL, index, itemId)
                     },
                     onShowAllPhotosClick = {
-                        navigationState.navigateToProfilePhotosFromSuggested(params.id)
+                        navigationState.navigateToProfilePhotos(from = from, profileId = params.id)
                     },
                     onProfileRefreshError = { sendEvent(MainEvent.ShowErrorMessage(it)) },
                     onLogoutClick = { sendEvent(MainEvent.Logout) },
-                    onFriendsClick = { navigationState.navigateToFriendsFromSuggested(params.id) },
+                    onFriendsClick = {
+                        navigationState.navigateToFriends(from = from, userId = params.id)
+                    },
                     onBackPressed = { navigationState.navHostController.popBackStack() },
                 )
             },
-            groupProfileScreenContent = { params ->
-                ProfileScreen(
-                    profileParams = params,
-                    paddingValues = paddingValues,
-                    onPhotoClick = { index ->
-                        onPhotoClick(params.id, PhotoType.PROFILE, index, null)
-                    },
-                    onWallItemClick = { index, itemId ->
-                        onPhotoClick(params.id, PhotoType.WALL, index, itemId)
-                    },
-                    onShowAllPhotosClick = { navigationState.navigateToGroupPhotos(params.id) },
-                    onProfileRefreshError = { sendEvent(MainEvent.ShowErrorMessage(it)) },
-                    onBackPressed = { navigationState.navHostController.popBackStack() },
-                )
-            },
-            userPhotosScreenContent = { userId ->
+            profilePhotosScreenContent = { userId ->
                 ProfilePhotosScreen(
                     userId = userId,
                     paddingValues = paddingValues,
@@ -201,43 +176,14 @@ fun MainScreen(
                     onBackPressed = { navigationState.navHostController.popBackStack() }
                 )
             },
-            userPhotosFromSuggestedScreenContent = { userId ->
-                ProfilePhotosScreen(
-                    userId = userId,
-                    paddingValues = paddingValues,
-                    onPhotoClick = { index ->
-                        onPhotoClick(userId, PhotoType.PROFILE, index, null)
-                    },
-                    onBackPressed = { navigationState.navHostController.popBackStack() }
-                )
-            },
-            groupPhotosScreenContent = { groupId ->
-                ProfilePhotosScreen(
-                    userId = groupId,
-                    paddingValues = paddingValues,
-                    onPhotoClick = { index ->
-                        onPhotoClick(groupId, PhotoType.PROFILE, index, null)
-                    },
-                    onBackPressed = { navigationState.navHostController.popBackStack() }
-                )
-            },
-            friendsScreenContent = { userId ->
-                FriendsScreen(
-                    paddingValues = paddingValues,
-                    onBackPressed = { navigationState.navHostController.popBackStack() },
-                    onFriendClick = { profileId ->
-                        navigationState.navigateToUserProfile(profileId = profileId)
-                    },
-                    userId = userId
-                )
-            },
-            friendsFromSuggestedScreenContent = { userId ->
+            friendsScreenContent = { from, userId ->
                 FriendsScreen(
                     paddingValues = paddingValues,
                     onBackPressed = { navigationState.navHostController.popBackStack() },
                     onFriendClick = { profileId ->
                         navigationState.navigateToProfile(
-                            profileParams = ProfileParams(
+                            from = from,
+                            params = ProfileParams(
                                 id = profileId,
                                 type = ProfileType.USER
                             )

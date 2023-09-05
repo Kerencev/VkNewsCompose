@@ -11,8 +11,8 @@ import androidx.navigation.compose.rememberNavController
 import com.kerencev.vknewscompose.di.getApplicationComponent
 import com.kerencev.vknewscompose.domain.entities.AuthState
 import com.kerencev.vknewscompose.presentation.common.compose.SetupSystemBar
-import com.kerencev.vknewscompose.presentation.navigation.AppNavGraph
-import com.kerencev.vknewscompose.presentation.navigation.Screen
+import com.kerencev.vknewscompose.presentation.navigation.main.MainNavGraph
+import com.kerencev.vknewscompose.presentation.navigation.main.MainScreen
 import com.kerencev.vknewscompose.presentation.screens.login.LoginScreen
 import com.kerencev.vknewscompose.presentation.screens.main.MainScreen
 import com.kerencev.vknewscompose.presentation.screens.main.flow.MainEvent
@@ -47,7 +47,7 @@ class MainActivity : ComponentActivity() {
                     AuthState.INITIAL -> Unit
 
                     AuthState.AUTHORIZED -> {
-                        AppNavGraph(
+                        MainNavGraph(
                             navHostController = navController,
                             mainScreenContent = {
                                 MainScreen(
@@ -55,7 +55,7 @@ class MainActivity : ComponentActivity() {
                                     mainViewModel = viewModel,
                                     onPhotoClick = { userId, type, index, newsModelId ->
                                         navController.navigate(
-                                            Screen.PhotosPager.getRouteWithArgs(
+                                            MainScreen.PhotosPager.getRouteWithArgs(
                                                 userId = userId,
                                                 type = type,
                                                 initialNumber = index,
