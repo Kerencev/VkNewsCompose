@@ -28,24 +28,31 @@ fun NewsFooter(
         verticalAlignment = Alignment.CenterVertically
     ) {
         IconWithText(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier
+                .padding(4.dp)
+                .weight(1f),
             iconRes = R.drawable.ic_views_count,
             text = newsModel.viewsCount.formatStatisticCount(),
         )
         Row {
             IconWithText(
+                modifier = Modifier.padding(4.dp),
                 iconRes = R.drawable.ic_share,
                 text = newsModel.sharesCount.formatStatisticCount(),
             )
             Spacer(modifier = Modifier.width(12.dp))
             IconWithText(
-                modifier = Modifier.clickable { onCommentsClick() },
+                modifier = Modifier
+                    .padding(4.dp)
+                    .clickable { onCommentsClick() },
                 iconRes = R.drawable.ic_comment,
                 text = newsModel.commentsCount.formatStatisticCount(),
             )
             Spacer(modifier = Modifier.width(12.dp))
             IconWithText(
-                modifier = Modifier.clickable { onLikesClick() },
+                modifier = Modifier
+                    .padding(4.dp)
+                    .clickable { onLikesClick() },
                 iconRes = if (newsModel.isLiked) R.drawable.ic_like_fill else R.drawable.ic_like,
                 text = newsModel.likesCount.formatStatisticCount(),
                 tint = if (newsModel.isLiked) DarkRed else MaterialTheme.colors.onSecondary

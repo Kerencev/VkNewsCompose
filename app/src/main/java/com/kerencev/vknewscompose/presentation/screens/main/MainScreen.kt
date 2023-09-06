@@ -2,7 +2,6 @@ package com.kerencev.vknewscompose.presentation.screens.main
 
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -21,7 +20,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.kerencev.vknewscompose.R
@@ -71,11 +69,11 @@ fun MainScreen(
         bottomBar = {
             BottomNavigation(
                 modifier = Modifier
-                    .height(56.dp)
                     .windowInsetsPadding(
                         WindowInsets.systemBars
                             .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom)
-                    )
+                    ),
+                backgroundColor = MaterialTheme.colors.primary,
             ) {
                 val navBackStackEntry by navigationState.navHostController.currentBackStackEntryAsState()
 

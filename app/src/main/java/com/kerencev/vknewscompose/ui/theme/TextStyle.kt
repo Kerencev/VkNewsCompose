@@ -9,3 +9,9 @@ val SecondTitle = TextStyle(
     fontSize = 16.sp,
     color = LightBlue
 )
+
+val OnSecondarySmall = TextStyle(
+    fontSize = 12.sp,
+    fontWeight = FontWeight.Medium,
+    color = Black500,
+)

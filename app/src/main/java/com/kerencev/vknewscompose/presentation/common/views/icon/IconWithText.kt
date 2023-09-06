@@ -4,7 +4,6 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Icon
@@ -15,6 +14,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -24,9 +25,10 @@ fun IconWithText(
     text: String,
     tint: Color = MaterialTheme.colors.onSecondary,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
+    textStyle: TextStyle = TextStyle(color = MaterialTheme.colors.onSecondary)
 ) {
     Row(
-        modifier = modifier.padding(4.dp),
+        modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = horizontalArrangement
     ) {
@@ -37,6 +39,11 @@ fun IconWithText(
             tint = tint
         )
         Spacer(modifier = Modifier.width(2.dp))
-        Text(text = text, color = MaterialTheme.colors.onSecondary)
+        Text(
+            text = text,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            style = textStyle
+        )
     }
 }

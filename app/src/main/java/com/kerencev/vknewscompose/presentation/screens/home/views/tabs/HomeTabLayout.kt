@@ -17,12 +17,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.pager.pagerTabIndicatorOffset
-import com.kerencev.vknewscompose.R
 import com.kerencev.vknewscompose.ui.theme.LightBlue
 import kotlinx.coroutines.launch
 
@@ -60,7 +59,9 @@ fun HomeTabLayout(
                             text = newsType.toTitle(),
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Medium,
-                            color = MaterialTheme.colors.onPrimary
+                            color = MaterialTheme.colors.onPrimary,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
                         )
                     }
                 )
