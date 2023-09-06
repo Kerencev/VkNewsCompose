@@ -6,7 +6,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.kerencev.vknewscompose.presentation.model.PhotoType
+import com.kerencev.vknewscompose.presentation.screens.photos_pager.PhotoType
 import com.kerencev.vknewscompose.presentation.screens.photos_pager.PhotosPagerParams
 
 @Composable

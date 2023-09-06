@@ -26,7 +26,6 @@ import com.kerencev.vknewscompose.presentation.common.compose.rememberUnitParams
 import com.kerencev.vknewscompose.presentation.common.views.pager.HorizontalPagerIndicator
 import com.kerencev.vknewscompose.presentation.screens.photos_pager.views.PhotosPagerItem
 import com.kerencev.vknewscompose.presentation.screens.photos_pager.views.PhotosPagerToolbar
-import com.kerencev.vknewscompose.presentation.model.PhotoType
 import com.kerencev.vknewscompose.presentation.screens.photos_pager.flow.PhotosPagerEvent
 import com.kerencev.vknewscompose.presentation.screens.photos_pager.flow.PhotosPagerViewState
 import com.kerencev.vknewscompose.presentation.common.views.loading.ShimmerImage

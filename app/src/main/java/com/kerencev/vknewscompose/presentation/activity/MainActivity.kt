@@ -24,7 +24,8 @@ import com.vk.api.sdk.auth.VKScope
 
 class MainActivity : ComponentActivity() {
 
-    private val vkAccessRights = listOf(VKScope.WALL, VKScope.FRIENDS, VKScope.PHOTOS, VKScope.GROUPS)
+    private val vkAccessRights =
+        listOf(VKScope.WALL, VKScope.FRIENDS, VKScope.PHOTOS, VKScope.GROUPS)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,8 +44,8 @@ class MainActivity : ComponentActivity() {
 
             VkNewsComposeTheme {
                 SetupSystemBar()
+
                 when (state.value.authState) {
-                    AuthState.INITIAL -> Unit
 
                     AuthState.AUTHORIZED -> {
                         MainNavGraph(
@@ -53,14 +54,9 @@ class MainActivity : ComponentActivity() {
                                 MainScreen(
                                     viewModelFactory = viewModelFactory,
                                     mainViewModel = viewModel,
-                                    onPhotoClick = { userId, type, index, newsModelId ->
+                                    onPhotoClick = { params ->
                                         navController.navigate(
-                                            MainScreen.PhotosPager.getRouteWithArgs(
-                                                userId = userId,
-                                                type = type,
-                                                initialNumber = index,
-                                                newsModelId = newsModelId
-                                            )
+                                            MainScreen.PhotosPager.getRouteWithArgs(params)
                                         )
                                     }
                                 )
@@ -82,6 +78,8 @@ class MainActivity : ComponentActivity() {
                         navController.graph.clear()
                         LoginScreen { launcher.launch(vkAccessRights) }
                     }
+
+                    AuthState.INITIAL -> Unit
                 }
             }
         }

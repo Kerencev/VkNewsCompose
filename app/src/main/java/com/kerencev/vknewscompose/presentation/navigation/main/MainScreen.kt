@@ -1,6 +1,6 @@
 package com.kerencev.vknewscompose.presentation.navigation.main
 
-import com.kerencev.vknewscompose.presentation.model.PhotoType
+import com.kerencev.vknewscompose.presentation.screens.photos_pager.PhotosPagerParams
 
 sealed class MainScreen(
     override val route: String
@@ -11,13 +11,9 @@ sealed class MainScreen(
     object PhotosPager : MainScreen(ROUTE_PHOTOS_PAGER) {
         private const val ROUTE_FOR_ARGS = "photos_pager"
 
-        fun getRouteWithArgs(
-            userId: Long?,
-            type: PhotoType,
-            initialNumber: Int,
-            newsModelId: Long?
-        ): String {
-            return "$ROUTE_FOR_ARGS/$initialNumber/${type.name}/${newsModelId ?: 0}/${userId ?: 0}"
+        fun getRouteWithArgs(params: PhotosPagerParams): String {
+            return "$ROUTE_FOR_ARGS/${params.selectedPhotoNumber}" +
+                    "/${params.photoType.name}/${params.newsModelId}/${params.userId}"
         }
     }
 

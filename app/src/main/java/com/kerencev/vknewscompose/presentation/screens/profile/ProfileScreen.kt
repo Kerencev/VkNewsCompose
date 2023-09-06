@@ -29,6 +29,8 @@ import com.kerencev.vknewscompose.domain.entities.ProfileType
 import com.kerencev.vknewscompose.presentation.common.compose.rememberUnitParams
 import com.kerencev.vknewscompose.presentation.common.compose.statusBarHeight
 import com.kerencev.vknewscompose.presentation.screens.news.views.NewsCard
+import com.kerencev.vknewscompose.presentation.screens.photos_pager.PhotoType
+import com.kerencev.vknewscompose.presentation.screens.photos_pager.PhotosPagerParams
 import com.kerencev.vknewscompose.presentation.screens.profile.flow.ProfileEvent
 import com.kerencev.vknewscompose.presentation.screens.profile.flow.ProfileShot
 import com.kerencev.vknewscompose.presentation.screens.profile.flow.ProfileViewState
@@ -49,8 +51,8 @@ import kotlinx.coroutines.flow.onEach
 fun ProfileScreen(
     profileParams: ProfileParams,
     paddingValues: PaddingValues,
-    onPhotoClick: (index: Int) -> Unit,
-    onWallItemClick: (index: Int, itemId: Long) -> Unit,
+    onPhotoClick: (params: PhotosPagerParams) -> Unit,
+    onWallItemClick: (params: PhotosPagerParams) -> Unit,
     onShowAllPhotosClick: () -> Unit,
     onProfileRefreshError: (message: String) -> Unit,
     onBackPressed: () -> Unit,
@@ -71,8 +73,25 @@ fun ProfileScreen(
         currentShot = shot,
         paddingValues = paddingValues,
         sendEvent = sendEvent,
-        onPhotoClick = onPhotoClick,
-        onWallItemClick = onWallItemClick,
+        onPhotoClick = { index ->
+            onPhotoClick(
+                PhotosPagerParams(
+                    userId = profileParams.id,
+                    photoType = PhotoType.PROFILE,
+                    selectedPhotoNumber = index
+                )
+            )
+        },
+        onWallItemClick = { index, itemId ->
+            onWallItemClick(
+                PhotosPagerParams(
+                    userId = profileParams.id,
+                    photoType = PhotoType.WALL,
+                    selectedPhotoNumber = index,
+                    newsModelId = itemId
+                )
+            )
+        },
         onShowAllPhotosClick = onShowAllPhotosClick,
         onProfileRefreshError = onProfileRefreshError,
         onLogoutClick = onLogoutClick,

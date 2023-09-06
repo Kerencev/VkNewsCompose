@@ -6,7 +6,6 @@ import com.kerencev.vknewscompose.presentation.common.mvi.VkAction
 import com.kerencev.vknewscompose.presentation.common.mvi.VkCommand
 import com.kerencev.vknewscompose.presentation.common.mvi.VkEffect
 import com.kerencev.vknewscompose.presentation.common.mvi.VkShot
-import com.kerencev.vknewscompose.presentation.model.PhotoType
 import com.kerencev.vknewscompose.presentation.screens.photos_pager.flow.PhotosPagerEvent
 import com.kerencev.vknewscompose.presentation.screens.photos_pager.flow.PhotosPagerInputAction
 import com.kerencev.vknewscompose.presentation.screens.photos_pager.flow.PhotosPagerOutputAction

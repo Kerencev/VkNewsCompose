@@ -22,6 +22,8 @@ import com.kerencev.vknewscompose.presentation.screens.news.NewsScreen
 import com.kerencev.vknewscompose.presentation.screens.news.NewsType
 import com.kerencev.vknewscompose.presentation.screens.news.NewsViewModel
 import com.kerencev.vknewscompose.presentation.screens.news.RecommendationViewModel
+import com.kerencev.vknewscompose.presentation.screens.photos_pager.PhotoType
+import com.kerencev.vknewscompose.presentation.screens.photos_pager.PhotosPagerParams
 import com.kerencev.vknewscompose.presentation.screens.profile.ProfileParams
 import com.kerencev.vknewscompose.presentation.screens.suggested.SuggestedScreen
 
@@ -31,7 +33,7 @@ fun HomeScreen(
     paddingValues: PaddingValues,
     onCommentsClick: (newsModel: NewsModelUi) -> Unit,
     onError: (message: String) -> Unit,
-    onImageClick: (index: Int, newsModelId: Long) -> Unit,
+    onImageClick: (params: PhotosPagerParams) -> Unit,
     onHeaderClick: (params: ProfileParams) -> Unit,
     onSuggestedClick: (params: ProfileParams) -> Unit,
 ) {
@@ -50,7 +52,15 @@ fun HomeScreen(
         paddingValues = paddingValues,
         onCommentsClick = onCommentsClick,
         onError = onError,
-        onImageClick = onImageClick,
+        onImageClick = { index, newsModelId ->
+            onImageClick(
+                PhotosPagerParams(
+                    photoType = PhotoType.NEWS,
+                    selectedPhotoNumber = index,
+                    newsModelId = newsModelId
+                )
+            )
+        },
         onHeaderClick = onHeaderClick,
         onSuggestedClick = onSuggestedClick
     )

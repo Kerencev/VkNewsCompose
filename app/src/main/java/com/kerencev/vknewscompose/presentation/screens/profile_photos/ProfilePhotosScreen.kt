@@ -27,11 +27,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kerencev.vknewscompose.R
 import com.kerencev.vknewscompose.di.getApplicationComponent
 import com.kerencev.vknewscompose.presentation.common.compose.rememberUnitParams
-import com.kerencev.vknewscompose.presentation.common.views.loading.AsyncShimmerImage
 import com.kerencev.vknewscompose.presentation.common.views.icon.IconBack
+import com.kerencev.vknewscompose.presentation.common.views.loading.AsyncShimmerImage
 import com.kerencev.vknewscompose.presentation.common.views.loading.ProgressBarDefault
-import com.kerencev.vknewscompose.presentation.common.views.toolbar.ScaffoldWithCollapsingToolbar
 import com.kerencev.vknewscompose.presentation.common.views.text.TextWithButton
+import com.kerencev.vknewscompose.presentation.common.views.toolbar.ScaffoldWithCollapsingToolbar
+import com.kerencev.vknewscompose.presentation.screens.photos_pager.PhotoType
+import com.kerencev.vknewscompose.presentation.screens.photos_pager.PhotosPagerParams
 import com.kerencev.vknewscompose.presentation.screens.profile_photos.flow.ProfilePhotosEvent
 import com.kerencev.vknewscompose.presentation.screens.profile_photos.flow.ProfilePhotosViewState
 
@@ -39,7 +41,7 @@ import com.kerencev.vknewscompose.presentation.screens.profile_photos.flow.Profi
 fun ProfilePhotosScreen(
     userId: Long,
     paddingValues: PaddingValues,
-    onPhotoClick: (index: Int) -> Unit,
+    onPhotoClick: (params: PhotosPagerParams) -> Unit,
     onBackPressed: () -> Unit,
 ) {
     val component = getApplicationComponent()
@@ -52,7 +54,15 @@ fun ProfilePhotosScreen(
     ProfilePhotosScreenContent(
         currentState = state,
         paddingValues = paddingValues,
-        onPhotoClick = onPhotoClick,
+        onPhotoClick = { index ->
+            onPhotoClick(
+                PhotosPagerParams(
+                    userId = userId,
+                    photoType = PhotoType.PROFILE,
+                    selectedPhotoNumber = index
+                )
+            )
+        },
         onBackPressed = onBackPressed,
         sendEvent = sendEvent
     )

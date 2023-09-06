@@ -28,7 +28,6 @@ import com.kerencev.vknewscompose.domain.entities.ProfileType
 import com.kerencev.vknewscompose.presentation.activity.MainViewModel
 import com.kerencev.vknewscompose.presentation.common.compose.SetupSystemBar
 import com.kerencev.vknewscompose.presentation.common.compose.rememberUnitParams
-import com.kerencev.vknewscompose.presentation.model.PhotoType
 import com.kerencev.vknewscompose.presentation.navigation.main.BottomNavGraph
 import com.kerencev.vknewscompose.presentation.navigation.main.NavigationItem
 import com.kerencev.vknewscompose.presentation.navigation.main.rememberNavigationState
@@ -37,6 +36,7 @@ import com.kerencev.vknewscompose.presentation.screens.friends.FriendsScreen
 import com.kerencev.vknewscompose.presentation.screens.home.HomeScreen
 import com.kerencev.vknewscompose.presentation.screens.main.flow.MainEvent
 import com.kerencev.vknewscompose.presentation.screens.main.flow.MainShot
+import com.kerencev.vknewscompose.presentation.screens.photos_pager.PhotosPagerParams
 import com.kerencev.vknewscompose.presentation.screens.profile.ProfileParams
 import com.kerencev.vknewscompose.presentation.screens.profile.ProfileScreen
 import com.kerencev.vknewscompose.presentation.screens.profile_photos.ProfilePhotosScreen
@@ -48,12 +48,7 @@ import kotlinx.coroutines.launch
 fun MainScreen(
     viewModelFactory: ViewModelFactory,
     mainViewModel: MainViewModel,
-    onPhotoClick: (
-        userId: Long?,
-        type: PhotoType,
-        index: Int,
-        newsModelId: Long?
-    ) -> Unit
+    onPhotoClick: (params: PhotosPagerParams) -> Unit
 ) {
     SetupSystemBar()
 
@@ -108,9 +103,7 @@ fun MainScreen(
                     paddingValues = paddingValues,
                     onCommentsClick = { navigationState.navigateToComments(it) },
                     onError = { sendEvent(MainEvent.ShowErrorMessage(it)) },
-                    onImageClick = { index, newsModelId ->
-                        onPhotoClick(null, PhotoType.NEWS, index, newsModelId)
-                    },
+                    onImageClick = onPhotoClick,
                     onHeaderClick = { profileParams ->
                         navigationState.navigateToProfile(
                             from = NavigationItem.Home,
@@ -150,12 +143,8 @@ fun MainScreen(
                 ProfileScreen(
                     profileParams = params,
                     paddingValues = paddingValues,
-                    onPhotoClick = { index ->
-                        onPhotoClick(params.id, PhotoType.PROFILE, index, null)
-                    },
-                    onWallItemClick = { index, itemId ->
-                        onPhotoClick(params.id, PhotoType.WALL, index, itemId)
-                    },
+                    onPhotoClick = onPhotoClick,
+                    onWallItemClick = onPhotoClick,
                     onShowAllPhotosClick = {
                         navigationState.navigateToProfilePhotos(from = from, profileId = params.id)
                     },
@@ -172,9 +161,7 @@ fun MainScreen(
                 ProfilePhotosScreen(
                     userId = userId,
                     paddingValues = paddingValues,
-                    onPhotoClick = { index ->
-                        onPhotoClick(userId, PhotoType.PROFILE, index, null)
-                    },
+                    onPhotoClick = onPhotoClick,
                     onBackPressed = { navigationState.navHostController.popBackStack() }
                 )
             },

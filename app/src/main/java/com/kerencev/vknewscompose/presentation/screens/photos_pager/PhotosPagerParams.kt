@@ -1,10 +1,12 @@
 package com.kerencev.vknewscompose.presentation.screens.photos_pager
 
-import com.kerencev.vknewscompose.presentation.model.PhotoType
-
 data class PhotosPagerParams(
-    val userId: Long,
+    val userId: Long = 0,
     val photoType: PhotoType,
     val selectedPhotoNumber: Int,
-    val newsModelId: Long,
+    val newsModelId: Long = 0,
 )
+
+enum class PhotoType {
+    PROFILE, WALL, NEWS
+}
