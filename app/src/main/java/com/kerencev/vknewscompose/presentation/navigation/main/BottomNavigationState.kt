@@ -10,6 +10,7 @@ import com.kerencev.vknewscompose.domain.entities.ProfileType
 import com.kerencev.vknewscompose.presentation.model.NewsModelUi
 import com.kerencev.vknewscompose.presentation.navigation.home.HomeScreen
 import com.kerencev.vknewscompose.presentation.navigation.profile.ProfileScreen
+import com.kerencev.vknewscompose.presentation.navigation.search.SearchScreen
 import com.kerencev.vknewscompose.presentation.screens.profile.ProfileParams
 
 class BottomNavigationState(
@@ -40,8 +41,9 @@ class BottomNavigationState(
                 ProfileScreen.Profile.getRouteWithArgs(params)
             )
 
-            //TODO
-            NavigationItem.Search -> Unit
+            NavigationItem.Search -> navHostController.navigate(
+                SearchScreen.Profile.getRouteWithArgs(params)
+            )
         }
     }
 
@@ -55,8 +57,9 @@ class BottomNavigationState(
                 ProfileScreen.ProfilePhotos.getRouteWithArgs(profileId)
             )
 
-            //TODO
-            NavigationItem.Search -> Unit
+            NavigationItem.Search -> navHostController.navigate(
+                SearchScreen.ProfilePhotos.getRouteWithArgs(profileId)
+            )
         }
     }
 
@@ -70,8 +73,9 @@ class BottomNavigationState(
                 ProfileScreen.Friends.getRouteWithArgs(userId)
             )
 
-            //TODO
-            NavigationItem.Search -> Unit
+            NavigationItem.Search -> navHostController.navigate(
+                SearchScreen.Friends.getRouteWithArgs(userId)
+            )
         }
     }
 

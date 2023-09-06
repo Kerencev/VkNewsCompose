@@ -33,6 +33,9 @@ fun BottomNavGraph(
         )
         searchScreenNavGraph(
             searchScreenContent = searchScreenContent,
+            profileScreenContent = { profileScreenContent(NavigationItem.Search, it) },
+            profilePhotosScreenContent = profilePhotosScreenContent,
+            friendsScreenContent = { friendsScreenContent(NavigationItem.Search, it) }
         )
         profileScreenNavGraph(
             profileScreenContent = { profileScreenContent(NavigationItem.Profile, it) },
