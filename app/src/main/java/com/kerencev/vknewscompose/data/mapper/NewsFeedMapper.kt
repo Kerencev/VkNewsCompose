@@ -40,7 +40,7 @@ fun NewsFeedResponseDto.mapToModel(): List<NewsModel> {
                 ownerId = post.ownerId ?: 0,
                 communityName = group?.name ?: "${profile?.firstName} ${profile?.lastName}",
                 postTime = ((post.date ?: 0) * 1000).toDateTime(),
-                communityImageUrl = group?.avatar ?: profile?.photoUrl,
+                communityImageUrl = group?.avatar ?: profile?.avatarUrl,
                 contentText = post.text.orEmpty(),
                 imageContent = imageContent,
                 viewsCount = post.views?.count ?: 0,

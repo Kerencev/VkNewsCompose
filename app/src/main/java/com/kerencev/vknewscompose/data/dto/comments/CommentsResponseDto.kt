@@ -1,6 +1,7 @@
 package com.kerencev.vknewscompose.data.dto.comments
 
 import com.google.gson.annotations.SerializedName
+import com.kerencev.vknewscompose.data.dto.profile.ProfileDto
 
 data class CommentsResponseDto(
     val response: CommentsDto?

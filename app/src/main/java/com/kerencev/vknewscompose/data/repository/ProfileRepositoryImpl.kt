@@ -9,6 +9,7 @@ import com.kerencev.vknewscompose.domain.entities.PagingModel
 import com.kerencev.vknewscompose.domain.entities.PhotoModel
 import com.kerencev.vknewscompose.domain.entities.PhotosModel
 import com.kerencev.vknewscompose.domain.entities.UserProfileModel
+import com.kerencev.vknewscompose.domain.mapper.toPhotoModel
 import com.kerencev.vknewscompose.domain.repositories.ProfileRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -119,25 +120,7 @@ class ProfileRepositoryImpl @Inject constructor(
 
     override fun getWallItemPhotos(userId: Long, itemId: Long): Flow<List<PhotoModel>> = flow {
         val post = wallItemsCache.getById(userId).firstOrNull { it.id == itemId }
-        if (post == null) emit(emptyList())
-        else {
-            emit(
-                post.imageContent.map { image ->
-                    PhotoModel(
-                        id = image.id,
-                        date = null,
-                        lat = null,
-                        long = null,
-                        url = image.url,
-                        height = image.height,
-                        width = image.width,
-                        text = "",
-                        likes = 0,
-                        reposts = 0
-                    )
-                }
-            )
-        }
+        emit(post?.imageContent?.map { it.toPhotoModel() } ?: emptyList())
     }
 
 }

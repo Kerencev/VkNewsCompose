@@ -16,7 +16,7 @@ fun CommentsResponseDto.mapToModel(): List<CommentModel> {
             val commentModel = CommentModel(
                 id = comment.id,
                 authorName = "${profile.firstName} ${profile.lastName}",
-                authorImageUrl = profile.avatar,
+                authorImageUrl = profile.avatarUrl,
                 commentText = comment.text.orEmpty(),
                 commentDate = ((comment.date ?: 0) * 1000).toDateTime()
             )

@@ -1,6 +1,7 @@
 package com.kerencev.vknewscompose.data.dto.news_feed
 
 import com.google.gson.annotations.SerializedName
+import com.kerencev.vknewscompose.data.dto.profile.ProfileDto
 
 data class NewsFeedResponseDto(
     val response: NewsFeedDto?
@@ -10,15 +11,8 @@ data class NewsFeedDto(
     val count: Int?,
     val groups: List<Group>?,
     val items: List<ItemNewsDto>?,
-    val profiles: List<Profile>?,
+    val profiles: List<ProfileDto>?,
     @SerializedName("next_from") val nextFrom: String?
-)
-
-data class Profile(
-    val id: Long?,
-    @SerializedName("first_name") val firstName: String?,
-    @SerializedName("last_name") val lastName: String?,
-    @SerializedName("photo_100") val photoUrl: String?
 )
 
 data class Group(
