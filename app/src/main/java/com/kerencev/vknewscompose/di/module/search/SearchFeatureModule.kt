@@ -1,4 +1,4 @@
-package com.kerencev.vknewscompose.di.module
+package com.kerencev.vknewscompose.di.module.search
 
 import com.kerencev.vknewscompose.domain.repositories.SearchRepository
 import com.kerencev.vknewscompose.presentation.screens.search.flow.features.SearchFeature

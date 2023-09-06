@@ -1,4 +1,4 @@
-package com.kerencev.vknewscompose.di.module
+package com.kerencev.vknewscompose.di.module.profile
 
 import com.kerencev.vknewscompose.domain.repositories.ProfileRepository
 import com.kerencev.vknewscompose.presentation.screens.profile.flow.features.CalculateProfileParamsFeature

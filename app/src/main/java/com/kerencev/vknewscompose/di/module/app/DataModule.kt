@@ -1,4 +1,4 @@
-package com.kerencev.vknewscompose.di.module
+package com.kerencev.vknewscompose.di.module.app
 
 import android.content.Context
 import com.kerencev.vknewscompose.data.api.ApiFactory

@@ -42,7 +42,7 @@ interface ApiService {
         @Query("item_id") postId: Long
     ): LikesCountResponseDto
 
-    @GET("wall.getComments?v=5.131&extended=1&fields=photo_100")
+    @GET("wall.getComments?v=5.131&extended=1&fields=photo_200")
     suspend fun getComments(
         @Query("owner_id") ownerId: Long,
         @Query("post_id") postId: Long
@@ -65,7 +65,7 @@ interface ApiService {
         @Query("count") count: Int
     ): ProfilePhotosResponseDto
 
-    @GET("wall.get?v=5.131&extended=true")
+    @GET("wall.get?v=5.131&extended=true&fields=photo_200")
     suspend fun getWall(
         @Query("owner_id") userId: String,
         @Query("offset") offset: Int,

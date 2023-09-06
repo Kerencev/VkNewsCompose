@@ -1,4 +1,4 @@
-package com.kerencev.vknewscompose.di.module
+package com.kerencev.vknewscompose.di.module.app
 
 import com.kerencev.vknewscompose.domain.repositories.AuthRepository
 import com.kerencev.vknewscompose.presentation.screens.main.flow.features.CheckAuthStateFeature

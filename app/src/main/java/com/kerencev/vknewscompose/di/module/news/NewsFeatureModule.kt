@@ -1,4 +1,4 @@
-package com.kerencev.vknewscompose.di.module
+package com.kerencev.vknewscompose.di.module.news
 
 import com.kerencev.vknewscompose.domain.repositories.NewsFeedRepository
 import com.kerencev.vknewscompose.presentation.screens.news.flow.features.ChangeLikeStatusFeature

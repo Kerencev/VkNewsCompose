@@ -1,4 +1,4 @@
-package com.kerencev.vknewscompose.di.module
+package com.kerencev.vknewscompose.di.module.comments
 
 import com.kerencev.vknewscompose.domain.repositories.CommentsRepository
 import com.kerencev.vknewscompose.presentation.screens.comments.flow.features.GetCommentsFeature

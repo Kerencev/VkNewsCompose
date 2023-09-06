@@ -1,8 +1,8 @@
 package com.kerencev.vknewscompose.di.component
 
 import com.kerencev.vknewscompose.di.ViewModelFactory
-import com.kerencev.vknewscompose.di.module.FriendsFeatureModule
-import com.kerencev.vknewscompose.di.module.FriendsViewModelModule
+import com.kerencev.vknewscompose.di.module.friends.FriendsFeatureModule
+import com.kerencev.vknewscompose.di.module.friends.FriendsViewModelModule
 import dagger.BindsInstance
 import dagger.Subcomponent
 

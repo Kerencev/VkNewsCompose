@@ -1,7 +1,7 @@
 package com.kerencev.vknewscompose.di.component
 
 import com.kerencev.vknewscompose.di.ViewModelFactory
-import com.kerencev.vknewscompose.di.module.ProfilePhotosViewModelModule
+import com.kerencev.vknewscompose.di.module.profile.ProfilePhotosViewModelModule
 import dagger.BindsInstance
 import dagger.Subcomponent
 

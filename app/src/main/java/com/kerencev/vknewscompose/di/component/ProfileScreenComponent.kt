@@ -1,8 +1,8 @@
 package com.kerencev.vknewscompose.di.component
 
 import com.kerencev.vknewscompose.di.ViewModelFactory
-import com.kerencev.vknewscompose.di.module.ProfileFeatureModule
-import com.kerencev.vknewscompose.di.module.ProfileViewModelModule
+import com.kerencev.vknewscompose.di.module.profile.ProfileFeatureModule
+import com.kerencev.vknewscompose.di.module.profile.ProfileViewModelModule
 import com.kerencev.vknewscompose.presentation.screens.profile.ProfileParams
 import dagger.BindsInstance
 import dagger.Subcomponent

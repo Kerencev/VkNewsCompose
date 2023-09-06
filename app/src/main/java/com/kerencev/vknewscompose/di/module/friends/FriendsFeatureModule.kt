@@ -1,4 +1,4 @@
-package com.kerencev.vknewscompose.di.module
+package com.kerencev.vknewscompose.di.module.friends
 
 import com.kerencev.vknewscompose.domain.repositories.FriendsRepository
 import com.kerencev.vknewscompose.presentation.screens.friends.flow.features.GetFriendsFeature

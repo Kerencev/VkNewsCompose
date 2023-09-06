@@ -3,14 +3,12 @@ package com.kerencev.vknewscompose.di.component
 import android.content.Context
 import com.kerencev.vknewscompose.di.ViewModelFactory
 import com.kerencev.vknewscompose.di.annotation.ApplicationScope
-import com.kerencev.vknewscompose.di.module.CommonFeatureModule
-import com.kerencev.vknewscompose.di.module.DataModule
-import com.kerencev.vknewscompose.di.module.MainFeatureModule
-import com.kerencev.vknewscompose.di.module.MainViewModelModule
-import com.kerencev.vknewscompose.di.module.SearchFeatureModule
-import com.kerencev.vknewscompose.di.module.SearchViewModelModule
-import com.kerencev.vknewscompose.di.module.SuggestedFeatureModule
-import com.kerencev.vknewscompose.di.module.SuggestedViewModelModule
+import com.kerencev.vknewscompose.di.module.app.CommonFeatureModule
+import com.kerencev.vknewscompose.di.module.app.MainFeatureModule
+import com.kerencev.vknewscompose.di.module.search.SearchFeatureModule
+import com.kerencev.vknewscompose.di.module.suggested.SuggestedFeatureModule
+import com.kerencev.vknewscompose.di.module.app.DataModule
+import com.kerencev.vknewscompose.di.module.app.ViewModelModule
 import dagger.BindsInstance
 import dagger.Component
 
@@ -18,9 +16,7 @@ import dagger.Component
 @Component(
     modules = [
         DataModule::class,
-        MainViewModelModule::class,
-        SuggestedViewModelModule::class,
-        SearchViewModelModule::class,
+        ViewModelModule::class,
         MainFeatureModule::class,
         SuggestedFeatureModule::class,
         SearchFeatureModule::class,

@@ -1,4 +1,4 @@
-package com.kerencev.vknewscompose.di.module
+package com.kerencev.vknewscompose.di.module.suggested
 
 import com.kerencev.vknewscompose.domain.repositories.SuggestedRepository
 import com.kerencev.vknewscompose.presentation.screens.suggested.flow.features.GetSuggestedFeature

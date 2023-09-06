@@ -1,4 +1,4 @@
-package com.kerencev.vknewscompose.di.module
+package com.kerencev.vknewscompose.di.module.photos_pager
 
 import com.kerencev.vknewscompose.domain.repositories.NewsFeedRepository
 import com.kerencev.vknewscompose.domain.repositories.ProfileRepository

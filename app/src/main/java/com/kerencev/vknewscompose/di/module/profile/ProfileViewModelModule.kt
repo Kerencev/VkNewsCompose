@@ -1,4 +1,4 @@
-package com.kerencev.vknewscompose.di.module
+package com.kerencev.vknewscompose.di.module.profile
 
 import androidx.lifecycle.ViewModel
 import com.kerencev.vknewscompose.di.annotation.ViewModelKey
