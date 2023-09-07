@@ -23,7 +23,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.kerencev.vknewscompose.R
-import com.kerencev.vknewscompose.ui.theme.SecondTitle
 
 @Composable
 fun NewsText(
@@ -78,7 +77,7 @@ fun NewsText(
                 Text(
                     modifier = Modifier.background(color = surfaceColor),
                     text = stringResource(id = R.string.show_more),
-                    style = SecondTitle
+                    style = MaterialTheme.typography.body2
                 )
             }
         }

@@ -13,11 +13,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.kerencev.vknewscompose.R
-import com.kerencev.vknewscompose.ui.theme.SecondTitle
+import com.kerencev.vknewscompose.presentation.extensions.getFriendWord
 import com.kerencev.vknewscompose.ui.theme.VkNewsComposeTheme
 
 @Composable
@@ -36,8 +35,8 @@ fun ProfileFriends(
         ) {
             Text(
                 modifier = Modifier.weight(1f),
-                text = "$friendsCount ${getFriendWord(friendsCount)}",
-                style = SecondTitle
+                text = "$friendsCount ${friendsCount.getFriendWord()}",
+                style = MaterialTheme.typography.body2
             )
             Icon(
                 modifier = Modifier.size(24.dp),
@@ -46,17 +45,6 @@ fun ProfileFriends(
             )
         }
     }
-}
-
-@Composable
-private fun getFriendWord(count: Int): String {
-    return stringResource(
-        id = when {
-            count % 10 == 1 && count % 100 != 11 -> R.string.friend
-            count % 10 in 2..4 && count % 100 !in 12..14 -> R.string.friends_a_little
-            else -> R.string.friends_a_lot
-        }
-    )
 }
 
 @Preview(showBackground = true, showSystemUi = true)

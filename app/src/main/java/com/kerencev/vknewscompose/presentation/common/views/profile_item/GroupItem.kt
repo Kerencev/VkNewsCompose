@@ -23,7 +23,6 @@ import com.kerencev.vknewscompose.R
 import com.kerencev.vknewscompose.domain.entities.GroupProfileModel
 import com.kerencev.vknewscompose.extensions.formatStatisticCount
 import com.kerencev.vknewscompose.presentation.common.views.icon.IconWithText
-import com.kerencev.vknewscompose.ui.theme.OnSecondarySmall
 import com.kerencev.vknewscompose.ui.theme.VkNewsComposeTheme
 
 @Composable
@@ -58,7 +57,7 @@ fun GroupItem(
             IconWithText(
                 iconRes = R.drawable.ic_people,
                 text = model.memberCount.formatStatisticCount(),
-                textStyle = OnSecondarySmall
+                textStyle = MaterialTheme.typography.subtitle2
             )
         }
     }

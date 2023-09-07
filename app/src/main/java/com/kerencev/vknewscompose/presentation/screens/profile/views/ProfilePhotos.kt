@@ -35,7 +35,6 @@ import com.kerencev.vknewscompose.domain.entities.PhotoModel
 import com.kerencev.vknewscompose.presentation.common.views.icon.BoxIcon
 import com.kerencev.vknewscompose.presentation.common.views.loading.ShimmerDefault
 import com.kerencev.vknewscompose.ui.theme.LightBlue
-import com.kerencev.vknewscompose.ui.theme.SecondTitle
 import com.kerencev.vknewscompose.ui.theme.Shapes
 
 @Composable
@@ -64,11 +63,11 @@ fun ProfilePhotos(
                 Text(
                     modifier = Modifier.weight(1f),
                     text = stringResource(id = R.string.photo),
-                    style = SecondTitle
+                    style = MaterialTheme.typography.body2
                 )
                 Text(
                     text = stringResource(id = R.string.show_all),
-                    style = SecondTitle
+                    style = MaterialTheme.typography.body2
                 )
                 Icon(
                     modifier = Modifier.padding(top = 2.dp),

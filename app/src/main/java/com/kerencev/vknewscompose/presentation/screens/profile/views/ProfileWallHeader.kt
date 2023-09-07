@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.kerencev.vknewscompose.R
-import com.kerencev.vknewscompose.ui.theme.SecondTitle
 
 @Composable
 fun ProfileWallHeader(
@@ -31,7 +30,7 @@ fun ProfileWallHeader(
                 vertical = 8.dp
             ),
             text = stringResource(id = R.string.wall),
-            style = SecondTitle
+            style = MaterialTheme.typography.body2
         )
     }
 }
