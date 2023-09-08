@@ -1,5 +1,7 @@
 package com.kerencev.vknewscompose.presentation.activity
 
+import androidx.lifecycle.viewModelScope
+import com.kerencev.vknewscompose.data.api.auth.ReLoginExecutor
 import com.kerencev.vknewscompose.presentation.common.mvi.BaseViewModel
 import com.kerencev.vknewscompose.presentation.common.mvi.VkAction
 import com.kerencev.vknewscompose.presentation.common.mvi.VkCommand
@@ -12,16 +14,25 @@ import com.kerencev.vknewscompose.presentation.screens.main.flow.MainShot
 import com.kerencev.vknewscompose.presentation.screens.main.flow.MainState
 import com.kerencev.vknewscompose.presentation.screens.main.flow.features.CheckAuthStateFeature
 import com.kerencev.vknewscompose.presentation.screens.main.flow.features.LogoutFeature
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
     private val checkAuthStateFeature: CheckAuthStateFeature,
     private val logoutFeature: LogoutFeature,
+    reLoginExecutor: ReLoginExecutor
 ) : BaseViewModel<MainEvent, MainState, MainShot>() {
 
     init {
         send(MainEvent.CheckAuthState)
+        reLoginExecutor.observeReLogin()
+            .onEach { send(MainEvent.Logout) }
+            .flowOn(Dispatchers.IO)
+            .launchIn(viewModelScope)
     }
 
     override fun initState() = MainState()

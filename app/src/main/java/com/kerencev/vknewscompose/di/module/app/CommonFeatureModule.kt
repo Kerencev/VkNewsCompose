@@ -6,6 +6,8 @@ import com.kerencev.vknewscompose.presentation.screens.profile.flow.features.Get
 import dagger.Module
 import dagger.Provides
 
+//TODO: Заменить все Provides на Binds для своих классов
+
 @Module
 class CommonFeatureModule {
 

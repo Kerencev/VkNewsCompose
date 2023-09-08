@@ -1,4 +1,4 @@
-package com.kerencev.vknewscompose.data.api
+package com.kerencev.vknewscompose.data.api.auth
 
 import com.vk.api.sdk.VKKeyValueStorage
 import com.vk.api.sdk.auth.VKAccessToken
@@ -8,7 +8,8 @@ import okhttp3.Response
 import javax.inject.Inject
 
 class AuthInterceptor @Inject constructor(
-    private val storage: VKKeyValueStorage
+    private val storage: VKKeyValueStorage,
+    private val reLoginExecutor: ReLoginExecutor,
 ) : Interceptor {
 
     companion object {
@@ -25,7 +26,9 @@ class AuthInterceptor @Inject constructor(
     }
 
     @Throws(IllegalStateException::class)
-    private fun getAccessToken(): String {
-        return VKAccessToken.restore(storage)?.accessToken ?: error("Token is null")
+    private fun getAccessToken(): String? {
+        val token = VKAccessToken.restore(storage)?.accessToken
+        if (token == null) reLoginExecutor.reLogin()
+        return token
     }
 }

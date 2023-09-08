@@ -3,7 +3,9 @@ package com.kerencev.vknewscompose.di.module.app
 import android.content.Context
 import com.kerencev.vknewscompose.data.api.ApiFactory
 import com.kerencev.vknewscompose.data.api.ApiService
-import com.kerencev.vknewscompose.data.api.AuthInterceptor
+import com.kerencev.vknewscompose.data.api.auth.AuthInterceptor
+import com.kerencev.vknewscompose.data.api.auth.ReLoginExecutor
+import com.kerencev.vknewscompose.data.api.auth.ReLoginExecutorImpl
 import com.kerencev.vknewscompose.data.repository.AuthRepositoryImpl
 import com.kerencev.vknewscompose.data.repository.CommentsRepositoryImpl
 import com.kerencev.vknewscompose.data.repository.FriendsRepositoryImpl
@@ -42,12 +44,15 @@ interface DataModule {
             return VKPreferencesKeyValueStorage(context)
         }
 
-        @ApplicationScope
-        @Provides
-        fun provideAuthInterceptor(storage: VKKeyValueStorage): Interceptor {
-            return AuthInterceptor(storage)
-        }
     }
+
+    @ApplicationScope
+    @Binds
+    fun bindAuthInterceptor(impl: AuthInterceptor): Interceptor
+
+    @ApplicationScope
+    @Binds
+    fun bindReLoginExecutor(impl: ReLoginExecutorImpl): ReLoginExecutor
 
     @ApplicationScope
     @Binds
