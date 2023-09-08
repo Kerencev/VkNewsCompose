@@ -15,7 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kerencev.vknewscompose.R
-import com.kerencev.vknewscompose.di.getApplicationComponent
+import com.kerencev.vknewscompose.di.app.getApplicationComponent
 import com.kerencev.vknewscompose.presentation.common.compose.rememberUnit
 import com.kerencev.vknewscompose.presentation.common.views.loading.ProgressBarDefault
 import com.kerencev.vknewscompose.presentation.common.views.toolbar.ScaffoldWithCollapsingToolbar

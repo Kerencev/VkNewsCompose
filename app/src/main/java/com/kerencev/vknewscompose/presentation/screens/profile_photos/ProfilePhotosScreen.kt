@@ -25,7 +25,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kerencev.vknewscompose.R
-import com.kerencev.vknewscompose.di.getApplicationComponent
+import com.kerencev.vknewscompose.di.app.getApplicationComponent
 import com.kerencev.vknewscompose.presentation.common.compose.rememberUnitParams
 import com.kerencev.vknewscompose.presentation.common.views.icon.IconBack
 import com.kerencev.vknewscompose.presentation.common.views.loading.AsyncShimmerImage

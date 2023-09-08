@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.kerencev.vknewscompose.R
-import com.kerencev.vknewscompose.di.ViewModelFactory
+import com.kerencev.vknewscompose.di.common.ViewModelFactory
 import com.kerencev.vknewscompose.domain.entities.Profile
 import com.kerencev.vknewscompose.presentation.common.compose.rememberUnitParams
 import com.kerencev.vknewscompose.presentation.common.mvi.state.SearchViewState

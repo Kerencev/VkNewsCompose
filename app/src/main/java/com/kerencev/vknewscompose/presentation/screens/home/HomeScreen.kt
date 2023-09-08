@@ -12,8 +12,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.kerencev.vknewscompose.di.ViewModelFactory
-import com.kerencev.vknewscompose.di.getApplicationComponent
+import com.kerencev.vknewscompose.di.common.ViewModelFactory
+import com.kerencev.vknewscompose.di.app.getApplicationComponent
 import com.kerencev.vknewscompose.presentation.model.NewsModelUi
 import com.kerencev.vknewscompose.presentation.screens.home.views.tabs.HomeTab
 import com.kerencev.vknewscompose.presentation.screens.home.views.tabs.HomeTabLayout

@@ -11,7 +11,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshState
-import com.kerencev.vknewscompose.di.ViewModelFactory
+import com.kerencev.vknewscompose.di.common.ViewModelFactory
 import com.kerencev.vknewscompose.presentation.common.compose.rememberUnitParams
 import com.kerencev.vknewscompose.presentation.common.views.profile_item.ProfileItem
 import com.kerencev.vknewscompose.presentation.screens.profile.ProfileParams
