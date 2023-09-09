@@ -30,6 +30,7 @@ fun NewsCard(
     onImageClick: (index: Int) -> Unit,
     onHeaderClick: () -> Unit = {},
     onIconMoreClick: () -> Unit,
+    onShareClick: () -> Unit,
 ) {
     Box(modifier = modifier.background(color = colorResource(id = R.color.background_news))) {
         Card(
@@ -50,7 +51,12 @@ fun NewsCard(
                     onImageClick = onImageClick
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                NewsFooter(newsModel = newsModel, onCommentsClick, onLikesClick)
+                NewsFooter(
+                    newsModel = newsModel,
+                    onCommentsClick = onCommentsClick,
+                    onLikesClick = onLikesClick,
+                    onShareClick = onShareClick
+                )
             }
         }
     }

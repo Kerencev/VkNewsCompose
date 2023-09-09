@@ -51,7 +51,7 @@ fun NewsScreen(
     showSnackBar: (message: String) -> Unit,
     onImageClick: (index: Int, newsModelId: Long) -> Unit,
     onHeaderClick: (params: ProfileParams) -> Unit,
-    paddingValues: PaddingValues = PaddingValues()
+    paddingValues: PaddingValues = PaddingValues(),
 ) {
     val noFeatureMessage = stringResource(id = R.string.no_feature_message)
     val coroutineScope = rememberCoroutineScope()
@@ -102,9 +102,15 @@ fun NewsScreen(
                             onImageClick(index, newsItem.id)
                         },
                         onHeaderClick = {
-                            onHeaderClick(ProfileParams(id = newsItem.ownerId, type = newsItem.type))
+                            onHeaderClick(
+                                ProfileParams(
+                                    id = newsItem.ownerId,
+                                    type = newsItem.type
+                                )
+                            )
                         },
                         onIconMoreClick = { showSnackBar(noFeatureMessage) },
+                        onShareClick = { showSnackBar(noFeatureMessage) },
                     )
                 }
                 item {

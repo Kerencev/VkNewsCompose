@@ -216,7 +216,8 @@ fun ProfileScreenContent(
                         onImageClick = { imageIndex ->
                             onWallItemClick(imageIndex, item.id)
                         },
-                        onIconMoreClick = { showSnackBar(noFeatureMessage) }
+                        onIconMoreClick = { showSnackBar(noFeatureMessage) },
+                        onShareClick = { showSnackBar(noFeatureMessage) },
                     )
                 }
 
