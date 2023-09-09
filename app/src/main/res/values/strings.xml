@@ -52,4 +52,5 @@
     <string name="set_last_seen_hours">был(а) в сети %d ч. назад</string>
     <string name="set_last_seen_days">был(а) в сети %d д. назад</string>
     <string name="set_members">%s Подписчиков</string>
+    <string name="no_feature_message">Фича на подходе &#128522;</string>
 </resources>

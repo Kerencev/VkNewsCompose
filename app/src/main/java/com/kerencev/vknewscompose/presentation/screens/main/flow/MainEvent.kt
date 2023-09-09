@@ -9,7 +9,7 @@ sealed class MainEvent : VkEvent {
      */
     object CheckAuthState : MainEvent()
 
-    class ShowErrorMessage(val message: String) : MainEvent()
+    class ShowSnackBar(val message: String) : MainEvent()
 
     /**
      * When SnackBar is dismissed

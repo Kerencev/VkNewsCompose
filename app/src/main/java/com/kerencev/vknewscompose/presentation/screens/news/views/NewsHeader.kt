@@ -1,5 +1,6 @@
 package com.kerencev.vknewscompose.presentation.screens.news.views
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -25,7 +26,8 @@ import com.kerencev.vknewscompose.presentation.model.NewsModelUi
 @Composable
 fun NewsHeader(
     modifier: Modifier = Modifier,
-    newsModel: NewsModelUi
+    newsModel: NewsModelUi,
+    onIconMoreClick: () -> Unit
 ) {
     Row(
         modifier = modifier
@@ -57,6 +59,7 @@ fun NewsHeader(
             )
         }
         Icon(
+            modifier = Modifier.clickable { onIconMoreClick() },
             imageVector = Icons.Filled.MoreVert,
             contentDescription = stringResource(id = R.string.more),
             tint = MaterialTheme.colors.onSecondary

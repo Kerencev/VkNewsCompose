@@ -4,7 +4,7 @@ import com.kerencev.vknewscompose.presentation.common.mvi.VkShot
 
 sealed class MainShot : VkShot {
 
-    class ShowErrorMessage(val message: String) : MainShot()
+    class ShowSnackBar(val message: String) : MainShot()
 
     object None : MainShot()
 

@@ -29,6 +29,7 @@ fun NewsCard(
     onLikesClick: () -> Unit,
     onImageClick: (index: Int) -> Unit,
     onHeaderClick: () -> Unit = {},
+    onIconMoreClick: () -> Unit,
 ) {
     Box(modifier = modifier.background(color = colorResource(id = R.color.background_news))) {
         Card(
@@ -38,7 +39,8 @@ fun NewsCard(
             Column(modifier = Modifier.padding(vertical = 8.dp)) {
                 NewsHeader(
                     modifier = Modifier.clickable { onHeaderClick() },
-                    newsModel = newsModel
+                    newsModel = newsModel,
+                    onIconMoreClick = onIconMoreClick
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 NewsText(text = newsModel.contentText)

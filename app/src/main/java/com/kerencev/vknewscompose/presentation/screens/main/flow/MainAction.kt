@@ -26,7 +26,7 @@ sealed class MainOutputAction : VkAction {
 
 sealed class MainEffect : VkEffect {
 
-    class ShowErrorMessage(val message: String) : MainEffect()
+    class ShowSnackBar(val message: String) : MainEffect()
 
     object None : MainEffect()
 

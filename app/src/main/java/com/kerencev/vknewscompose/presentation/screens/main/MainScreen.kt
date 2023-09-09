@@ -102,7 +102,7 @@ fun MainScreen(
                     viewModelFactory = viewModelFactory,
                     paddingValues = paddingValues,
                     onCommentsClick = { navigationState.navigateToComments(it) },
-                    onError = { sendEvent(MainEvent.ShowErrorMessage(it)) },
+                    showSnackBar = { sendEvent(MainEvent.ShowSnackBar(it)) },
                     onImageClick = onPhotoClick,
                     onHeaderClick = { profileParams ->
                         navigationState.navigateToProfile(
@@ -148,12 +148,13 @@ fun MainScreen(
                     onShowAllPhotosClick = {
                         navigationState.navigateToProfilePhotos(from = from, profileId = params.id)
                     },
-                    onProfileRefreshError = { sendEvent(MainEvent.ShowErrorMessage(it)) },
+                    onProfileRefreshError = { sendEvent(MainEvent.ShowSnackBar(it)) },
                     onLogoutClick = { sendEvent(MainEvent.Logout) },
                     onFriendsClick = {
                         navigationState.navigateToFriends(from = from, userId = params.id)
                     },
                     onBackPressed = { navigationState.navHostController.popBackStack() },
+                    showSnackBar = { sendEvent(MainEvent.ShowSnackBar(it)) }
                 )
             },
 
@@ -186,13 +187,12 @@ fun MainScreen(
     }
 
     when (shot) {
-        is MainShot.ShowErrorMessage -> {
-            val message = stringResource(id = R.string.set_error_cause, shot.message)
+        is MainShot.ShowSnackBar -> {
             val actionLabel = stringResource(id = R.string.ok)
             LaunchedEffect(key1 = scaffoldState.snackbarHostState) {
                 coroutineScope.launch {
                     scaffoldState.snackbarHostState.showSnackbar(
-                        message = message,
+                        message = shot.message,
                         actionLabel = actionLabel,
                         duration = SnackbarDuration.Short
                     )

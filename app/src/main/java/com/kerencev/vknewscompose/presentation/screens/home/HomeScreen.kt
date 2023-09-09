@@ -32,7 +32,7 @@ fun HomeScreen(
     viewModelFactory: ViewModelFactory,
     paddingValues: PaddingValues,
     onCommentsClick: (newsModel: NewsModelUi) -> Unit,
-    onError: (message: String) -> Unit,
+    showSnackBar: (message: String) -> Unit,
     onImageClick: (params: PhotosPagerParams) -> Unit,
     onHeaderClick: (params: ProfileParams) -> Unit,
     onSuggestedClick: (params: ProfileParams) -> Unit,
@@ -51,7 +51,7 @@ fun HomeScreen(
         recommendationViewModel = recommendationViewModel,
         paddingValues = paddingValues,
         onCommentsClick = onCommentsClick,
-        onError = onError,
+        showSnackBar = showSnackBar,
         onImageClick = { index, newsModelId ->
             onImageClick(
                 PhotosPagerParams(
@@ -74,7 +74,7 @@ fun HomeScreenContent(
     recommendationViewModel: RecommendationViewModel,
     paddingValues: PaddingValues,
     onCommentsClick: (newsModel: NewsModelUi) -> Unit,
-    onError: (message: String) -> Unit,
+    showSnackBar: (message: String) -> Unit,
     onImageClick: (index: Int, newsModelId: Long) -> Unit,
     onHeaderClick: (params: ProfileParams) -> Unit,
     onSuggestedClick: (params: ProfileParams) -> Unit,
@@ -94,7 +94,7 @@ fun HomeScreenContent(
                     NewsScreen(
                         viewModel = newsViewModel,
                         onCommentsClick = onCommentsClick,
-                        onError = onError,
+                        showSnackBar = showSnackBar,
                         onImageClick = onImageClick,
                         onHeaderClick = onHeaderClick,
                     )
@@ -104,7 +104,7 @@ fun HomeScreenContent(
                     NewsScreen(
                         viewModel = recommendationViewModel,
                         onCommentsClick = onCommentsClick,
-                        onError = onError,
+                        showSnackBar = showSnackBar,
                         onImageClick = onImageClick,
                         onHeaderClick = onHeaderClick,
                     )

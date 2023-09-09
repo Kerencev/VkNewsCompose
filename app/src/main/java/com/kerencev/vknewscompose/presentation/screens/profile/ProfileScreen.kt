@@ -19,6 +19,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
@@ -58,6 +59,7 @@ fun ProfileScreen(
     onBackPressed: () -> Unit,
     onLogoutClick: () -> Unit = {},
     onFriendsClick: () -> Unit = {},
+    showSnackBar: (message: String) -> Unit,
 ) {
     val component = getApplicationComponent()
         .getProfileScreenComponentFactory()
@@ -97,6 +99,7 @@ fun ProfileScreen(
         onLogoutClick = onLogoutClick,
         onFriendsClick = onFriendsClick,
         onBackPressed = onBackPressed,
+        showSnackBar = showSnackBar,
     )
 }
 
@@ -114,7 +117,9 @@ fun ProfileScreenContent(
     onLogoutClick: () -> Unit,
     onFriendsClick: () -> Unit,
     onBackPressed: () -> Unit,
+    showSnackBar: (message: String) -> Unit,
 ) {
+    val noFeatureMessage = stringResource(id = R.string.no_feature_message)
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
@@ -210,7 +215,8 @@ fun ProfileScreenContent(
                         onLikesClick = {},
                         onImageClick = { imageIndex ->
                             onWallItemClick(imageIndex, item.id)
-                        }
+                        },
+                        onIconMoreClick = { showSnackBar(noFeatureMessage) }
                     )
                 }
 

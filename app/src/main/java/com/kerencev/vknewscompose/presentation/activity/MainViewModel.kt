@@ -40,7 +40,7 @@ class MainViewModel @Inject constructor(
     override fun produceCommand(event: MainEvent): VkCommand {
         return when (event) {
             is MainEvent.CheckAuthState -> MainInputAction.CheckAuthState
-            is MainEvent.ShowErrorMessage -> MainEffect.ShowErrorMessage(event.message)
+            is MainEvent.ShowSnackBar -> MainEffect.ShowSnackBar(event.message)
             is MainEvent.OnSnackBarDismiss -> MainEffect.None
             is MainEvent.Logout -> MainInputAction.Logout
         }
@@ -56,7 +56,7 @@ class MainViewModel @Inject constructor(
 
     override suspend fun produceShot(effect: VkEffect) {
         when (effect) {
-            is MainEffect.ShowErrorMessage -> setShot { MainShot.ShowErrorMessage(effect.message) }
+            is MainEffect.ShowSnackBar -> setShot { MainShot.ShowSnackBar(effect.message) }
             is MainEffect.None -> setShot { MainShot.None }
         }
     }

@@ -48,11 +48,12 @@ import kotlinx.coroutines.launch
 fun NewsScreen(
     viewModel: BaseViewModel<NewsEvent, NewsViewState, NewsShot>,
     onCommentsClick: (newsModel: NewsModelUi) -> Unit,
-    onError: (message: String) -> Unit,
+    showSnackBar: (message: String) -> Unit,
     onImageClick: (index: Int, newsModelId: Long) -> Unit,
     onHeaderClick: (params: ProfileParams) -> Unit,
     paddingValues: PaddingValues = PaddingValues()
 ) {
+    val noFeatureMessage = stringResource(id = R.string.no_feature_message)
     val coroutineScope = rememberCoroutineScope()
     val state = viewModel.observedState.collectAsState()
     val shot = viewModel.observedShot.collectAsState(NewsShot.None)
@@ -102,7 +103,8 @@ fun NewsScreen(
                         },
                         onHeaderClick = {
                             onHeaderClick(ProfileParams(id = newsItem.ownerId, type = newsItem.type))
-                        }
+                        },
+                        onIconMoreClick = { showSnackBar(noFeatureMessage) },
                     )
                 }
                 item {
@@ -146,7 +148,7 @@ fun NewsScreen(
 
         when (val currentShot = shot.value) {
             is NewsShot.ShowErrorMessage -> {
-                onError(currentShot.message)
+                showSnackBar(currentShot.message)
                 sendEvent(NewsEvent.OnErrorInvoked)
             }
 
