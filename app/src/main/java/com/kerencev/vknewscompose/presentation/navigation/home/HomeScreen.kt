@@ -49,11 +49,10 @@ sealed class HomeScreen(
     }
 
     companion object {
-        const val KEY_NEWS_POST = "news_post"
         private const val GRAPH_KEY = "home_screen"
 
         private const val ROUTE_NEWS = "${GRAPH_KEY}_news"
-        private const val ROUTE_COMMENTS = "${Comments.ROUTE_FOR_ARGS}/{${KEY_NEWS_POST}}"
+        private const val ROUTE_COMMENTS = "${Comments.ROUTE_FOR_ARGS}/{${Screen.KEY_NEWS_POST}}"
         private const val ROUTE_PROFILE =
             "${Profile.ROUTE_FOR_ARGS}/{${Screen.KEY_PROFILE_ID}}/{${Screen.KEY_PROFILE_TYPE}}"
         private const val ROUTE_PROFILE_PHOTOS =

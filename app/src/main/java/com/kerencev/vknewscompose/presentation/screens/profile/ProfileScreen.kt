@@ -29,6 +29,7 @@ import com.kerencev.vknewscompose.di.app.getApplicationComponent
 import com.kerencev.vknewscompose.domain.entities.ProfileType
 import com.kerencev.vknewscompose.presentation.common.compose.rememberUnitParams
 import com.kerencev.vknewscompose.presentation.common.compose.statusBarHeight
+import com.kerencev.vknewscompose.presentation.model.NewsModelUi
 import com.kerencev.vknewscompose.presentation.screens.news.views.NewsCard
 import com.kerencev.vknewscompose.presentation.screens.photos_pager.PhotoType
 import com.kerencev.vknewscompose.presentation.screens.photos_pager.PhotosPagerParams
@@ -59,6 +60,7 @@ fun ProfileScreen(
     onBackPressed: () -> Unit,
     onLogoutClick: () -> Unit = {},
     onFriendsClick: () -> Unit = {},
+    onCommentsClick: (newsModel: NewsModelUi) -> Unit,
     showSnackBar: (message: String) -> Unit,
 ) {
     val component = getApplicationComponent()
@@ -98,6 +100,7 @@ fun ProfileScreen(
         onProfileRefreshError = onProfileRefreshError,
         onLogoutClick = onLogoutClick,
         onFriendsClick = onFriendsClick,
+        onCommentsClick = onCommentsClick,
         onBackPressed = onBackPressed,
         showSnackBar = showSnackBar,
     )
@@ -116,6 +119,7 @@ fun ProfileScreenContent(
     onProfileRefreshError: (message: String) -> Unit,
     onLogoutClick: () -> Unit,
     onFriendsClick: () -> Unit,
+    onCommentsClick: (newsModel: NewsModelUi) -> Unit,
     onBackPressed: () -> Unit,
     showSnackBar: (message: String) -> Unit,
 ) {
@@ -211,8 +215,8 @@ fun ProfileScreenContent(
                             bottomEnd = 16.dp
                         ) else Shapes.large,
                         newsModel = item,
-                        onCommentsClick = {},
-                        onLikesClick = {},
+                        onCommentsClick = { onCommentsClick(item) },
+                        onLikesClick = {}, //TODO
                         onImageClick = { imageIndex ->
                             onWallItemClick(imageIndex, item.id)
                         },

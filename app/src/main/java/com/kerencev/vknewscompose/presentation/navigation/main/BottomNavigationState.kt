@@ -27,56 +27,44 @@ class BottomNavigationState(
         }
     }
 
-    fun navigateToComments(newsModel: NewsModelUi) {
-        navHostController.navigate(HomeScreen.Comments.getRouteWithArgs(newsModel))
+    fun navigateToComments(from: NavigationItem, newsModel: NewsModelUi) {
+        navHostController.navigate(
+            when (from) {
+                NavigationItem.Home -> HomeScreen.Comments.getRouteWithArgs(newsModel)
+                NavigationItem.Profile -> ProfileScreen.Comments.getRouteWithArgs(newsModel)
+                NavigationItem.Search -> SearchScreen.Comments.getRouteWithArgs(newsModel)
+            }
+        )
     }
 
     fun navigateToProfile(from: NavigationItem, params: ProfileParams) {
-        when (from) {
-            NavigationItem.Home -> navHostController.navigate(
-                HomeScreen.Profile.getRouteWithArgs(params)
-            )
-
-            NavigationItem.Profile -> navHostController.navigate(
-                ProfileScreen.Profile.getRouteWithArgs(params)
-            )
-
-            NavigationItem.Search -> navHostController.navigate(
-                SearchScreen.Profile.getRouteWithArgs(params)
-            )
-        }
+        navHostController.navigate(
+            when (from) {
+                NavigationItem.Home -> HomeScreen.Profile.getRouteWithArgs(params)
+                NavigationItem.Profile -> ProfileScreen.Profile.getRouteWithArgs(params)
+                NavigationItem.Search -> SearchScreen.Profile.getRouteWithArgs(params)
+            }
+        )
     }
 
     fun navigateToProfilePhotos(from: NavigationItem, profileId: Long) {
-        when (from) {
-            NavigationItem.Home -> navHostController.navigate(
-                HomeScreen.ProfilePhotos.getRouteWithArgs(profileId)
-            )
-
-            NavigationItem.Profile -> navHostController.navigate(
-                ProfileScreen.ProfilePhotos.getRouteWithArgs(profileId)
-            )
-
-            NavigationItem.Search -> navHostController.navigate(
-                SearchScreen.ProfilePhotos.getRouteWithArgs(profileId)
-            )
-        }
+        navHostController.navigate(
+            when (from) {
+                NavigationItem.Home -> HomeScreen.ProfilePhotos.getRouteWithArgs(profileId)
+                NavigationItem.Profile -> ProfileScreen.ProfilePhotos.getRouteWithArgs(profileId)
+                NavigationItem.Search -> SearchScreen.ProfilePhotos.getRouteWithArgs(profileId)
+            }
+        )
     }
 
     fun navigateToFriends(from: NavigationItem, userId: Long) {
-        when (from) {
-            NavigationItem.Home -> navHostController.navigate(
-                HomeScreen.Friends.getRouteWithArgs(userId)
-            )
-
-            NavigationItem.Profile -> navHostController.navigate(
-                ProfileScreen.Friends.getRouteWithArgs(userId)
-            )
-
-            NavigationItem.Search -> navHostController.navigate(
-                SearchScreen.Friends.getRouteWithArgs(userId)
-            )
-        }
+        navHostController.navigate(
+            when (from) {
+                NavigationItem.Home -> HomeScreen.Friends.getRouteWithArgs(userId)
+                NavigationItem.Profile -> ProfileScreen.Friends.getRouteWithArgs(userId)
+                NavigationItem.Search -> SearchScreen.Friends.getRouteWithArgs(userId)
+            }
+        )
     }
 
     private fun getCorrectBottomTabRoute(route: String): String {

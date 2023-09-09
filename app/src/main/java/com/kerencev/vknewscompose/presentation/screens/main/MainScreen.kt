@@ -101,7 +101,12 @@ fun MainScreen(
                 HomeScreen(
                     viewModelFactory = viewModelFactory,
                     paddingValues = paddingValues,
-                    onCommentsClick = { navigationState.navigateToComments(it) },
+                    onCommentsClick = { newsModel ->
+                        navigationState.navigateToComments(
+                            from = NavigationItem.Home,
+                            newsModel = newsModel
+                        )
+                    },
                     showSnackBar = { sendEvent(MainEvent.ShowSnackBar(it)) },
                     onImageClick = onPhotoClick,
                     onHeaderClick = { profileParams ->
@@ -119,7 +124,7 @@ fun MainScreen(
                 )
             },
 
-            commentsScreenContent = { newsModel ->
+            commentsScreenContent = { from, newsModel ->
                 CommentsScreen(
                     newsModel = newsModel,
                     onBackPressed = { navigationState.navHostController.popBackStack() }
@@ -154,7 +159,10 @@ fun MainScreen(
                         navigationState.navigateToFriends(from = from, userId = params.id)
                     },
                     onBackPressed = { navigationState.navHostController.popBackStack() },
-                    showSnackBar = { sendEvent(MainEvent.ShowSnackBar(it)) }
+                    showSnackBar = { sendEvent(MainEvent.ShowSnackBar(it)) },
+                    onCommentsClick = { newsModel ->
+                        navigationState.navigateToComments(from = from, newsModel = newsModel)
+                    }
                 )
             },
 

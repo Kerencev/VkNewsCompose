@@ -16,7 +16,7 @@ fun BottomNavGraph(
     homeScreenContent: @Composable () -> Unit,
     searchScreenContent: @Composable () -> Unit,
     profileScreenContent: @Composable (from: NavigationItem, profileParams: ProfileParams) -> Unit,
-    commentsScreenContent: @Composable (NewsModelUi) -> Unit,
+    commentsScreenContent: @Composable (from: NavigationItem, NewsModelUi) -> Unit,
     profilePhotosScreenContent: @Composable (userId: Long) -> Unit,
     friendsScreenContent: @Composable (from: NavigationItem, userId: Long) -> Unit,
 ) {
@@ -26,7 +26,7 @@ fun BottomNavGraph(
     ) {
         homeScreenNavGraph(
             newsScreenContent = homeScreenContent,
-            commentsScreenContent = commentsScreenContent,
+            commentsScreenContent = { commentsScreenContent(NavigationItem.Home, it) },
             profileScreenContent = { profileScreenContent(NavigationItem.Home, it) },
             groupPhotosScreenContent = profilePhotosScreenContent,
             friendsScreenContent = { friendsScreenContent(NavigationItem.Home, it) },
@@ -35,12 +35,14 @@ fun BottomNavGraph(
             searchScreenContent = searchScreenContent,
             profileScreenContent = { profileScreenContent(NavigationItem.Search, it) },
             profilePhotosScreenContent = profilePhotosScreenContent,
-            friendsScreenContent = { friendsScreenContent(NavigationItem.Search, it) }
+            friendsScreenContent = { friendsScreenContent(NavigationItem.Search, it) },
+            commentsScreenContent = { commentsScreenContent(NavigationItem.Search, it) },
         )
         profileScreenNavGraph(
             profileScreenContent = { profileScreenContent(NavigationItem.Profile, it) },
             profilePhotosScreenContent = profilePhotosScreenContent,
-            friendsScreenContent = { friendsScreenContent(NavigationItem.Profile, it) }
+            friendsScreenContent = { friendsScreenContent(NavigationItem.Profile, it) },
+            commentsScreenContent = { commentsScreenContent(NavigationItem.Profile, it) },
         )
     }
 }
