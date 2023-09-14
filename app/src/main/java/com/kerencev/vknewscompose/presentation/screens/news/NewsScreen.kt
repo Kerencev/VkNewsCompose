@@ -103,10 +103,7 @@ fun NewsScreen(
                         },
                         onHeaderClick = {
                             onHeaderClick(
-                                ProfileParams(
-                                    id = newsItem.ownerId,
-                                    type = newsItem.type
-                                )
+                                ProfileParams(id = newsItem.ownerId, type = newsItem.type)
                             )
                         },
                         onIconMoreClick = { showSnackBar(noFeatureMessage) },

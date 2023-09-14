@@ -1,6 +1,7 @@
 package com.kerencev.vknewscompose.presentation.screens.profile.flow
 
 import com.kerencev.vknewscompose.presentation.common.mvi.VkEvent
+import com.kerencev.vknewscompose.presentation.model.NewsModelUi
 
 sealed class ProfileEvent : VkEvent {
 
@@ -36,4 +37,10 @@ sealed class ProfileEvent : VkEvent {
      * When we invoked profile error lambda
      */
     object OnProfileErrorInvoked : ProfileEvent()
+
+    /**
+     * Event when the user is clicking on a like
+     * @param newsModelUi - item to be liked
+     */
+    class ChangeLikeStatus(val newsModelUi: NewsModelUi) : ProfileEvent()
 }

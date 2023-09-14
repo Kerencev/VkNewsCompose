@@ -138,6 +138,14 @@ data class ProfileViewState(
         isSwipeRefreshing = false
     )
 
+    fun updateItem(updatedItem: NewsModelUi): ProfileViewState {
+        val data = wallItems.toMutableList()
+        val index = data.indexOfFirst { it.id == updatedItem.id }
+        if (index == -1) return this
+        data[index] = updatedItem
+        return copy(wallItems = data.toList())
+    }
+
     private fun getFriendsCountByProfileType(profile: Profile) =
         if (profile is UserProfileModel) profile.friendsCount else 0
 

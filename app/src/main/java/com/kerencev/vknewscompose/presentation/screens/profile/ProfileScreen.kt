@@ -216,7 +216,7 @@ fun ProfileScreenContent(
                         ) else Shapes.large,
                         newsModel = item,
                         onCommentsClick = { onCommentsClick(item) },
-                        onLikesClick = {}, //TODO
+                        onLikesClick = { sendEvent(ProfileEvent.ChangeLikeStatus(item)) },
                         onImageClick = { imageIndex ->
                             onWallItemClick(imageIndex, item.id)
                         },

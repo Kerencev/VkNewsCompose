@@ -4,7 +4,12 @@ import com.kerencev.vknewscompose.presentation.common.mvi.BaseViewModel
 import com.kerencev.vknewscompose.presentation.common.mvi.VkAction
 import com.kerencev.vknewscompose.presentation.common.mvi.VkCommand
 import com.kerencev.vknewscompose.presentation.common.mvi.VkEffect
+import com.kerencev.vknewscompose.presentation.mapper.mapToModel
 import com.kerencev.vknewscompose.presentation.mapper.mapToUiModel
+import com.kerencev.vknewscompose.presentation.screens.news.flow.NewsEffect
+import com.kerencev.vknewscompose.presentation.screens.news.flow.NewsInputAction
+import com.kerencev.vknewscompose.presentation.screens.news.flow.NewsOutputAction
+import com.kerencev.vknewscompose.presentation.screens.news.flow.features.ChangeLikeStatusFeature
 import com.kerencev.vknewscompose.presentation.screens.profile.flow.ProfileEffect
 import com.kerencev.vknewscompose.presentation.screens.profile.flow.ProfileEvent
 import com.kerencev.vknewscompose.presentation.screens.profile.flow.ProfileInputAction
@@ -26,6 +31,7 @@ class ProfileViewModel @Inject constructor(
     private val getProfilePhotosFeature: GetProfilePhotosFeature,
     private val calculateProfileParamsFeature: CalculateProfileParamsFeature,
     private val getAllProfileDataFeature: GetAllProfileDataFeature,
+    private val changeLikeStatusFeature: ChangeLikeStatusFeature,
 ) : BaseViewModel<ProfileEvent, ProfileViewState, ProfileShot>() {
 
     init {
@@ -49,6 +55,9 @@ class ProfileViewModel @Inject constructor(
 
             is ProfileEvent.RefreshProfileData -> ProfileInputAction.RefreshProfileData(profileParams)
             is ProfileEvent.OnProfileErrorInvoked -> ProfileEffect.None
+            is ProfileEvent.ChangeLikeStatus -> NewsInputAction.ChangeLikeStatus(
+                event.newsModelUi.mapToModel()
+            )
         }
     }
 
@@ -59,6 +68,7 @@ class ProfileViewModel @Inject constructor(
             is ProfileInputAction.GetWall -> getWallFeature(action)
             is ProfileInputAction.CalculateUiParams -> calculateProfileParamsFeature(action)
             is ProfileInputAction.RefreshProfileData -> getAllProfileDataFeature(action)
+            is NewsInputAction.ChangeLikeStatus -> changeLikeStatusFeature(action)
             else -> null
         }
     }
@@ -70,6 +80,7 @@ class ProfileViewModel @Inject constructor(
             }
 
             is ProfileEffect.None -> setShot { ProfileShot.None }
+            is NewsEffect.LikeError -> setShot { ProfileShot.ShowErrorMessage(effect.message) }
         }
     }
 
@@ -110,6 +121,9 @@ class ProfileViewModel @Inject constructor(
                     wallItems = action.wallItems.map { it.mapToUiModel() },
                     isWallItemsOver = action.isWallItemsOver
                 )
+            }
+            is NewsOutputAction.ChangeLikeStatus -> setState {
+                updateItem(action.newsModel.mapToUiModel())
             }
         }
     }
