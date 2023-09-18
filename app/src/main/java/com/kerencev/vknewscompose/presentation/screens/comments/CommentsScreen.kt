@@ -24,12 +24,14 @@ import com.kerencev.vknewscompose.presentation.model.NewsModelUi
 import com.kerencev.vknewscompose.presentation.screens.comments.flow.CommentsEvent
 import com.kerencev.vknewscompose.presentation.screens.comments.flow.CommentsViewState
 import com.kerencev.vknewscompose.presentation.screens.comments.views.CommentsColumn
+import com.kerencev.vknewscompose.presentation.screens.profile.ProfileParams
 import com.kerencev.vknewscompose.ui.theme.LightBlue
 
 @Composable
 fun CommentsScreen(
     newsModel: NewsModelUi,
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
+    onCommentClick: (params: ProfileParams) -> Unit,
 ) {
     val component = getApplicationComponent()
         .getCommentsScreenComponentFactory()
@@ -43,7 +45,8 @@ fun CommentsScreen(
     CommentsScreenContent(
         state = state,
         onBackPressed = onBackPressed,
-        onRetryClick = onRetryClick
+        onRetryClick = onRetryClick,
+        onCommentClick = onCommentClick
     )
 }
 
@@ -52,7 +55,8 @@ fun CommentsScreen(
 fun CommentsScreenContent(
     state: State<CommentsViewState>,
     onBackPressed: () -> Unit,
-    onRetryClick: () -> Unit
+    onRetryClick: () -> Unit,
+    onCommentClick: (params: ProfileParams) -> Unit,
 ) {
     ScaffoldWithCollapsingToolbar(
         toolBarTitle = {
@@ -92,7 +96,8 @@ fun CommentsScreenContent(
 
         CommentsColumn(
             comments = currentState.commentsList,
-            paddingValues = paddingValues
+            paddingValues = paddingValues,
+            onCommentClick = onCommentClick
         )
     }
 }

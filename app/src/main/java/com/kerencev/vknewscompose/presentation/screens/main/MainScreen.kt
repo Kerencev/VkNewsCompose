@@ -127,7 +127,10 @@ fun MainScreen(
             commentsScreenContent = { from, newsModel ->
                 CommentsScreen(
                     newsModel = newsModel,
-                    onBackPressed = { navigationState.navHostController.popBackStack() }
+                    onBackPressed = { navigationState.navHostController.popBackStack() },
+                    onCommentClick = { profileParams ->
+                        navigationState.navigateToProfile(from = from, params = profileParams)
+                    }
                 )
             },
 

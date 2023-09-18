@@ -23,10 +23,11 @@ import com.kerencev.vknewscompose.domain.entities.CommentModel
 
 @Composable
 fun CommentItem(
+    modifier: Modifier = Modifier,
     comment: CommentModel
 ) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
