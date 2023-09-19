@@ -1,11 +1,12 @@
 package com.kerencev.vknewscompose.domain.repositories
 
 import com.kerencev.vknewscompose.domain.entities.AuthState
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
 
-    fun getAuthStateFlow(): StateFlow<AuthState>
+    fun checkAuthState(): Flow<AuthState>
 
-    suspend fun checkAuthState()
+    fun logout()
+
 }

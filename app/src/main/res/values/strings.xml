@@ -18,6 +18,7 @@
     <string name="all_photos">Все фотографии %s</string>
     <string name="photo">Фото</string>
     <string name="show_all">Показать все</string>
+    <string name="show_more">Показать еще</string>
     <string name="wall">Записи на стене</string>
     <string name="profile_photos_error">Не удалось загрузить фотографии</string>
     <string name="profile_error">Не удалось загрузить профиль</string>
@@ -27,5 +28,29 @@
     <string name="set_error_cause">Что-то пошло не так: %s</string>
     <string name="new_posts">Свежие записи</string>
     <string name="news">Новости</string>
+    <string name="recommendation">Рекомендации</string>
+    <string name="interesting">Интересное</string>
     <string name="set_count">Всего: %d</string>
+    <string name="empty_data">Данных нет</string>
+    <string name="set_photos_count">Фотографии: %d</string>
+    <string name="refresh">Обновить</string>
+    <string name="log_out">Выйти</string>
+    <string name="set_page">%d из %d</string>
+    <string name="friends">Друзья</string>
+    <string name="global_search">Глобальный поиск</string>
+    <string name="search_friends_label">"Введите имя и фамилию"</string>
+    <string name="search_global_label">"Поиск"</string>
+    <string name="search_global_text">"Поиск людей, групп и сообществ"</string>
+    <string name="tab_title_news">Лента</string>
+    <string name="tab_title_recommended">Для вас</string>
+    <string name="now">только что</string>
+    <string name="set_minutes">%d мин.</string>
+    <string name="set_hours">%d ч.</string>
+    <string name="set_days">%d д.</string>
+    <string name="last_seen_now">был(а) в сети только что</string>
+    <string name="set_last_seen_minutes">был(а) в сети %d мин. назад</string>
+    <string name="set_last_seen_hours">был(а) в сети %d ч. назад</string>
+    <string name="set_last_seen_days">был(а) в сети %d д. назад</string>
+    <string name="set_members">%s Подписчиков</string>
+    <string name="no_feature_message">Фича на подходе &#128522;</string>
 </resources>

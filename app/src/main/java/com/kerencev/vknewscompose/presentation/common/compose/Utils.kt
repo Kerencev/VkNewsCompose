@@ -1,13 +1,26 @@
 package com.kerencev.vknewscompose.presentation.common.compose
 
-import android.app.Activity
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.isImeVisible
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
+import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalView
-import androidx.core.view.WindowCompat
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.unit.Dp
+import com.google.accompanist.systemuicontroller.SystemUiController
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 /**
  * Wrapper functions for optimizing Compose when working with lambdas
@@ -96,16 +109,56 @@ inline fun <T> rememberUnitParams(
 }
 
 @Composable
-fun SetupStatusColors(color: Color, isAppearanceLightStatusBars: Boolean) {
-    val view = LocalView.current
-    if (!view.isInEditMode) {
-        SideEffect {
-            val window = (view.context as Activity).window
-            window.statusBarColor = color.toArgb()
-            window.navigationBarColor = color.toArgb()
-            val windowInsetsController =
-                WindowCompat.getInsetsController(window, window.decorView)
-            windowInsetsController.isAppearanceLightStatusBars = isAppearanceLightStatusBars
+fun SetupSystemBar(
+    isNavigationBarContrastEnforced: Boolean = true,
+    darkIcons: Boolean = !isSystemInDarkTheme(),
+    color: Color = Color.Transparent
+) {
+    val systemUiController: SystemUiController = rememberSystemUiController()
+    SideEffect {
+        systemUiController.setSystemBarsColor(
+            color = color,
+            darkIcons = darkIcons,
+            isNavigationBarContrastEnforced = isNavigationBarContrastEnforced,
+        )
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+fun Modifier.clearFocusOnKeyboardDismiss(): Modifier = composed {
+    var isFocused by remember { mutableStateOf(false) }
+    var keyboardAppearedSinceLastFocused by remember { mutableStateOf(false) }
+    if (isFocused) {
+        val imeIsVisible = WindowInsets.isImeVisible
+        val focusManager = LocalFocusManager.current
+        LaunchedEffect(imeIsVisible) {
+            if (imeIsVisible) {
+                keyboardAppearedSinceLastFocused = true
+            } else if (keyboardAppearedSinceLastFocused) {
+                focusManager.clearFocus()
+            }
         }
     }
+    onFocusEvent {
+        if (isFocused != it.isFocused) {
+            isFocused = it.isFocused
+            if (isFocused) {
+                keyboardAppearedSinceLastFocused = false
+            }
+        }
+    }
+}
+
+@Composable
+fun statusBarHeight(): Dp {
+    return WindowInsets.systemBars
+        .asPaddingValues()
+        .calculateTopPadding()
+}
+
+@Composable
+fun navigationBarHeight(): Dp {
+    return WindowInsets.systemBars
+        .asPaddingValues()
+        .calculateBottomPadding()
 }

@@ -2,24 +2,32 @@ package com.kerencev.vknewscompose.presentation.screens.profile_photos.flow
 
 import androidx.compose.runtime.Stable
 import com.kerencev.vknewscompose.domain.entities.PhotoModel
-import com.kerencev.vknewscompose.presentation.common.ContentState
+import com.kerencev.vknewscompose.domain.entities.PhotosModel
 import com.kerencev.vknewscompose.presentation.common.mvi.VkState
 
 @Stable
 data class ProfilePhotosViewState(
-    val photosState: ContentState<List<PhotoModel>> = ContentState.Loading
+    val photos: List<PhotoModel> = emptyList(),
+    val isPhotosLoading: Boolean = false,
+    val errorMessage: String? = null,
+    val photosTotalCount: Int = 0
 ) : VkState {
 
-    fun setPhotos(photos: List<PhotoModel>) = copy(
-        photosState = ContentState.Content(photos)
+    fun setPhotos(photosModel: PhotosModel) = copy(
+        photos = photosModel.photos,
+        isPhotosLoading = false,
+        errorMessage = null,
+        photosTotalCount = photosModel.totalCount
     )
 
     fun loading() = copy(
-        photosState = ContentState.Loading
+        isPhotosLoading = true,
+        errorMessage = null
     )
 
     fun error(message: String) = copy(
-        photosState = ContentState.Error(message)
+        isPhotosLoading = false,
+        errorMessage = message
     )
 
 }

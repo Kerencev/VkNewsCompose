@@ -1,44 +1,37 @@
 package com.kerencev.vknewscompose.data.repository
 
+import android.util.Log
 import com.kerencev.vknewscompose.domain.entities.AuthState
 import com.kerencev.vknewscompose.domain.repositories.AuthRepository
 import com.vk.api.sdk.VKKeyValueStorage
 import com.vk.api.sdk.auth.VKAccessToken
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
     private val storage: VKKeyValueStorage
 ) : AuthRepository {
 
+    companion object {
+        private const val TOKEN_TAG = "TOKEN_TAG"
+        private var userId = 0L
+        val currentUserId
+            get() = userId
+    }
+
     private val token
         get() = VKAccessToken.restore(storage)
 
-    private val checkAuthState = MutableSharedFlow<Unit>(replay = 1)
-    private val coroutineScope = CoroutineScope(Dispatchers.IO)
+    override fun checkAuthState() = flow {
+        Log.d(TOKEN_TAG, token?.accessToken.toString())
+        val currentToken = token
+        val loggedIn = currentToken != null && currentToken.isValid
+        userId = token?.userId?.value ?: 0
+        emit(if (loggedIn) AuthState.AUTHORIZED else AuthState.NOT_AUTHORIZED)
+    }
 
-    private val authState = flow {
-        checkAuthState.emit(Unit)
-        checkAuthState.collect {
-            val currentToken = token
-            val loggedIn = currentToken != null && currentToken.isValid
-            emit(if (loggedIn) AuthState.AUTHORIZED else AuthState.NOT_AUTHORIZED)
-        }
-    }.stateIn(
-        scope = coroutineScope,
-        started = SharingStarted.Lazily,
-        initialValue = AuthState.INITIAL
-    )
-
-    override fun getAuthStateFlow() = authState
-
-    override suspend fun checkAuthState() {
-        checkAuthState.emit(Unit)
+    override fun logout() {
+        VKAccessToken.remove(storage)
     }
 
 }

@@ -1,20 +1,23 @@
 package com.kerencev.vknewscompose.data.dto.profile
 
 import com.google.gson.annotations.SerializedName
-import com.kerencev.vknewscompose.data.dto.news_feed.Attachment
 
 data class ProfileResponseDto(
     val response: List<ProfileDto>?
 )
 
 data class ProfileDto(
-    val id: Int?,
+    val id: Long?,
     @SerializedName("first_name") val firstName: String?,
     @SerializedName("last_name") val lastName: String?,
     val city: City?,
     @SerializedName("university_name") val universityName: String?,
     val counters: Counters?,
-    @SerializedName("crop_photo") val cropPhoto: Attachment?
+    @SerializedName("photo_200") val avatar200: String?,
+    @SerializedName("photo_100") val avatar100: String?,
+    val online: Int?,
+    @SerializedName("online_mobile") val onlineMobile: Int?,
+    @SerializedName("last_seen") val lastSeen: LastSeenDto?,
 )
 
 data class City(
@@ -39,4 +42,9 @@ data class Counters(
     @SerializedName("user_photos") val userPhotos: Int?,
     @SerializedName("video_playlists") val videoPlaylists: Int?,
     val videos: Int?
+)
+
+data class LastSeenDto(
+    val platform: Int?,
+    val time: Long?
 )
