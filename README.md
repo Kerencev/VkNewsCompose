@@ -46,10 +46,14 @@ User Profile or Group Profile • Profile info • Displaying the platform • F
   <img src="https://github.com/Kerencev/VkNewsCompose/assets/97218034/e561914a-53b2-4db7-9ba5-9c9d10a7328a" width="33%"/>
 </p>
 
+## Night theme and landscape orientation support
+<p>
+  <img src="https://github.com/Kerencev/VkNewsCompose/assets/97218034/549ab368-60f3-4f37-91a1-08c11da5795f" width="33%"/>
+  <img src="https://github.com/Kerencev/VkNewsCompose/assets/97218034/8fde19bf-647f-4538-9e7a-7e61f7921727" width="33%"/>
+</p>
 
-
-
-
-
-
-
+## Handling download states and server errors
+<p>
+  <img src="https://github.com/Kerencev/VkNewsCompose/assets/97218034/12154b88-ed86-4f53-80c7-aff93912402b" width="33%"/>
+  <img src="https://github.com/Kerencev/VkNewsCompose/assets/97218034/169aa378-1e1d-4bc0-970b-18b106cf88c5" width="33%"/>
+</p>
