@@ -24,15 +24,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import com.kerencev.vknewscompose.R
 import com.kerencev.vknewscompose.domain.entities.Photo
 import com.kerencev.vknewscompose.domain.entities.PhotoModel
 import com.kerencev.vknewscompose.presentation.common.views.icon.BoxIcon
+import com.kerencev.vknewscompose.presentation.common.views.loading.AsyncShimmerImage
 import com.kerencev.vknewscompose.presentation.common.views.loading.ShimmerDefault
 import com.kerencev.vknewscompose.ui.theme.LightBlue
 import com.kerencev.vknewscompose.ui.theme.Shapes
@@ -86,18 +85,24 @@ fun ProfilePhotos(
                 verticalArrangement = Arrangement.spacedBy(2.dp)
             ) {
                 itemsIndexed(photos) { index, item ->
-                    if (item is PhotoModel) AsyncImage(
+                    if (item is PhotoModel) AsyncShimmerImage(
                         modifier = Modifier
                             .size(100.dp)
                             .clickable { onPhotoClick(index) },
-                        model = item.url,
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop
+                        imageUrl = item.url,
+                        shimmerHeight = 100.dp,
+                        error = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_photo_24),
+                                contentDescription = null
+                            )
+                        }
                     )
                     else ShimmerItems()
                 }
                 when {
                     photos.size == totalCount -> return@LazyHorizontalGrid
+
                     isLoading && photos.isEmpty() -> item { ShimmerItems() }
 
                     errorMessage != null -> item(span = { GridItemSpan(maxLineSpan) }) {
